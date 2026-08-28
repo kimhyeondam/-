@@ -1,0 +1,621 @@
+<title>콘크리트 2차제품 수주 전략</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --ground:#ECEFEE;
+    --surface:#FBFCFB;
+    --surface-2:#E2E7E5;
+    --ink:#141A19;
+    --ink-2:#3B4746;
+    --muted:#66716F;
+    --line:#CBD3D1;
+    --line-soft:#DDE3E1;
+    --accent:#1D5C57;
+    --accent-soft:#D6E4E1;
+    --hot:#C04D18;
+    --hot-soft:#F0DFD4;
+    --shadow:0 1px 2px rgba(20,26,25,.05);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1211;
+      --surface:#161C1B;
+      --surface-2:#1E2625;
+      --ink:#E7ECEA;
+      --ink-2:#C0C9C7;
+      --muted:#8B9694;
+      --line:#2A3432;
+      --line-soft:#222B2A;
+      --accent:#5CB0A6;
+      --accent-soft:#1B2E2C;
+      --hot:#E97B45;
+      --hot-soft:#2E211A;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1211;
+    --surface:#161C1B;
+    --surface-2:#1E2625;
+    --ink:#E7ECEA;
+    --ink-2:#C0C9C7;
+    --muted:#8B9694;
+    --line:#2A3432;
+    --line-soft:#222B2A;
+    --accent:#5CB0A6;
+    --accent-soft:#1B2E2C;
+    --hot:#E97B45;
+    --hot-soft:#2E211A;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR","Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-weight:400;
+    font-size:16.5px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px 96px}
+
+  /* ---------- masthead ---------- */
+  .mast{
+    border-bottom:1px solid var(--line);
+    padding:64px 0 34px;
+    margin-bottom:56px;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:"Noto Serif KR",Georgia,serif;
+    font-weight:700;
+    font-size:clamp(30px,5.2vw,46px);
+    line-height:1.28;
+    letter-spacing:-.02em;
+    margin:0 0 20px;
+    text-wrap:balance;
+    max-width:16ch;
+  }
+  .standfirst{
+    max-width:62ch;
+    color:var(--ink-2);
+    font-size:17px;
+    font-weight:300;
+    margin:0;
+  }
+  .mast-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:28px;
+  }
+  .tag{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--accent);
+    background:var(--accent-soft);
+    border-radius:2px;
+    padding:4px 9px;
+  }
+
+  /* ---------- section frame ---------- */
+  .sec{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    padding-bottom:52px;
+    margin-bottom:52px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .sec:last-of-type{border-bottom:0}
+  .rail{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding-top:8px;
+  }
+  .body-col{min-width:0;max-width:70ch}
+  @media (min-width:1040px){
+    .sec{grid-template-columns:170px minmax(0,1fr);gap:40px}
+  }
+
+  h2{
+    font-family:"Noto Serif KR",Georgia,serif;
+    font-weight:700;
+    font-size:clamp(21px,2.6vw,26px);
+    line-height:1.42;
+    letter-spacing:-.015em;
+    margin:0 0 18px;
+    text-wrap:balance;
+  }
+  h3{
+    font-size:16.5px;
+    font-weight:600;
+    line-height:1.5;
+    margin:30px 0 10px;
+    letter-spacing:-.005em;
+  }
+  p{margin:0 0 15px}
+  .body-col > p:last-child{margin-bottom:0}
+  strong{font-weight:600;color:var(--ink)}
+  em{font-style:normal;color:var(--hot);font-weight:500}
+
+  ul{margin:0 0 15px;padding-left:0;list-style:none}
+  li{position:relative;padding-left:19px;margin-bottom:8px}
+  li::before{
+    content:"";
+    position:absolute;
+    left:2px;top:.72em;
+    width:5px;height:5px;
+    background:var(--accent);
+    opacity:.55;
+  }
+
+  /* ---------- truths ---------- */
+  .truths{display:flex;flex-direction:column;gap:0;margin:4px 0 0}
+  .truth{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:18px;
+    padding:20px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .truth:last-child{border-bottom:1px solid var(--line-soft)}
+  .truth-n{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:12px;
+    color:var(--hot);
+    padding-top:5px;
+    font-variant-numeric:tabular-nums;
+  }
+  .truth h3{margin:0 0 6px}
+  .truth p{margin:0;color:var(--ink-2);font-size:15.5px}
+
+  /* ---------- formula ---------- */
+  .formula{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:22px 24px;
+    margin:0 0 8px;
+    overflow-x:auto;
+    box-shadow:var(--shadow);
+  }
+  .formula-line{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:13px;
+    white-space:nowrap;
+    color:var(--muted);
+  }
+  .fv{
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR",sans-serif;
+    font-size:14px;
+    font-weight:500;
+    border-bottom:2px solid var(--accent);
+    padding-bottom:2px;
+  }
+  .formula-note{
+    margin:16px 0 0;
+    font-size:14.5px;
+    color:var(--muted);
+    white-space:normal;
+  }
+
+  /* ---------- levers ---------- */
+  .lever{
+    border-top:2px solid var(--ink);
+    padding-top:18px;
+    margin-top:44px;
+  }
+  .lever:first-of-type{margin-top:6px}
+  .lever-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:10px 14px;
+    margin-bottom:12px;
+  }
+  .lever-head h3{
+    margin:0;
+    font-family:"Noto Serif KR",Georgia,serif;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .chip{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:2px;
+    white-space:nowrap;
+  }
+  .chip-hi{background:var(--hot-soft);color:var(--hot)}
+  .chip-mid{background:var(--accent-soft);color:var(--accent)}
+  .chip-cost{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid var(--line);
+  }
+  .lever > p:first-of-type{color:var(--ink-2)}
+
+  .callout{
+    border-left:2px solid var(--hot);
+    padding:2px 0 2px 16px;
+    margin:18px 0;
+    color:var(--ink-2);
+    font-size:15.5px;
+  }
+  .callout p{margin:0}
+
+  /* ---------- roadmap ---------- */
+  .phase{
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    gap:20px;
+    padding:22px 0;
+    border-top:1px solid var(--line-soft);
+  }
+  .phase:last-child{border-bottom:1px solid var(--line-soft)}
+  .phase-n{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;
+    line-height:1.5;
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+    padding-top:4px;
+    white-space:nowrap;
+  }
+  .phase-n span{display:block;color:var(--muted);font-size:10.5px;letter-spacing:.08em}
+  .phase h3{margin:0 0 8px}
+  .phase ul{margin:0}
+  .phase li{font-size:15.5px;color:var(--ink-2)}
+
+  /* ---------- table ---------- */
+  .tablewrap{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:3px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+  }
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+  th,td{
+    text-align:left;
+    padding:11px 16px;
+    border-bottom:1px solid var(--line-soft);
+    vertical-align:top;
+  }
+  th{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+    color:var(--muted);
+    font-weight:500;
+    background:var(--surface-2);
+    white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.num{
+    font-variant-numeric:tabular-nums;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:13px;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  td:first-child{font-weight:500;color:var(--ink)}
+
+  /* ---------- don't list ---------- */
+  .avoid li::before{
+    background:transparent;
+    border-top:2px solid var(--hot);
+    width:9px;height:0;
+    top:.95em;left:0;
+  }
+  .avoid li{padding-left:20px}
+
+  a{color:var(--accent);text-underline-offset:3px}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
+
+  .closer{
+    margin-top:8px;
+    padding:26px 28px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:3px;
+    box-shadow:var(--shadow);
+  }
+  .closer p{margin:0;color:var(--ink-2)}
+  .closer p + p{margin-top:12px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">토목·구조용 콘크리트 2차제품 / 매출 확대 전략</p>
+    <h1>견적서를 받기 전에 이미 이겨 있어야 한다</h1>
+    <p class="standfirst">흄관·맨홀·측구·옹벽블록 같은 KS 규격품은 제품으로 이길 수 없습니다. 이길 수 있는 지점은 딱 세 군데 — <strong>누구보다 먼저 현장을 아는 것</strong>, <strong>설계도서에 이름을 박아 두는 것</strong>, <strong>한 현장에서 더 많은 품목을 싣는 것</strong>입니다. 아래는 그 세 가지를 90일 안에 굴러가게 만드는 실행안입니다.</p>
+    <div class="mast-meta">
+      <span class="tag">건설사·시공사 직납</span>
+      <span class="tag">대리점·자재상 유통</span>
+      <span class="tag">90일 실행</span>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="rail">진단</div>
+    <div class="body-col">
+      <h2>이 업종의 구조적 진실 세 가지</h2>
+      <p>여기서 벗어난 마케팅은 전부 돈 낭비입니다. 예산을 쓰기 전에 이 셋을 먼저 인정해야 합니다.</p>
+      <div class="truths">
+        <div class="truth">
+          <div class="truth-n">01</div>
+          <div>
+            <h3>시장의 크기 = 물류 반경</h3>
+            <p>중량물이라 운반비가 납품가의 15~30%를 먹습니다. 반경 밖 현장은 아무리 잘 팔아도 마진이 남지 않습니다. <em>마케팅 예산의 100%를 공장 반경 안에 쏟아야 합니다.</em> 전국구 광고는 비용이지 투자가 아닙니다.</p>
+          </div>
+        </div>
+        <div class="truth">
+          <div class="truth-n">02</div>
+          <div>
+            <h3>승부는 견적 요청 전에 끝난다</h3>
+            <p>규격은 설계도서에서 정해지고, 공급자 후보는 낙찰 직후 2~3곳으로 좁혀집니다. 현장에서 견적 요청이 왔다면 이미 들러리일 확률이 높습니다. 개입해야 할 시점은 <em>설계 단계</em>와 <em>낙찰 직후</em>입니다.</p>
+          </div>
+        </div>
+        <div class="truth">
+          <div class="truth-n">03</div>
+          <div>
+            <h3>제품으로는 차별화가 불가능하다</h3>
+            <p>같은 KS 규격, 같은 도면, 같은 강도. 그래서 실제 구매 결정을 가르는 건 <em>납기 확약, 현장 대응 속도, 서류 완결성, 혼적 배송</em>입니다. 이 넷이 우리 회사의 상품이라고 생각하고 팔아야 합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">구조</div>
+    <div class="body-col">
+      <h2>매출을 네 개의 변수로 분해하기</h2>
+      <p>"매출을 늘리자"는 실행할 수 없습니다. 아래 네 변수 중 어느 것을 올릴지 정해야 실행이 됩니다.</p>
+      <div class="formula">
+        <div class="formula-line">
+          <span class="fv">커버 현장 수</span><span>×</span>
+          <span class="fv">수주율</span><span>×</span>
+          <span class="fv">현장당 품목 수</span><span>×</span>
+          <span class="fv">품목 단가</span>
+        </div>
+        <p class="formula-note">네 변수 중 <strong>단가</strong>는 건드리지 마십시오. 한 번 내린 단가는 다시 못 올리고, 경쟁사가 따라 내리면 시장 전체 마진만 깎입니다. 남은 세 변수가 아래 다섯 개 레버의 대상입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">레버</div>
+    <div class="body-col">
+      <h2>매출을 움직이는 다섯 개 레버</h2>
+      <p>임팩트 순서대로 배치했습니다. 인력이 부족하면 1번과 3번만 해도 6개월 안에 숫자가 움직입니다.</p>
+
+      <div class="lever">
+        <div class="lever-head">
+          <h3>착공 전 현장 레이더</h3>
+          <span class="chip chip-hi">임팩트 최상</span>
+          <span class="chip chip-cost">비용 0원 · 주 4시간</span>
+        </div>
+        <p>경쟁사보다 2주 먼저 현장을 알면 승률이 두 배가 됩니다. 광고가 아니라 <strong>정보 수집 루틴</strong>이 이 업종 최고의 마케팅입니다.</p>
+        <h3>정보 소스 (전부 무료·공개)</h3>
+        <ul>
+          <li><strong>나라장터</strong> — 입찰공고와 개찰결과. 낙찰 시공사 이름이 여기서 먼저 나옵니다.</li>
+          <li><strong>KISCON 건설공사대장</strong> — 계약금액·공기·원도급사 확인.</li>
+          <li><strong>발주기관 연간 사업계획</strong> — LH, 도로공사, 수자원공사, 국가철도공단, 지자체 상하수도사업소·도시계획과 고시.</li>
+          <li><strong>세움터 착공신고</strong> — 민간 건축현장의 착공 시점 포착.</li>
+          <li><strong>지역 건설협회·시공사 홈페이지 수주 공시</strong> — 반경 내 원도급사 동향.</li>
+        </ul>
+        <h3>운영 방식</h3>
+        <ul>
+          <li>매주 월요일 오전, 반경 내 신규 낙찰·착공 현장을 스프레드시트에 등록 (현장명 / 발주처 / 시공사 / 공사금액 / 착공예정 / 예상 소요 품목·수량 / 접촉 상태).</li>
+          <li>착공 예정일 <strong>D-30</strong>에 알림 → 자재 발주가 뜨기 직전 타이밍.</li>
+          <li>낙찰 공고 <strong>D+3 이내</strong> 현장소장·구매담당 접촉을 규칙으로 고정. 이 규칙 하나가 전체 성과의 절반입니다.</li>
+        </ul>
+        <div class="callout">
+          <p>첫 통화에서 팔지 마십시오. "이 현장에 들어가는 규격이 이러이러한데, 저희가 반경 안이라 운반비가 얼마 절감됩니다"까지만 말하고 <strong>수량산출 도움</strong>을 제안하면 다음 통화가 열립니다.</p>
+        </div>
+      </div>
+
+      <div class="lever">
+        <div class="lever-head">
+          <h3>대리점·자재상 커버리지 확장</h3>
+          <span class="chip chip-hi">임팩트 최상</span>
+          <span class="chip chip-cost">저비용 · 즉효</span>
+        </div>
+        <p>이미 있는 유통망의 빈칸을 메우는 게 신규 개척보다 훨씬 빠릅니다.</p>
+        <ul>
+          <li><strong>커버리지 맵</strong> — 반경 내 자재상·대리점을 전수 리스트업하고 <em>거래중 / 휴면 / 미거래</em> 3분류. 휴면과 미거래가 곧 즉시 매출입니다.</li>
+          <li><strong>휴면 복구 캠페인</strong> — 최근 12개월 거래 없는 곳부터. 전환율이 신규 개척의 3~5배입니다. "왜 끊겼는지"를 묻는 통화 한 통이 시작점.</li>
+          <li><strong>판매 키트 제공</strong> — 대리점이 팔기 쉬워야 팝니다. 단가표, 견적서 양식, 카탈로그 PDF, KS인증서·시험성적서, 시공 사진, 샘플을 한 폴더로 묶어 전달.</li>
+          <li><strong>3층 인센티브</strong> — ① 분기 누적 볼륨 리베이트 ② 신규 현장 정보 제보 보상(수주 시 지급) ③ 현금결제 할인. 특히 ②는 대리점을 영업사원으로 바꿉니다.</li>
+        </ul>
+      </div>
+
+      <div class="lever">
+        <div class="lever-head">
+          <h3>스펙인 — 설계 단계 침투</h3>
+          <span class="chip chip-mid">임팩트 상 · 시차 있음</span>
+          <span class="chip chip-cost">6~18개월</span>
+        </div>
+        <p>설계도서에 우리 제품이 들어가면 영업 없이 수주가 들어옵니다. 대신 결과가 나오기까지 시간이 걸리므로 지금 시작해야 합니다.</p>
+        <ul>
+          <li><strong>설계사무소·엔지니어링사에 도면을 무상 배포</strong> — 표준상세도 DWG, 구조계산서, 수량산출표. 설계자가 우리 도면을 그대로 붙여넣게 만드는 게 목적입니다.</li>
+          <li><strong>인증으로 지정 근거 만들기</strong> — 특허, 신기술(NET), 성능인증(EPC), 녹색기술인증. "동등 이상" 문구를 우리 제품 지정으로 바꾸는 유일한 수단입니다.</li>
+          <li><strong>발주처 기술 설명회</strong> — 지자체 토목과·상하수도사업소 대상. 제품 소개가 아니라 <em>"하자 사례와 예방"</em> 주제로 가야 자리가 잡힙니다.</li>
+          <li><strong>KPI로 관리</strong> — "설계 반영 건수"를 별도 지표로 세고 담당자를 지정하십시오. 안 세면 안 합니다.</li>
+        </ul>
+      </div>
+
+      <div class="lever">
+        <div class="lever-head">
+          <h3>현장당 품목 확대 (객단가)</h3>
+          <span class="chip chip-mid">임팩트 상</span>
+          <span class="chip chip-cost">비용 0원</span>
+        </div>
+        <p>이미 수주한 현장에서 매출을 키우는 가장 싼 방법입니다. 새 고객을 찾을 필요가 없습니다.</p>
+        <ul>
+          <li><strong>현장 단위 패키지 견적</strong> — 흄관만 넣지 말고 맨홀·이음재·받침·측구·경계석까지 한 장의 견적서로. 현장은 발주처를 줄이고 싶어 합니다.</li>
+          <li><strong>혼적 배송을 가치로 팔기</strong> — "한 차에 다 실어 보냅니다"는 현장 입장에서 하차 인원·크레인 비용·공정 지연 절감입니다. 단가를 깎지 않고 총액을 낮춰 주는 유일한 카드.</li>
+          <li><strong>규격외 주문제작 비중 확대</strong> — 표준품은 비교당하지만 특수 규격품은 비교 대상이 없습니다. 마진 구조가 다릅니다.</li>
+          <li><strong>시공 지원 번들</strong> — 거치 가이드, 초도 시공 입회, 하자 대응 약속. 현장소장이 가장 무서워하는 건 가격이 아니라 <em>공정 지연</em>입니다.</li>
+        </ul>
+      </div>
+
+      <div class="lever">
+        <div class="lever-head">
+          <h3>디지털 최소 세트</h3>
+          <span class="chip chip-mid">임팩트 중 · 인바운드</span>
+          <span class="chip chip-cost">월 30~50만원</span>
+        </div>
+        <p>B2B라도 담당자의 첫 행동은 네이버 검색입니다. 크게 벌일 필요는 없고, 딱 다음 다섯 개면 충분합니다.</p>
+        <ul>
+          <li><strong>지역+제품 키워드 상위 노출</strong> — "○○지역 흄관 제조", "옹벽블록 납품업체" 같은 좁은 키워드에만 파워링크를 겁니다. 넓은 키워드는 돈만 씁니다.</li>
+          <li><strong>홈페이지의 목적은 단 하나</strong> — 담당자가 <em>결재에 올릴 자료를 5분 안에 내려받게</em> 하는 것. 카탈로그, KS인증서, 시험성적서, 납품실적, 견적문의 폼. 회사 소개는 뒤로 미루십시오.</li>
+          <li><strong>네이버 플레이스 정비</strong> — 공장 위치·전화·사진. 반경 검색에서 잡히는 기본기입니다.</li>
+          <li><strong>시공 영상 1편</strong> — 카탈로그 10장보다 강력합니다. 현장소장은 성능이 아니라 <em>시공 난이도</em>를 봅니다.</li>
+          <li><strong>카카오톡 채널을 견적 창구로</strong> — 전화보다 도면·수량표 전달이 쉽고 기록이 남습니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">추가 제안</div>
+    <div class="body-col">
+      <h2>선택하지 않으셨지만, 짚고 갑니다 — 관급 조달</h2>
+      <p>매출 극대화 관점에서 지금 가장 큰 미개척 채널입니다. 건설사 직납은 단가 압박과 어음 리스크를 함께 지지만, 관급은 <strong>단가 방어와 대금 안정성</strong>이 구조적으로 낫습니다.</p>
+      <ul>
+        <li>경로: 나라장터 등록 → 직접생산확인증명 → 성능인증(EPC) → 우수조달물품 지정 → 다수공급자계약(MAS).</li>
+        <li>인증 취득에만 12~18개월이 걸립니다. <em>착수 시점이 곧 매출 시점을 결정합니다.</em></li>
+        <li>기존 직납·유통 채널과 상충하지 않고, 비수기 가동률을 메우는 데도 유리합니다.</li>
+      </ul>
+      <p>당장 여력이 없다면 최소한 <strong>직접생산확인증명과 KS 인증 갱신 상태</strong>만이라도 이번 분기에 점검해 두시길 권합니다.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">실행</div>
+    <div class="body-col">
+      <h2>90일 로드맵</h2>
+      <p>순서가 중요합니다. 기반을 만들지 않고 영업부터 돌리면 3주 뒤에 멈춥니다.</p>
+      <div class="phase">
+        <div class="phase-n">D1–30<span>기반</span></div>
+        <div>
+          <h3>정보와 자료를 갖춘다</h3>
+          <ul>
+            <li>공장 기준 물류 반경 지도 작성 — 반경별 운반비 손익분기 라인 확정.</li>
+            <li>반경 내 자재상·대리점 전수 리스트업, 거래중/휴면/미거래 분류.</li>
+            <li>현장 레이더 시트 설계 및 정보 소스 북마크, 담당자 지정.</li>
+            <li>카탈로그·시험성적서·인증서·납품실적 PDF 정비 (다운로드 가능한 한 세트로).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-n">D31–60<span>가동</span></div>
+        <div>
+          <h3>루틴을 돌린다</h3>
+          <ul>
+            <li>매주 월요일 낙찰·착공 현장 스캔 시작, D+3 접촉 규칙 적용.</li>
+            <li>휴면 자재상 복구 콜 — 주 10곳씩, 4주간 40곳.</li>
+            <li>홈페이지 자료 다운로드 구조 개편, 네이버 플레이스·파워링크 세팅.</li>
+            <li>반경 내 설계사무소 5곳 방문, 표준상세도 DWG 전달.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-n">D61–90<span>확장</span></div>
+        <div>
+          <h3>단가 대신 구조로 판다</h3>
+          <ul>
+            <li>현장 단위 패키지 견적서 양식 도입, 전 영업 적용.</li>
+            <li>대리점 인센티브 3층 구조 공식 발표 및 첫 분기 정산 기준일 지정.</li>
+            <li>인증(성능인증·직접생산확인) 취득 절차 착수.</li>
+            <li>KPI 첫 리뷰 — 안 움직인 지표의 원인을 지표가 아니라 루틴에서 찾습니다.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">측정</div>
+    <div class="body-col">
+      <h2>매주 볼 지표</h2>
+      <p>매출은 후행 지표라 매주 보면 아무것도 안 보입니다. 아래 선행 지표를 보십시오.</p>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>지표</th><th>왜 보는가</th><th>주기</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>레이더 등록 현장 수</td><td>파이프라인의 입구 크기</td><td class="num">주간</td></tr>
+            <tr><td>D+3 접촉 달성률</td><td>속도 우위가 실제로 지켜지는지</td><td class="num">주간</td></tr>
+            <tr><td>견적 제출 건수</td><td>영업 활동량의 실체</td><td class="num">주간</td></tr>
+            <tr><td>수주율 (수주÷견적)</td><td>제안 품질과 타이밍의 결과</td><td class="num">월간</td></tr>
+            <tr><td>현장당 평균 품목 수</td><td>패키지 판매가 먹히는지</td><td class="num">월간</td></tr>
+            <tr><td>거래 자재상 수</td><td>유통 커버리지 확장 속도</td><td class="num">월간</td></tr>
+            <tr><td>설계 반영 건수</td><td>스펙인의 유일한 증거</td><td class="num">분기</td></tr>
+            <tr><td>웹·카톡 견적문의 건수</td><td>디지털 투자 대비 인바운드</td><td class="num">월간</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">금지</div>
+    <div class="body-col">
+      <h2>하지 말아야 할 네 가지</h2>
+      <ul class="avoid">
+        <li><strong>전국구 광고·전시회 남발</strong> — 반경 밖 노출은 리드가 아니라 비용입니다. 지역 밀착 전시·발주처 설명회로 대체하십시오.</li>
+        <li><strong>인스타그램·틱톡 운영</strong> — 여기에 현장소장과 구매팀은 없습니다. 인테리어 소품이면 정답이지만 토목자재에는 아닙니다.</li>
+        <li><strong>브로슈어 대량 인쇄</strong> — 규격이 바뀌면 전부 폐기됩니다. PDF와 다운로드 링크가 더 빠르고 최신입니다.</li>
+        <li><strong>가격 인하로 방어</strong> — 즉효처럼 보이지만 회복이 안 됩니다. 총액을 낮추려면 단가가 아니라 <em>혼적 배송과 패키지 공급</em>으로 낮추십시오.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="rail">요약</div>
+    <div class="body-col">
+      <div class="closer">
+        <p><strong>이번 주에 딱 하나만 한다면:</strong> 반경 내 최근 3개월 낙찰 현장을 전부 뽑아 한 장의 시트로 만드십시오. 그중 아직 자재 발주가 나가지 않은 현장이 몇 개인지 세어 보면, 지금 놓치고 있는 매출의 크기가 그대로 숫자로 나옵니다.</p>
+        <p>그 숫자를 보고 나면 이 문서의 나머지는 설득이 필요 없어집니다.</p>
+      </div>
+    </div>
+  </section>
+
+</div>

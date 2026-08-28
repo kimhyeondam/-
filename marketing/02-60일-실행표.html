@@ -1,0 +1,541 @@
+<title>콘크리트 수주 60일 실행표</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --ground:#ECEFEE;
+    --surface:#FBFCFB;
+    --surface-2:#E3E8E6;
+    --ink:#141A19;
+    --ink-2:#3B4746;
+    --muted:#697472;
+    --line:#CBD3D1;
+    --line-soft:#DEE4E2;
+    --accent:#1D5C57;
+    --accent-soft:#D6E4E1;
+    --hot:#C04D18;
+    --hot-soft:#F1E0D5;
+    --done:#7C8A87;
+    --shadow:0 1px 2px rgba(20,26,25,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1211; --surface:#161C1B; --surface-2:#1F2726;
+      --ink:#E7ECEA; --ink-2:#C0C9C7; --muted:#8B9694;
+      --line:#2B3533; --line-soft:#232C2B;
+      --accent:#5CB0A6; --accent-soft:#1B2E2C;
+      --hot:#E97B45; --hot-soft:#2F221B;
+      --done:#5E6A68;
+      --shadow:0 1px 2px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1211; --surface:#161C1B; --surface-2:#1F2726;
+    --ink:#E7ECEA; --ink-2:#C0C9C7; --muted:#8B9694;
+    --line:#2B3533; --line-soft:#232C2B;
+    --accent:#5CB0A6; --accent-soft:#1B2E2C;
+    --hot:#E97B45; --hot-soft:#2F221B;
+    --done:#5E6A68;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:"IBM Plex Sans KR","Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-size:16px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 20px 100px}
+
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+  /* header */
+  header.mast{padding:52px 0 26px}
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 14px;
+  }
+  h1{
+    font-family:"Noto Serif KR",Georgia,serif;font-weight:700;
+    font-size:clamp(26px,4.6vw,38px);line-height:1.3;letter-spacing:-.02em;
+    margin:0 0 14px;text-wrap:balance;
+  }
+  .lede{margin:0;max-width:60ch;color:var(--ink-2);font-weight:300;font-size:16px}
+
+  /* progress */
+  .progress{
+    position:sticky;top:0;z-index:20;
+    background:var(--ground);
+    border-bottom:1px solid var(--line);
+    padding:14px 0 12px;
+    margin-bottom:8px;
+  }
+  .progress-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .bar{
+    flex:1 1 200px;min-width:160px;height:6px;
+    background:var(--surface-2);border-radius:99px;overflow:hidden;
+  }
+  .bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease}
+  .count{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .count b{font-weight:500;color:var(--accent)}
+  .sync{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);white-space:nowrap;
+  }
+  .sync[data-state="saving"]{color:var(--hot)}
+
+  /* next-up card */
+  .nextup{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-left:3px solid var(--hot);
+    border-radius:3px;
+    padding:18px 20px;
+    margin:22px 0 40px;
+    box-shadow:var(--shadow);
+  }
+  .nextup .label{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--hot);margin:0 0 8px;
+  }
+  .nextup h2{font-size:19px;font-weight:600;margin:0 0 6px;line-height:1.45;letter-spacing:-.01em}
+  .nextup p{margin:0;color:var(--ink-2);font-size:15px}
+
+  /* week */
+  .week{margin-bottom:38px}
+  .week-head{
+    display:flex;align-items:baseline;gap:12px;
+    padding-bottom:9px;margin-bottom:4px;
+    border-bottom:2px solid var(--ink);
+  }
+  .week-n{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11px;letter-spacing:.1em;color:var(--muted);white-space:nowrap;
+  }
+  .week-head h3{
+    margin:0;font-family:"Noto Serif KR",Georgia,serif;
+    font-size:18px;font-weight:700;letter-spacing:-.01em;line-height:1.4;
+  }
+  .week-prog{margin-left:auto;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  /* task row */
+  .task{
+    display:grid;
+    grid-template-columns:auto auto minmax(0,1fr);
+    gap:0 14px;
+    align-items:start;
+    padding:15px 4px;
+    border-bottom:1px solid var(--line-soft);
+    cursor:pointer;
+  }
+  .task:hover{background:var(--surface)}
+  .task:has(input:focus-visible){outline:2px solid var(--hot);outline-offset:-2px}
+  .task input{
+    appearance:none;-webkit-appearance:none;
+    width:19px;height:19px;margin:3px 0 0;
+    border:1.5px solid var(--line);border-radius:3px;
+    background:var(--surface);cursor:pointer;flex:none;
+  }
+  .task input:checked{background:var(--accent);border-color:var(--accent)}
+  .task input:checked::after{
+    content:"";display:block;
+    width:5px;height:9px;margin:2px 0 0 5px;
+    border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(42deg);
+  }
+  .d-n{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:11.5px;color:var(--accent);padding-top:5px;
+    font-variant-numeric:tabular-nums;white-space:nowrap;
+  }
+  .d-body{min-width:0}
+  .d-title{font-size:16px;font-weight:500;line-height:1.5;margin:0 0 3px;letter-spacing:-.005em}
+  .d-goal{margin:0;font-size:14px;color:var(--muted);line-height:1.6}
+  .d-goal b{color:var(--ink-2);font-weight:500}
+  .d-meta{
+    display:inline-block;margin-top:6px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:10px;letter-spacing:.08em;
+    color:var(--muted);border:1px solid var(--line);
+    border-radius:2px;padding:2px 6px;
+  }
+  .task.is-done .d-title{color:var(--done);text-decoration:line-through;text-decoration-thickness:1px;font-weight:400}
+  .task.is-done .d-goal,.task.is-done .d-n{color:var(--done);opacity:.75}
+  .task.is-key .d-title::after{
+    content:"핵심";
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:9.5px;letter-spacing:.1em;
+    background:var(--hot-soft);color:var(--hot);
+    border-radius:2px;padding:2px 5px;margin-left:8px;
+    vertical-align:2px;text-decoration:none;display:inline-block;
+  }
+
+  /* extras */
+  .extras{margin-top:64px;padding-top:8px;border-top:1px solid var(--line)}
+  .extras > h2{
+    font-family:"Noto Serif KR",Georgia,serif;font-size:23px;font-weight:700;
+    margin:34px 0 10px;letter-spacing:-.015em;line-height:1.4;
+  }
+  .extras > p{max-width:62ch;color:var(--ink-2);margin:0 0 26px}
+  .idea{
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;
+    padding:17px 0;border-top:1px solid var(--line-soft);
+  }
+  .idea:last-child{border-bottom:1px solid var(--line-soft)}
+  .idea-n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;color:var(--hot);padding-top:5px;font-variant-numeric:tabular-nums}
+  .idea h4{margin:0 0 4px;font-size:16px;font-weight:600;line-height:1.5;letter-spacing:-.005em}
+  .idea p{margin:0;font-size:14.5px;color:var(--ink-2);line-height:1.65}
+
+  .rules{
+    background:var(--surface);border:1px solid var(--line);border-radius:3px;
+    padding:20px 22px;margin:0 0 42px;box-shadow:var(--shadow);
+  }
+  .rules h2{font-size:14px;font-weight:600;margin:0 0 10px;letter-spacing:-.005em}
+  .rules ul{margin:0;padding-left:0;list-style:none}
+  .rules li{position:relative;padding-left:17px;margin-bottom:6px;font-size:14.5px;color:var(--ink-2)}
+  .rules li:last-child{margin-bottom:0}
+  .rules li::before{content:"";position:absolute;left:0;top:.75em;width:8px;height:0;border-top:1.5px solid var(--accent)}
+
+  .note{margin-top:44px;font-size:13.5px;color:var(--muted);max-width:62ch}
+  a{color:var(--accent);text-underline-offset:3px}
+  a:focus-visible{outline:2px solid var(--hot);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">토목·구조용 콘크리트 2차제품 / 하루 1과제</p>
+    <h1>60일, 하루에 하나씩</h1>
+    <p class="lede">90일 전략을 주 5일 × 12주 = 60개의 과제로 쪼갰습니다. 하나에 30~90분. 순서대로만 하면 됩니다. 체크는 저장되고 팀 전체가 같은 진도를 봅니다.</p>
+  </header>
+
+  <div class="progress">
+    <div class="progress-row">
+      <div class="bar"><span id="bar-fill"></span></div>
+      <div class="count"><b id="cnt-done">0</b> / 60 완료</div>
+      <div class="sync mono" id="sync">저장 준비</div>
+    </div>
+  </div>
+
+  <div class="nextup" id="nextup" hidden>
+    <p class="label">오늘 할 것</p>
+    <h2 id="nextup-title"></h2>
+    <p id="nextup-goal"></p>
+  </div>
+
+  <div class="rules">
+    <h2>운영 규칙 네 가지</h2>
+    <ul>
+      <li>과제는 <strong>순서대로</strong>. 앞의 자료가 뒤의 실행 재료입니다.</li>
+      <li>하루 하나만. 두 개 하고 싶은 날이 있어도 하나로 끝내야 60일을 갑니다.</li>
+      <li>못 한 날은 건너뛰지 말고 <strong>다음 날로 밀기</strong>. 순서가 곧 설계입니다.</li>
+      <li>완료 기준을 채웠을 때만 체크. "봤다"는 완료가 아닙니다.</li>
+    </ul>
+  </div>
+
+  <div id="weeks"></div>
+
+  <section class="extras">
+    <h2>추가로 더 할 수 있는 것 — 레버 10개</h2>
+    <p>60일 표에 이미 다섯 개(운송기사 제보제, 인접업체 정보동맹, 재고 공개, 공장 견학, 소장 이력 DB)를 넣어 두었습니다. 아래는 그 다음으로 효과가 큰 열 개입니다. 여력이 생기는 순서대로 붙이십시오.</p>
+
+    <div class="idea"><div class="idea-n">01</div><div>
+      <h4>하자 대응 약속을 문서로 만들어 견적서에 첨부</h4>
+      <p>"하자 접수 24시간 내 현장 도착" 같은 원칙을 A4 한 장으로 문서화해 모든 견적서 뒤에 붙입니다. 현장소장이 실제로 두려워하는 건 가격이 아니라 공정 지연입니다. 가격 협상을 품질 협상으로 바꾸는 가장 싼 방법입니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">02</div><div>
+      <h4>무료 수량산출 서비스</h4>
+      <p>"도면 주시면 수량 뽑아 드립니다." 현장 적산 담당의 일을 대신 해주는 대신, 산출이 <strong>우리 규격 기준</strong>으로 이뤄집니다. 스펙인과 영업이 동시에 되는 몇 안 되는 서비스입니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">03</div><div>
+      <h4>환경성적표지(EPD)·녹색제품 인증</h4>
+      <p>공공 발주에는 녹색제품 의무구매와 가점이 걸려 있습니다. 순환골재 사용 비율, 탄소배출량을 인증으로 만들면 <strong>감성 소구가 아니라 실제 낙찰 점수</strong>가 됩니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">04</div><div>
+      <h4>비수기 사전 예약 캠페인</h4>
+      <p>동절기에는 타설이 줄어 가동률이 떨어집니다. 11월에 "내년 3월 납품 선주문 할인"을 돌리면 비수기 생산라인과 현금흐름을 동시에 방어합니다. 할인은 손실이 아니라 가동률 유지 비용입니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">05</div><div>
+      <h4>결제조건을 상품으로 명시</h4>
+      <p>어음 90일과 현금은 완전히 다른 거래입니다. "현금결제 시 O% 할인"을 단가표에 공식화하면 우량 거래처가 자동으로 걸러지고, 단가를 깎지 않고도 총액 협상이 가능해집니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">06</div><div>
+      <h4>제품 축소 모형(미니어처) 샘플</h4>
+      <p>옹벽블록·맨홀 축소 모형을 설계사무소와 발주처 담당자 책상에 놓습니다. 카탈로그는 서랍에 들어가지만 모형은 회의 때마다 눈에 들어옵니다. 제작비 대비 노출 시간이 압도적입니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">07</div><div>
+      <h4>지역 건설신문·협회보 노출</h4>
+      <p>전국 매체는 낭비지만 지역 건설신문과 건설협회보는 <strong>발주처 공무원이 실제로 읽습니다</strong>. 광고보다 납품 사례 기사 형태가 낫고, 단가도 낮습니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">08</div><div>
+      <h4>현장소장 한 줄 후기 + 준공 사진</h4>
+      <p>납품이 끝난 현장에서 "납기 안 밀렸다" 한 줄과 사진 한 장을 받아 둡니다. B2B에도 레퍼런스는 먹힙니다. 다음 견적서에 붙는 순간 우리 주장이 남의 증언이 됩니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">09</div><div>
+      <h4>폐콘크리트·잔재 회수 서비스</h4>
+      <p>현장의 골칫거리를 대신 처리해 주는 것은 그 자체로 진입 명분입니다. 회수한 골재를 순환골재로 되돌리면 3번 인증과도 연결됩니다.</p></div></div>
+
+    <div class="idea"><div class="idea-n">10</div><div>
+      <h4>전 직원 정보 제보 보상</h4>
+      <p>운송기사만이 아니라 생산·사무 직원까지. 지인·가족이 아는 현장 정보로 수주가 되면 보상합니다. 영업사원 두 명을 뽑는 것보다 싸고 빠릅니다.</p></div></div>
+
+    <p class="note">이 표는 <a href="https://claude.ai/code/artifact/8fe52ba5-afce-4b46-8103-0ae5fab8570e">콘크리트 2차제품 수주 전략</a>의 실행 버전입니다. 왜 이 순서인지 막히면 전략 문서를 보십시오.</p>
+  </section>
+</div>
+
+<script id="app-state" type="application/json">{"v":1,"done":{}}</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var WEEKS = [
+    {t:"현재 위치 진단", d:"우리가 어디에 서 있는지 숫자로 확인한다", tasks:[
+      {n:1,k:0,title:"물류 반경 지도 만들기",goal:"공장 기준 30·60·100km 원을 그리고 거리 구간별 운반단가를 계산한다. <b>완료: 거리별 운반비 표 1장</b>",m:"60분"},
+      {n:2,k:0,title:"최근 12개월 납품 실적 시트화",goal:"현장명·발주처·시공사·품목·수량·금액·거리 컬럼으로 전부 옮긴다. <b>완료: 한 장의 시트</b>",m:"90분"},
+      {n:3,k:0,title:"거래처 파레토 분석",goal:"상위 20% 거래처가 매출의 몇 %인지 계산한다. <b>완료: 상위 10곳 이름과 비중</b>",m:"30분"},
+      {n:4,k:0,title:"이탈 거래처 색출",goal:"재작년엔 거래가 있었는데 작년에 없는 곳을 뽑는다. <b>완료: 이탈 리스트 + 마지막 거래일</b>",m:"30분"},
+      {n:5,k:0,title:"품목별 실제 마진 계산",goal:"운반비와 불량률까지 반영한 진짜 마진. 많은 회사가 이 숫자를 모릅니다. <b>완료: 품목별 마진 순위표</b>",m:"90분"}
+    ]},
+    {t:"고객 지도 그리기", d:"반경 안에 누가 있는지 전수로 파악한다", tasks:[
+      {n:6,k:0,title:"자재상·대리점 전수 리스트업",goal:"반경 내 건자재상을 지도앱·업종검색으로 빠짐없이. <b>완료: 상호·주소·전화 30곳 이상</b>",m:"90분"},
+      {n:7,k:0,title:"거래중 / 휴면 / 미거래 3분류",goal:"리스트를 색으로 구분한다. 휴면과 미거래 개수가 곧 즉시 매출의 크기. <b>완료: 3분류 완료</b>",m:"30분"},
+      {n:8,k:0,title:"전문건설업체 리스트업",goal:"토공·상하수도·조경 업체. 원도급사보다 실제 자재 결정권이 여기 있는 경우가 많습니다. <b>완료: 20곳 이상</b>",m:"60분"},
+      {n:9,k:0,title:"설계사무소·엔지니어링사 리스트업",goal:"반경 내 사무소 + 발주처 용역을 수행한 곳. <b>완료: 10곳 이상</b>",m:"60분"},
+      {n:10,k:0,title:"발주기관 담당부서 정리",goal:"시·군 건설과, 상하수도사업소, 도로관리사업소, 공사 지역본부. <b>완료: 부서·담당·직통번호</b>",m:"60분"}
+    ]},
+    {t:"현장 레이더 세팅", d:"착공 전에 현장을 아는 구조를 만든다", tasks:[
+      {n:11,k:0,title:"나라장터 알림 설정",goal:"관심 지역·업종·금액 조건으로 입찰공고 알림을 건다. <b>완료: 알림 메일 수신 확인</b>",m:"30분"},
+      {n:12,k:0,title:"KISCON 건설공사대장 조회 익히기",goal:"조회 방법을 익히고 반경 내 진행 현장을 뽑아 본다. <b>완료: 현장 10건 확보</b>",m:"60분"},
+      {n:13,k:0,title:"발주기관 연간 발주계획 수집",goal:"D10에서 정리한 기관 홈페이지에서 올해 사업·발주계획을 내려받는다. <b>완료: PDF 5개</b>",m:"60분"},
+      {n:14,k:0,title:"현장 레이더 시트 설계",goal:"현장명·발주처·시공사·금액·착공예정·예상품목·수량·접촉상태 등 컬럼 확정, D-30 알림 수식. <b>완료: 빈 양식</b>",m:"60분"},
+      {n:15,k:1,title:"최근 3개월 낙찰 현장 전량 입력",goal:"그중 아직 접촉도 못 한 현장이 몇 개인지 센다. 지금 놓치고 있는 매출이 숫자로 나옵니다. <b>완료: 미접촉 현장 수 확인</b>",m:"90분"}
+    ]},
+    {t:"자료 무장", d:"담당자가 결재에 올릴 자료를 우리가 대신 만들어 준다", tasks:[
+      {n:16,k:0,title:"인증·성적서 유효기간 전수 점검",goal:"KS인증, 직접생산확인증명, 시험성적서. <b>완료: 만료 임박 목록과 갱신 일정</b>",m:"30분"},
+      {n:17,k:0,title:"카탈로그 PDF 최신화",goal:"규격·중량·허용오차·차량당 적재수량까지. 적재수량은 현장이 물류를 계산하는 근거입니다. <b>완료: 최신 PDF</b>",m:"90분"},
+      {n:18,k:0,title:"납품실적 레퍼런스 1장",goal:"대표 현장 20개를 발주처·품목·수량과 함께. <b>완료: A4 1장</b>",m:"60분"},
+      {n:19,k:0,title:"표준상세도 DWG 정리",goal:"설계사무소 배포용으로 품목별 상세도를 폴더링. <b>완료: 품목별 DWG 폴더</b>",m:"90분"},
+      {n:20,k:0,title:"자료 폴더 공유 링크 생성",goal:"D16~19를 한 폴더로 묶어 링크 하나로. 영업이 통화 중에 카톡으로 즉시 보낼 수 있어야 합니다. <b>완료: 링크 1개</b>",m:"30분"}
+    ]},
+    {t:"휴면 되살리기", d:"신규 개척보다 전환율이 3~5배 높은 구간", tasks:[
+      {n:21,k:1,title:"통화 스크립트 작성 + 첫 3곳",goal:"팔지 말고 <b>왜 끊겼는지</b>를 묻는 스크립트. <b>완료: 스크립트 1장 + 통화 3건</b>",m:"60분"},
+      {n:22,k:0,title:"휴면 자재상 3곳 전화",goal:"사유를 그대로 받아 적는다. 변명하지 않는다. <b>완료: 통화 3건, 사유 기록</b>",m:"45분"},
+      {n:23,k:0,title:"휴면 자재상 3곳 전화",goal:"<b>완료: 통화 3건, 사유 기록</b>",m:"45분"},
+      {n:24,k:0,title:"휴면 자재상 3곳 전화",goal:"<b>완료: 통화 3건, 사유 기록</b>",m:"45분"},
+      {n:25,k:0,title:"이탈 사유 유형화",goal:"12건의 사유를 5가지 유형으로 묶고 유형별 대응책을 한 줄씩. <b>완료: 사유 5유형 + 대응 5줄</b>",m:"45분"}
+    ]},
+    {t:"대리점 무장", d:"대리점이 팔기 쉬워야 판다", tasks:[
+      {n:26,k:0,title:"대리점 판매 키트 구성",goal:"단가표·견적서 양식·카탈로그·성적서·시공사진·샘플을 한 세트로. <b>완료: 키트 1세트</b>",m:"60분"},
+      {n:27,k:1,title:"인센티브 3층 구조 숫자 확정",goal:"① 분기 누적 볼륨 리베이트 ② 현장 정보 제보 보상 ③ 현금결제 할인. 각각 몇 %인지 확정. <b>완료: 요율표 1장</b>",m:"60분"},
+      {n:28,k:0,title:"상위 대리점 3곳 방문·키트 전달",goal:"전달만 하지 말고 요율표를 그 자리에서 설명한다. <b>완료: 방문 3곳</b>",m:"90분"},
+      {n:29,k:0,title:"대리점 정보 공유 채널 개설",goal:"카톡 단톡방. 정보를 <b>주는</b> 쪽이 관계의 갑이 됩니다. <b>완료: 채널 개설, 초대 완료</b>",m:"30분"},
+      {n:30,k:0,title:"첫 현장 정보 5건 공유",goal:"레이더 시트에서 반경 내 신규 낙찰 현장 5건을 골라 발송. <b>완료: 발송 1건</b>",m:"30분"}
+    ]},
+    {t:"디지털 최소 세트", d:"담당자의 첫 행동은 네이버 검색이다", tasks:[
+      {n:31,k:0,title:"검색 순위 실측",goal:"'지역명+제품명' 키워드 5개를 직접 검색해 우리 순위를 스크린샷으로 남긴다. <b>완료: 키워드 5개 순위 기록</b>",m:"30분"},
+      {n:32,k:0,title:"네이버 플레이스 등록·정비",goal:"공장 위치·전화·영업시간·사진 10장. 반경 검색에 잡히는 기본기. <b>완료: 등록 또는 정보 갱신</b>",m:"45분"},
+      {n:33,k:1,title:"홈페이지 첫 화면 개편안",goal:"회사 소개를 내리고 <b>자료 다운로드 4버튼 + 견적문의 폼</b>을 올린다. <b>완료: 개편안 스케치 1장</b>",m:"60분"},
+      {n:34,k:0,title:"카카오톡 채널 개설",goal:"견적문의 창구. 전화보다 도면·수량표 전달이 쉽고 기록이 남습니다. <b>완료: 채널 + 자동응답</b>",m:"45분"},
+      {n:35,k:0,title:"파워링크 세팅",goal:"좁은 키워드 10개, 일예산 1.5만원으로 시작. 넓은 키워드는 절대 넣지 않는다. <b>완료: 광고 집행 시작</b>",m:"60분"}
+    ]},
+    {t:"콘텐츠 만들기", d:"현장소장은 성능이 아니라 시공 난이도를 본다", tasks:[
+      {n:36,k:0,title:"공장 촬영",goal:"양생장·시험실·야적장·출하 장면. 규모와 품질관리가 보이면 그 자체가 신뢰. <b>완료: 사진 30장</b>",m:"90분"},
+      {n:37,k:0,title:"시공 현장 촬영 협조 요청",goal:"거래처 한 곳에 부탁해 촬영 일정을 잡는다. <b>완료: 촬영 일정 확정</b>",m:"30분"},
+      {n:38,k:0,title:"시공 영상 1편 편집",goal:"3분, 자막 포함. 카탈로그 열 장보다 강력합니다. <b>완료: 영상 1편 업로드</b>",m:"90분"},
+      {n:39,k:0,title:"시공 사례 글 1건 게시",goal:"현장명·규격·수량·공기·특이사항. 검색에 걸리는 자산이 됩니다. <b>완료: 게시 1건</b>",m:"60분"},
+      {n:40,k:0,title:"제품 부착용 QR 스티커 제작",goal:"시공법 영상과 문의처로 연결. 현장에 놓인 제품이 계속 우리를 광고합니다. <b>완료: 시안 확정</b>",m:"45분"}
+    ]},
+    {t:"스펙인 착수", d:"결과가 6~18개월 뒤에 나오므로 지금 시작한다", tasks:[
+      {n:41,k:0,title:"인증 후보 품목 1개 선정",goal:"특허·신기술·성능인증 가능성이 가장 높은 품목 하나. <b>완료: 품목 1개 확정</b>",m:"45분"},
+      {n:42,k:1,title:"성능인증·직접생산확인 요건 확인",goal:"신청 요건과 필요 서류, 예상 기간·비용을 목록화. <b>완료: 서류 목록 + 일정표</b>",m:"90분"},
+      {n:43,k:0,title:"설계사무소 발송 패키지 준비",goal:"표준상세도 DWG + 구조계산서 + 인사 메일 초안. <b>완료: 발송 준비 완료</b>",m:"60분"},
+      {n:44,k:0,title:"설계사무소 2곳 방문",goal:"영업하지 말고 도면만 두고 온다. 다음 설계 때 꺼내집니다. <b>완료: 방문 2곳</b>",m:"90분"},
+      {n:45,k:0,title:"발주처 기술설명회 기획안",goal:"제품 소개가 아니라 <b>하자 사례와 예방</b> 주제로. 그래야 자리가 잡힙니다. <b>완료: 기획안 1장</b>",m:"60분"}
+    ]},
+    {t:"객단가 올리기", d:"이미 수주한 현장에서 매출을 키우는 가장 싼 방법", tasks:[
+      {n:46,k:0,title:"현장 동반 품목 전량 나열",goal:"우리 현장에 같이 들어가는 품목을 전부 적고, 우리가 못 파는 것에 표시. <b>완료: 누락 품목 목록</b>",m:"45분"},
+      {n:47,k:1,title:"현장 단위 패키지 견적서 양식 제작",goal:"흄관·맨홀·이음재·받침을 한 장에. 현장은 발주처를 줄이고 싶어 합니다. <b>완료: 양식 1개</b>",m:"60분"},
+      {n:48,k:0,title:"혼적 배송 절감액 계산",goal:"분리 배송 대비 하차 인원·크레인·공정 지연 절감을 금액으로. <b>완료: 절감액 근거 1장</b>",m:"60분"},
+      {n:49,k:0,title:"최근 수주 5현장 역분석",goal:"우리가 못 넣은 품목이 금액으로 얼마였는지 계산. 이게 잃고 있던 매출입니다. <b>완료: 5현장 손실 금액</b>",m:"60분"},
+      {n:50,k:0,title:"긴급 납품 옵션 상품화",goal:"24시간 내 출고에 할증을 붙인다. 급한 현장은 가격보다 속도를 삽니다. <b>완료: 할증 단가 확정</b>",m:"45분"}
+    ]},
+    {t:"새 채널 열기", d:"경쟁사가 아직 안 하는 것들", tasks:[
+      {n:51,k:1,title:"운송기사 정보 제보 보상제",goal:"기사는 매일 여러 현장을 돕니다. 회사에서 가장 좋은 정보원인데 아무도 안 씁니다. <b>완료: 보상 기준 공지</b>",m:"45분"},
+      {n:52,k:0,title:"인접 업체 2곳에 정보 동맹 제안",goal:"레미콘·철근상·장비임대. 같은 현장에 다른 걸 파는 곳은 경쟁자가 아니라 정보원. <b>완료: 제안 2건</b>",m:"60분"},
+      {n:53,k:0,title:"야적장 재고 주간 공개 시작",goal:"'지금 무엇이 몇 개 있는지'를 대리점·거래처에 매주 발송. 즉시 출고는 못 따라오는 차별화입니다. <b>완료: 1회 발송</b>",m:"45분"},
+      {n:54,k:0,title:"공장 견학 프로그램 기획",goal:"발주처·설계사·시공사 초대용. 양생장과 시험실을 보면 신뢰가 단번에 생깁니다. <b>완료: 동선·소요시간 1장</b>",m:"60분"},
+      {n:55,k:0,title:"현장소장 이력 DB 착수",goal:"소장은 2~3년마다 현장을 옮기고, 신뢰는 따라옵니다. 이름·현장·이동 예정을 기록. <b>완료: DB 양식 + 20명 입력</b>",m:"60분"}
+    ]},
+    {t:"측정하고 고정하기", d:"루틴으로 굳히지 않으면 60일 뒤 원위치한다", tasks:[
+      {n:56,k:0,title:"KPI 시트 제작",goal:"레이더 등록 현장 수, D+3 접촉률, 견적 건수, 수주율, 현장당 품목 수, 거래 자재상 수, 설계 반영 건수, 인바운드 문의. <b>완료: 8지표 시트</b>",m:"60분"},
+      {n:57,k:0,title:"60일 숫자 집계",goal:"시작 시점과 지금을 나란히 놓는다. <b>완료: 비교표 1장</b>",m:"60분"},
+      {n:58,k:0,title:"안 움직인 지표 3개 원인 분석",goal:"원인을 지표가 아니라 <b>루틴</b>에서 찾는다. 안 한 것인지 못 한 것인지. <b>완료: 원인 3줄</b>",m:"45분"},
+      {n:59,k:1,title:"주간 루틴 확정",goal:"월요일 현장 레이더, 수요일 휴면·신규 콜, 금요일 KPI 갱신. 담당자 이름을 붙인다. <b>완료: 루틴표 게시</b>",m:"45분"},
+      {n:60,k:0,title:"전 직원에게 1장으로 공유",goal:"무엇이 어떻게 바뀌었는지. 공유하지 않으면 담당자 한 명의 취미로 끝납니다. <b>완료: 공유 완료</b>",m:"45분"}
+    ]}
+  ];
+
+  var TOTAL = 60;
+  var stateEl = document.getElementById("app-state");
+  var state;
+  try { state = JSON.parse(stateEl.textContent) || {}; } catch(e){ state = {}; }
+  if(!state.done || typeof state.done !== "object") state.done = {};
+
+  var LS_KEY = "concrete60:v1";
+  var api = null;
+  var pending = null;
+  var timer = null;
+  var PRISTINE = "<!doctype html>\n" + document.documentElement.outerHTML;
+
+  var syncEl = document.getElementById("sync");
+  function setSync(text, st){
+    syncEl.textContent = text;
+    if(st) syncEl.setAttribute("data-state", st); else syncEl.removeAttribute("data-state");
+  }
+
+  /* ---- local fallback ---- */
+  function loadLocal(){
+    try{
+      var raw = localStorage.getItem(LS_KEY);
+      if(raw){ var o = JSON.parse(raw); if(o && o.done) return o.done; }
+    }catch(e){}
+    return null;
+  }
+  function saveLocal(){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify({done:state.done})); }catch(e){}
+  }
+
+  /* ---- render ---- */
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+  var weeksEl = document.getElementById("weeks");
+  function render(){
+    var html = "";
+    for(var w=0; w<WEEKS.length; w++){
+      var wk = WEEKS[w];
+      var wdone = 0;
+      for(var i=0;i<wk.tasks.length;i++){ if(state.done[wk.tasks[i].n]) wdone++; }
+      html += '<section class="week">';
+      html += '<div class="week-head"><span class="week-n">WEEK ' + (w+1<10?"0":"") + (w+1) + '</span>';
+      html += '<h3>' + esc(wk.t) + '</h3>';
+      html += '<span class="week-prog">' + wdone + '/' + wk.tasks.length + '</span></div>';
+      for(var j=0;j<wk.tasks.length;j++){
+        var t = wk.tasks[j];
+        var on = !!state.done[t.n];
+        html += '<label class="task' + (on?" is-done":"") + (t.k?" is-key":"") + '">';
+        html += '<input type="checkbox" id="t' + t.n + '" data-n="' + t.n + '"' + (on?" checked":"") + '>';
+        html += '<span class="d-n">D' + (t.n<10?"0":"") + t.n + '</span>';
+        html += '<span class="d-body"><span class="d-title">' + esc(t.title) + '</span>';
+        html += '<p class="d-goal">' + t.goal + '</p>';
+        html += '<span class="d-meta">' + esc(t.m) + '</span></span></label>';
+      }
+      html += '</section>';
+    }
+    weeksEl.innerHTML = html;
+    updateHeader();
+  }
+
+  function updateHeader(){
+    var n = 0;
+    for(var k in state.done){ if(state.done[k]) n++; }
+    document.getElementById("cnt-done").textContent = n;
+    document.getElementById("bar-fill").style.width = (n/TOTAL*100) + "%";
+
+    var next = null;
+    outer: for(var w=0; w<WEEKS.length; w++){
+      for(var j=0;j<WEEKS[w].tasks.length;j++){
+        var t = WEEKS[w].tasks[j];
+        if(!state.done[t.n]){ next = t; break outer; }
+      }
+    }
+    var card = document.getElementById("nextup");
+    if(next){
+      card.hidden = false;
+      document.getElementById("nextup-title").textContent = "D" + (next.n<10?"0":"") + next.n + ". " + next.title;
+      document.getElementById("nextup-goal").innerHTML = next.goal;
+    } else {
+      card.hidden = false;
+      document.getElementById("nextup-title").textContent = "60일 완주";
+      document.getElementById("nextup-goal").textContent = "이제 D59의 주간 루틴만 계속 돌리면 됩니다.";
+    }
+  }
+
+  /* ---- persistence ---- */
+  function buildDoc(){
+    var payload = '<script id="app-state" type="application/json">' +
+      JSON.stringify({v:1, done:state.done, updated:new Date().toISOString()}) +
+      '<' + '/script>';
+    return PRISTINE.replace(
+      /<script id="app-state" type="application\/json">[\s\S]*?<\/script>/,
+      function(){ return payload; }
+    );
+  }
+
+  function schedulePublish(){
+    saveLocal();
+    if(!api){ setSync("이 기기에만 저장됨"); return; }
+    setSync("저장 중…", "saving");
+    if(timer) clearTimeout(timer);
+    timer = setTimeout(function(){
+      timer = null;
+      api.publish(buildDoc()).then(function(){
+        setSync("저장됨");
+      }).catch(function(err){
+        if(err && err.code === "conflict") return;      /* 다른 사람이 먼저 저장 — 곧 갱신됨 */
+        setSync("이 기기에만 저장됨");
+        api = null;
+      });
+    }, 1800);
+  }
+
+  weeksEl.addEventListener("change", function(ev){
+    var el = ev.target;
+    if(!el || el.type !== "checkbox") return;
+    var n = el.getAttribute("data-n");
+    if(el.checked) state.done[n] = true; else delete state.done[n];
+    var row = el.closest(".task");
+    if(row) row.classList.toggle("is-done", el.checked);
+    var wrapSec = row && row.closest(".week");
+    if(wrapSec){
+      var boxes = wrapSec.querySelectorAll("input[type=checkbox]");
+      var c = 0;
+      for(var i=0;i<boxes.length;i++){ if(boxes[i].checked) c++; }
+      wrapSec.querySelector(".week-prog").textContent = c + "/" + boxes.length;
+    }
+    updateHeader();
+    schedulePublish();
+  });
+
+  /* ---- boot ---- */
+  render();
+
+  if(window.claude && typeof window.claude.use === "function"){
+    setSync("연결 중…");
+    window.claude.use("artifact").then(function(a){
+      if(a && typeof a.publish === "function"){
+        api = a;
+        setSync("팀 공유 저장");
+      } else {
+        var loc = loadLocal();
+        if(loc && Object.keys(loc).length && !Object.keys(state.done).length){
+          state.done = loc; render();
+        }
+        setSync("이 기기에만 저장됨");
+      }
+    }).catch(function(){ setSync("이 기기에만 저장됨"); });
+  } else {
+    setSync("이 기기에만 저장됨");
+  }
+})();
+</script>
