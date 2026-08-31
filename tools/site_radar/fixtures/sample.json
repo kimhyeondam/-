@@ -3,9 +3,9 @@
     {
       "bidNtceNo": "R26BK000001",
       "bidNtceOrd": "000",
-      "bidNtceNm": "진영읍 하수도정비공사",
-      "dminsttNm": "경상남도 김해시",
-      "cnstrtsiteRgnNm": "경상남도 김해시",
+      "bidNtceNm": "삼향읍 하수관거 정비공사",
+      "dminsttNm": "전라남도 무안군",
+      "cnstrtsiteRgnNm": "전라남도 무안군",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "1450000000",
@@ -13,15 +13,15 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "88540000",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "055-330-0000",
+      "ntceInsttOfclTelNo": "061-270-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000001"
     },
     {
       "bidNtceNo": "R26BK000002",
       "bidNtceOrd": "000",
-      "bidNtceNm": "의창구 도로 확포장공사",
-      "dminsttNm": "경상남도 창원시",
-      "cnstrtsiteRgnNm": "경상남도 창원시",
+      "bidNtceNm": "첨단지구 도로개설공사",
+      "dminsttNm": "광주광역시 광산구",
+      "cnstrtsiteRgnNm": "광주광역시 북구",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "2300000000",
@@ -29,7 +29,7 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "310000000",
       "govcnstrtnGovsplyMtrlAmt": "20000000",
       "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "055-330-0000",
+      "ntceInsttOfclTelNo": "061-270-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000002"
     },
     {
@@ -45,15 +45,15 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "150000000",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "055-330-0000",
+      "ntceInsttOfclTelNo": "061-270-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000003"
     },
     {
       "bidNtceNo": "R26BK000004",
       "bidNtceOrd": "000",
-      "bidNtceNm": "김해시 청사 전기설비 개선공사",
-      "dminsttNm": "경상남도 김해시",
-      "cnstrtsiteRgnNm": "경상남도 김해시",
+      "bidNtceNm": "목포시 청사 전기설비 개선공사",
+      "dminsttNm": "전라남도 목포시",
+      "cnstrtsiteRgnNm": "전라남도 목포시",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "900000000",
@@ -61,15 +61,15 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "40000000",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "055-330-0000",
+      "ntceInsttOfclTelNo": "061-270-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000004"
     },
     {
       "bidNtceNo": "R26BK000005",
       "bidNtceOrd": "000",
       "bidNtceNm": "마을안길 측구정비공사",
-      "dminsttNm": "경상남도 밀양시",
-      "cnstrtsiteRgnNm": "경상남도 밀양시",
+      "dminsttNm": "전라남도 진도군",
+      "cnstrtsiteRgnNm": "전라남도 진도군",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "800000000",
@@ -77,13 +77,13 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "0",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "055-330-0000",
+      "ntceInsttOfclTelNo": "061-270-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000005"
     },
     {
       "bidNtceNo": "R26BK000006",
       "bidNtceOrd": "000",
-      "bidNtceNm": "김해 진례지구 하천 호안정비공사",
+      "bidNtceNm": "나주 혁신지구 하천 호안정비공사",
       "dminsttNm": "한국토지주택공사",
       "cnstrtsiteRgnNm": "",
       "bidNtceDt": "2026-08-28 09:00:00",
@@ -93,18 +93,9 @@
       "contrctrcnstrtnGovsplyMtrlAmt": "520000000",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "이담당",
-      "ntceInsttOfclTelNo": "055-922-0000",
+      "ntceInsttOfclTelNo": "061-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000006"
     }
   ],
-  "scsbid": {
-    "R26BK000001-000": {
-      "contractor": "(주)대성토건",
-      "contractor_tel": "055-000-0000"
-    },
-    "R26BK000006-000": {
-      "contractor": "(주)남부건설",
-      "contractor_tel": ""
-    }
-  }
+  "scsbid": {}
 }

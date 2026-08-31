@@ -35,6 +35,11 @@ def parse_args(argv=None):
     p.add_argument("--lookback-days", type=int, help="config 값을 덮어쓴다")
     p.add_argument("--regions", nargs="+", help="config 의 target_regions 를 덮어쓴다")
     p.add_argument(
+        "--list-regions",
+        action="store_true",
+        help="필터 없이, 최근 공고에 실제로 찍힌 공사현장 지역명을 세어서 보여준다",
+    )
+    p.add_argument(
         "--fixture",
         help="네트워크 없이 저장된 응답으로 파이프라인만 돌린다 (자체 점검용)",
     )
@@ -80,9 +85,12 @@ def main(argv=None) -> int:
     days = args.lookback_days or config.get("lookback_days") or 7
 
     os.makedirs(args.data_dir, exist_ok=True)
-    print(f"✅ 설정 로드 — 대상 지역 {config['target_regions']}, 최근 {days}일")
+    regions = config["target_regions"]
+    preview = ", ".join(regions[:4]) + (f" 외 {len(regions)-4}곳" if len(regions) > 4 else "")
+    print(f"✅ 설정 로드 — 대상 지역 {len(regions)}곳 ({preview}), 최근 {days}일")
 
     client = None
+    scsbid_ready = False
     if args.fixture:
         with open(args.fixture, encoding="utf-8") as fh:
             payload = json.load(fh)
@@ -91,15 +99,33 @@ def main(argv=None) -> int:
         print(f"✅ 픽스처 로드 — 원본 {len(raw_bids)}건 (네트워크 호출 없음)")
     else:
         try:
-            api.require_complete(spec, ["envelope", "bid", "scsbid"])
+            api.require_complete(spec, ["envelope", "bid"])
             api.service_key()
         except (api.SpecIncomplete, api.MissingCredential) as exc:
             print(f"\n중단: {exc}\n", file=sys.stderr)
             return 2
+        # 낙찰정보 스펙은 없어도 수집은 진행한다. 그 경우 낙찰시공사 열만 비워둔다.
+        try:
+            api.require_complete(spec, ["scsbid"])
+            scsbid_ready = True
+        except api.SpecIncomplete:
+            scsbid_ready = False
+            print("  ⚠ 낙찰정보 스펙(scsbid)이 비어 있어 낙찰시공사 열은 '미확인'으로 둡니다.")
         client = api.Client(spec)
         raw_bids = fetch_bids(client, spec, days)
         scsbid_map = None
         print(f"✅ 입찰공고 수집 — 원본 {len(raw_bids)}건")
+
+        if args.list_regions:
+            counts = collections.Counter(
+                (r.get(spec["bid"]["fields"]["region"]) or "(공란)").strip() for r in raw_bids
+            )
+            print(f"\n── 최근 {days}일 공사 공고에 실제로 찍힌 공사현장 지역명 ──")
+            print("   (config.yaml 의 target_regions 에 아래 표기를 그대로 쓰세요)\n")
+            for name, n in sorted(counts.items(), key=lambda kv: -kv[1]):
+                print(f"  {n:5d}건  {name}")
+            print(f"\n서로 다른 지역명 {len(counts)}종")
+            return 0
 
     fields = spec["bid"]["fields"]
     seen = pipeline.load_seen(args.data_dir)
@@ -117,9 +143,11 @@ def main(argv=None) -> int:
             hit = scsbid_map.get(key, {})
             row["낙찰시공사"] = hit.get("contractor", "개찰전")
             row["시공사연락처"] = hit.get("contractor_tel", "")
-        else:
+        elif scsbid_ready:
             name, tel = fetch_contractor(client, spec, pipeline.pick(record, fields, "bid_no"))
             row["낙찰시공사"], row["시공사연락처"] = name, tel
+        else:
+            row["낙찰시공사"] = "미확인"
         rows.append(row)
         new_keys.append(key or pipeline.row_fingerprint(row))
 
@@ -143,8 +171,12 @@ def main(argv=None) -> int:
     print(f"관급자재 합계   : {govsply_total:,}원")
     print(f"기존 중복 제외  : {skipped}건")
     print(f"API 실패        : {client.failures if client else 0}건")
-    for region in config["target_regions"]:
-        print(f"  {region}: {by_region.get(region, 0)}건")
+    hits = [(r, by_region[r]) for r in config["target_regions"] if by_region.get(r)]
+    for region, n in sorted(hits, key=lambda kv: -kv[1]):
+        print(f"  {region}: {n}건")
+    quiet = len(config["target_regions"]) - len(hits)
+    if quiet:
+        print(f"  (나머지 {quiet}곳 0건)")
     return 0
 
 
