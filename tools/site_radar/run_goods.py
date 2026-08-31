@@ -53,7 +53,7 @@ def fetch(client: api.Client, spec: dict, days: int) -> list[dict]:
         cfg["params"]["date_to"]: end.strftime(fmt),
     }
     # 물품 공고는 공사보다 훨씬 많다. 페이지 상한을 넉넉히 둔다.
-    return list(client.paged("thng", query, page_size=100, max_pages=400))
+    return list(client.paged("thng", query, page_size=500, max_pages=200))
 
 
 def main(argv=None) -> int:
@@ -81,6 +81,7 @@ def main(argv=None) -> int:
             print(f"\n중단: {exc}\n", file=sys.stderr)
             return 2
         client = api.Client(spec)
+        print(f"   물품 공고는 건수가 많습니다. {days}일이면 1~2분 걸립니다. 기다려 주세요.")
         raw = fetch(client, spec, days)
         print(f"✅ 물품 공고 수집 — 원본 {len(raw)}건")
 
@@ -163,4 +164,8 @@ def main(argv=None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print("\n  중단했습니다.")
+        raise SystemExit(130)

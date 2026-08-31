@@ -15,7 +15,7 @@ import requests
 import yaml
 
 TODO = "TODO"
-RATE_LIMIT_SECONDS = 1.0
+RATE_LIMIT_SECONDS = 0.4
 RETRY_BACKOFF = (2, 4, 8)
 
 
@@ -159,8 +159,13 @@ class Client:
         total = dig(payload, env["total_count_path"])
         return list(items), int(total or 0)
 
-    def paged(self, section: str, query: dict, page_size: int = 100, max_pages: int = 50):
-        """한 오퍼레이션을 끝까지 페이징하며 원본 레코드를 내보낸다."""
+    def paged(self, section: str, query: dict, page_size: int = 500,
+              max_pages: int = 200, progress_every: int = 5):
+        """한 오퍼레이션을 끝까지 페이징하며 원본 레코드를 내보낸다.
+
+        한 번에 크게 받는다. 페이지를 잘게 나누면 느릴 뿐 아니라
+        공공데이터포털 일일 트래픽도 그만큼 빨리 소진된다.
+        """
         cfg = self.spec[section]
         names = cfg["params"]
         url = f"{cfg['base_url'].rstrip('/')}/{cfg['operation'].lstrip('/')}"
@@ -181,5 +186,10 @@ class Client:
                 return
             yield from items
             seen += len(items)
+            if progress_every and page % progress_every == 0:
+                of = f" / {total:,}" if total else ""
+                print(f"     … {seen:,}{of}건 수집", flush=True)
             if total and seen >= total:
+                return
+            if len(items) < page_size:
                 return
