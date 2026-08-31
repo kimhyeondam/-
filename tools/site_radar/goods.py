@@ -44,8 +44,10 @@ def to_row(record: dict, field_map: dict, config: dict, require_items: bool = Tr
     # 세부품명·규격·구매대상목록까지 같이 훑는다.
     haystack = " ".join((title, item_name, item_spec, item_list))
 
+    # 제외어는 공고명만이 아니라 세부품명·규격까지 본다.
+    # '플라스틱계맨홀'처럼 제목이 아니라 품명에 재질이 적히는 경우가 있다.
     for banned in config.get("exclude_keywords") or []:
-        if banned in title:
+        if squash(banned) in squash(haystack):
             return None
 
     # 우리가 만드는 품목이 아니면 볼 이유가 없다. 이게 1차 관문이다.
