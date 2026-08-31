@@ -1,0 +1,3 @@
+# 수집 결과와 중복 색인은 커밋하지 않는다.
+radar_*.csv
+_seen_bids.json

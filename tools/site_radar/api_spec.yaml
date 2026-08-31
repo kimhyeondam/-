@@ -1,0 +1,55 @@
+# 나라장터 OpenAPI 스펙 — 값을 반드시 공식 문서에서 그대로 옮겨 적을 것.
+#
+#   입찰공고정보서비스: https://www.data.go.kr/data/15129394/openapi.do
+#   낙찰정보서비스:     https://www.data.go.kr/data/15129397/openapi.do
+#
+# 각 문서 페이지의 "요청 변수(Request Parameter)" / "출력 결과(Response Element)"
+# 표에 적힌 이름을 오타 없이 그대로 옮긴다. 추측해서 채우지 않는다.
+# TODO 가 하나라도 남아 있으면 run.py 는 실행을 거부한다.
+
+envelope:
+  # 응답 JSON에서 값을 꺼내는 경로. 점(.)으로 중첩을 표현한다.
+  items_path: TODO          # 예: response.body.items
+  total_count_path: TODO    # 예: response.body.totalCount
+  result_code_path: TODO    # 예: response.header.resultCode
+  result_ok_value: TODO     # 정상 응답일 때의 resultCode 값
+
+bid:                        # 입찰공고정보서비스 (공사)
+  base_url: TODO            # 문서의 "서비스 URL"
+  operation: TODO           # 공사 입찰공고 목록 오퍼레이션명
+  params:                   # 왼쪽은 고정 키, 오른쪽에 문서상 파라미터명을 적는다
+    service_key: TODO
+    page_no: TODO
+    num_of_rows: TODO
+    response_type: TODO     # 응답형식 파라미터명 (없으면 null)
+    date_from: TODO         # 공고일시 시작
+    date_to: TODO           # 공고일시 종료
+  extra_params: {}          # 문서상 추가 필수 파라미터가 있으면 {이름: 값}
+  date_format: TODO         # 예: "%Y%m%d%H%M"
+  max_range_days: 30        # 문서에 조회기간 상한이 있으면 그 값으로 바꾼다
+  fields:                   # 왼쪽은 고정 키, 오른쪽에 문서상 응답 항목명을 적는다
+    bid_no: TODO            # 공고번호 (중복 제거 기준)
+    bid_ord: null           # 공고차수 항목이 있으면 이름을, 없으면 null
+    title: TODO             # 공고명
+    agency: TODO            # 수요기관명
+    posted_at: TODO         # 공고일시
+    work_type: null         # 공사종류 항목이 있으면 이름을, 없으면 null
+    amount: null            # 추정가격/기초금액 항목이 있으면 이름을, 없으면 null
+    open_at: null           # 개찰일시 항목이 있으면 이름을, 없으면 null
+    region: null            # 지역제한 항목이 있으면 이름을, 없으면 null
+    url: null               # 공고 상세 URL 항목이 있으면 이름을, 없으면 null
+
+scsbid:                     # 낙찰정보서비스 (공사 개찰결과)
+  base_url: TODO
+  operation: TODO
+  params:
+    service_key: TODO
+    page_no: TODO
+    num_of_rows: TODO
+    response_type: TODO
+    bid_no: TODO            # 공고번호로 조회하는 파라미터명
+  extra_params: {}
+  fields:
+    bid_no: TODO
+    contractor: TODO        # 최종 낙찰업체명
+    contractor_tel: null    # 연락처 항목이 있으면 이름을, 없으면 null
