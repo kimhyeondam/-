@@ -98,7 +98,8 @@ def main(argv=None) -> int:
         print(f"\n서로 다른 품명 {len(counts)}종")
         return 0
 
-    seen = pipeline.load_seen(args.data_dir, mas.CSV_PATTERN, mas.SEEN_INDEX)
+    seen = pipeline.load_seen(args.data_dir, mas.CSV_PATTERN, mas.SEEN_INDEX,
+                              pipeline.MAS_KEYS)
     candidates, skipped = [], 0
     for record in raw:
         row = mas.to_row(record, fields, config)
@@ -106,23 +107,25 @@ def main(argv=None) -> int:
             continue
         no = mas.req_no(record, fields)
         key = f"{no}-{row['차수']}"
-        if key in seen:
+        mark = pipeline.fingerprint(row, pipeline.MAS_KEYS)
+        if key in seen or mark in seen:
             skipped += 1
             continue
-        row["_req"], row["_key"] = no, key
+        row["_req"], row["_key"], row["_mark"] = no, key, mark
         candidates.append(row)
 
     rows, collapsed = mas.collapse_by_req(candidates)
-    new_keys = {r["_key"] for r in rows if r["_key"]}
+    new_keys = {r["_key"] for r in rows if r["_key"]} | {r["_mark"] for r in rows}
     for row in rows:
         row.pop("_req", None)
         row.pop("_key", None)
+        row.pop("_mark", None)
 
     rows.sort(key=mas.amount_value, reverse=True)
     note = f", 변경차수 {collapsed}건 병합" if collapsed else ""
     print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외{note})")
 
-    out = os.path.join(args.data_dir, f"mas_{datetime.now():%Y-%m-%d}.csv")
+    out = os.path.join(args.data_dir, f"납품요구_{datetime.now():%Y-%m-%d}.csv")
     if rows:
         pipeline.write_csv(out, rows, mas.COLUMNS)
         pipeline.save_seen(args.data_dir, seen | new_keys, mas.SEEN_INDEX)

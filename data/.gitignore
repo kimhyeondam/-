@@ -1,3 +1,8 @@
 # 수집 결과와 중복 색인은 커밋하지 않는다.
+공사_*.csv
+물품_*.csv
+납품요구_*.csv
 radar_*.csv
-_seen_bids.json
+goods_*.csv
+mas_*.csv
+_seen_*.json

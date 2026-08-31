@@ -108,7 +108,8 @@ def main(argv=None) -> int:
         print(f"\n서로 다른 품명 {len(counts)}종")
         return 0
 
-    seen = pipeline.load_seen(args.data_dir, goods.CSV_PATTERN, goods.SEEN_INDEX)
+    seen = pipeline.load_seen(args.data_dir, goods.CSV_PATTERN, goods.SEEN_INDEX,
+                              pipeline.GOODS_KEYS)
 
     candidates, skipped = [], 0
     for record in raw:
@@ -116,16 +117,14 @@ def main(argv=None) -> int:
         if row is None:
             continue
         key = pipeline.bid_key(record, fields)
-        name = "goods:" + goods.name_key({
-            "지역(시군)": row["지역"], "발주처": row["수요기관"], "현장명": row["품목·공고명"],
-        })
+        name = pipeline.fingerprint(row, pipeline.GOODS_KEYS)
         if key in seen or name in seen:
             skipped += 1
             continue
         row["_key"], row["_name"] = key, name
         candidates.append(row)
 
-    # 같은 공고가 재공고로 다시 올라온 것을 접는다
+    # 같은 공고가 재공고로 다시 올라온 것을 접는다 (최신 공고일을 남긴다)
     best: dict[str, dict] = {}
     for row in candidates:
         prev = best.get(row["_name"])
@@ -143,7 +142,7 @@ def main(argv=None) -> int:
     note = f", 같은 공고 {collapsed}건 병합" if collapsed else ""
     print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외{note})")
 
-    out = os.path.join(args.data_dir, f"goods_{datetime.now():%Y-%m-%d}.csv")
+    out = os.path.join(args.data_dir, f"물품_{datetime.now():%Y-%m-%d}.csv")
     if rows:
         pipeline.write_csv(out, rows, goods.COLUMNS)
         pipeline.save_seen(args.data_dir, seen | new_keys, goods.SEEN_INDEX)

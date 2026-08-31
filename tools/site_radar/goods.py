@@ -10,7 +10,7 @@
 from __future__ import annotations
 
 from pipeline import (  # noqa: F401
-    format_amount, match_agency, match_region, name_key, normalize_date,
+    format_amount, match_agency, match_region, normalize_date,
     normalize_targets, parse_amount, pick, squash,
 )
 
@@ -20,7 +20,7 @@ COLUMNS = [
 ]
 
 SEEN_INDEX = "_seen_goods.json"
-CSV_PATTERN = "goods_*.csv"
+CSV_PATTERN = "물품_*.csv"
 
 
 def match_items(text: str, keywords) -> str:

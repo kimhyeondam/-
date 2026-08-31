@@ -192,35 +192,34 @@ def govsply_value(row: dict) -> int:
     return parse_amount(row.get("관급자재금액", "")) or 0
 
 
-def load_seen(data_dir: str, pattern: str = "radar_*.csv", index: str = SEEN_INDEX) -> set[str]:
-    """이전 실행에서 이미 시트에 넣은 공고번호."""
+# 중복 판정을 되짚을 때 시트에서 볼 열. 레이더마다 열 이름이 다르다.
+# 날짜는 넣지 않는다. 재공고·변경차수로 다시 올라온 같은 건은 날짜가
+# 달라지므로, 날짜를 넣으면 접어놓은 행이 다음 실행에 새 건으로 되살아난다.
+WORKS_KEYS = ("지역(시군)", "발주처", "현장명")
+GOODS_KEYS = ("지역", "수요기관", "품목·공고명")
+MAS_KEYS = ("지역", "수요기관", "납품요구명")
+
+
+def fingerprint(row: dict, columns=WORKS_KEYS) -> str:
+    """시트 한 행을 가리키는 열쇠. 공고번호 색인이 없어졌을 때 쓴다."""
+    return "|".join(str(row.get(c, "")) for c in columns)
+
+
+def load_seen(data_dir: str, pattern: str = "공사_*.csv", index: str = SEEN_INDEX,
+              key_columns=WORKS_KEYS) -> set[str]:
+    """이전 실행에서 이미 시트에 넣은 것들."""
     path = os.path.join(data_dir, index)
     if os.path.exists(path):
         with open(path, encoding="utf-8") as fh:
             return set(json.load(fh))
-    # 색인이 없어졌으면 기존 CSV의 (현장명, 발주처, 공고일)로 대체 판정한다.
+    # 색인이 없어졌으면 기존 CSV 를 읽어 되짚는다. 지우고 다시 돌려도
+    # 같은 행이 두 번 쌓이지 않아야 한다.
     fallback = set()
     for csv_path in sorted(glob.glob(os.path.join(data_dir, pattern))):
         with open(csv_path, encoding="utf-8-sig", newline="") as fh:
             for row in csv.DictReader(fh):
-                fallback.add(row_fingerprint(row))
+                fallback.add(fingerprint(row, key_columns))
     return fallback
-
-
-def row_fingerprint(row: dict) -> str:
-    return "|".join((row.get("현장명", ""), row.get("발주처", ""), row.get("공고일", "")))
-
-
-def name_key(row: dict) -> str:
-    """같은 현장인지 판정하는 열쇠.
-
-    한 현장이 재공고·정정공고로 여러 번 올라오면 공고번호가 매번 달라진다.
-    현장명만으로 묶으면 "마을안길 포장공사"처럼 흔한 이름이 다른 시군의
-    다른 공사까지 삼키므로, 지역과 발주처까지 함께 본다.
-    """
-    return "name:" + "|".join((
-        row.get("지역(시군)", ""), row.get("발주처", ""), row.get("현장명", ""),
-    ))
 
 
 def newest_first(row: dict) -> tuple:
@@ -228,11 +227,16 @@ def newest_first(row: dict) -> tuple:
     return (row.get("공고일", ""), govsply_value(row))
 
 
-def collapse_by_name(rows: list[dict]) -> tuple[list[dict], int]:
-    """같은 현장을 한 줄로 접는다. (남은 행, 접힌 건수)"""
+def collapse_by_name(rows: list[dict], columns=WORKS_KEYS) -> tuple[list[dict], int]:
+    """같은 건을 한 줄로 접는다. (남은 행, 접힌 건수)
+
+    한 건이 재공고·정정으로 여러 번 올라오면 번호가 매번 달라진다.
+    이름만으로 묶으면 '마을안길 포장공사'처럼 흔한 이름이 다른 시군의
+    다른 공사까지 삼키므로 지역과 발주처를 함께 본다.
+    """
     best: dict[str, dict] = {}
     for row in rows:
-        key = name_key(row)
+        key = fingerprint(row, columns)
         if key not in best or newest_first(row) > newest_first(best[key]):
             best[key] = row
     return list(best.values()), len(rows) - len(best)

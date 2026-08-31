@@ -18,7 +18,7 @@ COLUMNS = [
 ]
 
 SEEN_INDEX = "_seen_mas.json"
-CSV_PATTERN = "mas_*.csv"
+CSV_PATTERN = "납품요구_*.csv"
 
 
 def match_items(text: str, keywords) -> str:

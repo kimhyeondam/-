@@ -126,7 +126,8 @@ def main(argv=None) -> int:
             return 0
 
     fields = spec["bid"]["fields"]
-    seen = pipeline.load_seen(args.data_dir)
+    seen = pipeline.load_seen(args.data_dir, "공사_*.csv", pipeline.SEEN_INDEX,
+                              pipeline.WORKS_KEYS)
 
     # 1) 필터를 통과한 행을 모은다
     candidates, skipped = [], 0
@@ -135,8 +136,7 @@ def main(argv=None) -> int:
         if row is None:
             continue
         key = pipeline.bid_key(record, fields)
-        if (key in seen or pipeline.row_fingerprint(row) in seen
-                or pipeline.name_key(row) in seen):
+        if key in seen or pipeline.fingerprint(row, pipeline.WORKS_KEYS) in seen:
             skipped += 1
             continue
         row["_bid_no"] = pipeline.pick(record, fields, "bid_no")
@@ -147,8 +147,7 @@ def main(argv=None) -> int:
     rows, collapsed = pipeline.collapse_by_name(candidates)
 
     new_keys = {r["_key"] for r in rows if r["_key"]}
-    new_keys |= {pipeline.name_key(r) for r in rows}
-    new_keys |= {pipeline.row_fingerprint(r) for r in rows}
+    new_keys |= {pipeline.fingerprint(r, pipeline.WORKS_KEYS) for r in rows}
     for row in rows:
         row.pop("_bid_no", None)
         row.pop("_key", None)
@@ -158,7 +157,7 @@ def main(argv=None) -> int:
     note = f", 같은 현장 {collapsed}건 병합" if collapsed else ""
     print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외{note})")
 
-    out = os.path.join(args.data_dir, f"radar_{datetime.now():%Y-%m-%d}.csv")
+    out = os.path.join(args.data_dir, f"공사_{datetime.now():%Y-%m-%d}.csv")
     if rows:
         pipeline.write_csv(out, rows)
         pipeline.save_seen(args.data_dir, seen | new_keys)

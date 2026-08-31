@@ -150,11 +150,11 @@ def main() -> int:
 
     code = 0
     if kind in WORKS or kind in BOTH:
-        code |= run_one("공사 공고", "run", "radar", days)
+        code |= run_one("공사 공고", "run", "공사", days)
     if kind in GOODS or kind in BOTH:
-        code |= run_one("물품 공고", "run_goods", "goods", days)
+        code |= run_one("물품 공고", "run_goods", "물품", days)
     if kind in MAS or kind in BOTH:
-        code |= run_one("납품요구 (쇼핑몰)", "run_mas", "mas", days)
+        code |= run_one("납품요구 (쇼핑몰)", "run_mas", "납품요구", days)
     return code
 
 
