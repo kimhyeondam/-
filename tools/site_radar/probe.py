@@ -117,7 +117,9 @@ def probe(key: str, cfg: dict) -> dict | None:
     print(f"\n{'='*72}\n{cfg['label']} 탐색\n{'='*72}")
 
     divs = [None] if cfg.get("no_date") else INQRY_DIVS
-    for base in bases(cfg["service"]):
+    names = cfg.get("services") or [cfg["service"]]
+    all_bases = [b for name in names for b in bases(name)]
+    for base in all_bases:
         shown_base = base.replace("http://apis.data.go.kr/1230000", "…")
         for op in cfg["operations"]:
             url = f"{base}/{op}"
@@ -146,14 +148,14 @@ def parse_custom(argv: list[str]) -> dict | None:
         return None
     def value(flag, default=None):
         return argv[argv.index(flag) + 1] if flag in argv and argv.index(flag) + 1 < len(argv) else default
-    service = value("--service")
+    services = [x.strip() for x in (value("--service") or "").split(",") if x.strip()]
     ops = [o.strip() for o in (value("--ops") or "").split(",") if o.strip()]
-    if not service or not ops:
+    if not services or not ops:
         print("  --service 와 --ops 를 함께 주세요." + CUSTOM_HELP, file=sys.stderr)
         return None
     return {
-        "label": f"직접 지정: {service}",
-        "service": service,
+        "label": f"직접 지정: {', '.join(services)}",
+        "services": services,
         "operations": ops,
         "no_date": "--no-date" in argv,
     }
