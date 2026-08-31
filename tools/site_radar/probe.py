@@ -61,6 +61,17 @@ SERVICES = {
 
 INQRY_DIVS = [1, 2, 3]
 
+CUSTOM_HELP = """
+아직 손대지 않은 서비스를 두드릴 때:
+
+    py tools\\site_radar\\probe.py --service ShoppingMallPrdctInfoService \\
+        --ops getShoppingMallPrdctInfoList,getPrdctInfoList
+
+  --service  공공데이터포털 문서의 서비스 URL 마지막 조각
+  --ops      쉼표로 구분한 오퍼레이션 후보 (모르면 문서에서 그대로 옮긴다)
+  --no-date  조회기간 파라미터를 쓰지 않는 서비스일 때
+"""
+
 
 def header_of(payload):
     if isinstance(payload, dict):
@@ -105,17 +116,19 @@ def probe(key: str, cfg: dict) -> dict | None:
     start = end - timedelta(days=7)
     print(f"\n{'='*72}\n{cfg['label']} 탐색\n{'='*72}")
 
+    divs = [None] if cfg.get("no_date") else INQRY_DIVS
     for base in bases(cfg["service"]):
         shown_base = base.replace("http://apis.data.go.kr/1230000", "…")
         for op in cfg["operations"]:
             url = f"{base}/{op}"
-            for div in INQRY_DIVS:
-                params = {
-                    "serviceKey": key, "pageNo": 1, "numOfRows": 1, "type": "json",
-                    "inqryDiv": div,
-                    "inqryBgnDt": start.strftime("%Y%m%d%H%M"),
-                    "inqryEndDt": end.strftime("%Y%m%d%H%M"),
-                }
+            for div in divs:
+                params = {"serviceKey": key, "pageNo": 1, "numOfRows": 1, "type": "json"}
+                if div is not None:
+                    params.update({
+                        "inqryDiv": div,
+                        "inqryBgnDt": start.strftime("%Y%m%d%H%M"),
+                        "inqryEndDt": end.strftime("%Y%m%d%H%M"),
+                    })
                 note, items, total = attempt(url, params)
                 tag = f"{shown_base}/{op} inqryDiv={div}"
                 if items:
@@ -127,14 +140,54 @@ def probe(key: str, cfg: dict) -> dict | None:
     return None
 
 
+def parse_custom(argv: list[str]) -> dict | None:
+    """--service / --ops 로 임의의 서비스를 두드리게 한다."""
+    if "--service" not in argv:
+        return None
+    def value(flag, default=None):
+        return argv[argv.index(flag) + 1] if flag in argv and argv.index(flag) + 1 < len(argv) else default
+    service = value("--service")
+    ops = [o.strip() for o in (value("--ops") or "").split(",") if o.strip()]
+    if not service or not ops:
+        print("  --service 와 --ops 를 함께 주세요." + CUSTOM_HELP, file=sys.stderr)
+        return None
+    return {
+        "label": f"직접 지정: {service}",
+        "service": service,
+        "operations": ops,
+        "no_date": "--no-date" in argv,
+    }
+
+
 def main() -> int:
+    argv = sys.argv[1:]
+    if "--help" in argv or "-h" in argv:
+        print(__doc__ + CUSTOM_HELP)
+        return 0
     try:
         key = api.service_key()
     except api.MissingCredential as exc:
         print(f"중단: {exc}", file=sys.stderr)
         return 2
 
-    wanted = sys.argv[1:] or ["thng"]
+    custom = parse_custom(argv)
+    if custom is not None:
+        found = probe(key, custom)
+        print(f"\n\n{'#'*72}\n# 아래 내용을 통째로 복사해서 붙여넣어 주세요\n{'#'*72}\n")
+        if not found:
+            print("성공한 조합 없음 (위 로그의 resultMsg 를 함께 봐주세요)")
+            return 1
+        print(f"base_url : {found['base_url']}")
+        print(f"operation: {found['operation']}")
+        print(f"inqryDiv : {found['inqry_div']}")
+        print(f"totalCount: {found['total']}")
+        print("응답 항목 (실제 필드명 = 값):")
+        for k, v in found["item"].items():
+            text = str(v)
+            print(f"  {k} = {text[:60] + '…' if len(text) > 60 else text}")
+        return 0
+
+    wanted = [a for a in argv if not a.startswith("-")] or ["thng"]
     results = {}
     for name in wanted:
         if name not in SERVICES:
