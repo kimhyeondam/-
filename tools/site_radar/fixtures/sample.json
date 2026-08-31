@@ -1,96 +1,84 @@
 {
   "bids": [
     {
-      "FIX_bidNo": "20260828001",
-      "FIX_bidOrd": "00",
-      "FIX_title": "김해시 진영읍 하수도정비공사",
-      "FIX_agency": "경상남도 김해시청",
-      "FIX_workType": "하수도",
-      "FIX_amount": "1450000000",
-      "FIX_postedAt": "202608280900",
-      "FIX_openAt": "202609100900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/1"
+      "bidNtceNo": "R26BK000001",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "진영읍 하수도정비공사",
+      "dminsttNm": "경상남도 김해시",
+      "cnstrtsiteRgnNm": "경상남도 김해시",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "1450000000",
+      "mainCnsttyNm": "토목공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000001"
     },
     {
-      "FIX_bidNo": "20260829002",
-      "FIX_bidOrd": "00",
-      "FIX_title": "창원시 의창구 도로 확포장공사",
-      "FIX_agency": "경상남도 창원시청",
-      "FIX_workType": "도로",
-      "FIX_amount": "2300000000",
-      "FIX_postedAt": "202608290900",
-      "FIX_openAt": "202609110900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/2"
+      "bidNtceNo": "R26BK000002",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "의창구 도로 확포장공사",
+      "dminsttNm": "경상남도 창원시",
+      "cnstrtsiteRgnNm": "경상남도 창원시",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "2300000000",
+      "mainCnsttyNm": "토목공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000002"
     },
     {
-      "FIX_bidNo": "20260829003",
-      "FIX_bidOrd": "00",
-      "FIX_title": "부산 사하구 하수관거정비공사",
-      "FIX_agency": "부산광역시 사하구청",
-      "FIX_workType": "하수도",
-      "FIX_amount": "1800000000",
-      "FIX_postedAt": "202608290930",
-      "FIX_openAt": "202609120900",
-      "FIX_region": "부산",
-      "FIX_url": "https://example.invalid/3"
+      "bidNtceNo": "R26BK000003",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "태전로 노후 하수관거 정비공사",
+      "dminsttNm": "대구광역시 북구",
+      "cnstrtsiteRgnNm": "대구광역시 북구",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "1800000000",
+      "mainCnsttyNm": "토목공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000003"
     },
     {
-      "FIX_bidNo": "20260830004",
-      "FIX_bidOrd": "00",
-      "FIX_title": "김해시 청사 전기설비 개선공사",
-      "FIX_agency": "경상남도 김해시청",
-      "FIX_workType": "전기",
-      "FIX_amount": "900000000",
-      "FIX_postedAt": "202608300900",
-      "FIX_openAt": "202609130900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/4"
+      "bidNtceNo": "R26BK000004",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "김해시 청사 전기설비 개선공사",
+      "dminsttNm": "경상남도 김해시",
+      "cnstrtsiteRgnNm": "경상남도 김해시",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "900000000",
+      "mainCnsttyNm": "전기공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000004"
     },
     {
-      "FIX_bidNo": "20260830005",
-      "FIX_bidOrd": "00",
-      "FIX_title": "밀양시 마을안길 측구정비공사",
-      "FIX_agency": "경상남도 밀양시청",
-      "FIX_workType": "도로",
-      "FIX_amount": "50000000",
-      "FIX_postedAt": "202608300930",
-      "FIX_openAt": "202609130900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/5"
+      "bidNtceNo": "R26BK000005",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "마을안길 측구정비공사",
+      "dminsttNm": "경상남도 밀양시",
+      "cnstrtsiteRgnNm": "경상남도 밀양시",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "50000000",
+      "mainCnsttyNm": "토목공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000005"
     },
     {
-      "FIX_bidNo": "20260830006",
-      "FIX_bidOrd": "00",
-      "FIX_title": "김해 물류창고 신축 부대토목공사",
-      "FIX_agency": "(주)한빛건설",
-      "FIX_workType": "토목",
-      "FIX_amount": "1200000000",
-      "FIX_postedAt": "202608301000",
-      "FIX_openAt": "202609140900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/6"
-    },
-    {
-      "FIX_bidNo": "20260831007",
-      "FIX_bidOrd": "00",
-      "FIX_title": "김해 진례지구 하천 호안정비공사",
-      "FIX_agency": "한국토지주택공사",
-      "FIX_workType": "하천",
-      "FIX_amount": "3100000000",
-      "FIX_postedAt": "202608310900",
-      "FIX_openAt": "202609150900",
-      "FIX_region": "경남",
-      "FIX_url": "https://example.invalid/7"
+      "bidNtceNo": "R26BK000006",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "김해 진례지구 하천 호안정비공사",
+      "dminsttNm": "한국토지주택공사",
+      "cnstrtsiteRgnNm": "",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "3100000000",
+      "mainCnsttyNm": "토목공사",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000006"
     }
   ],
   "scsbid": {
-    "20260828001-00": {
+    "R26BK000001-000": {
       "contractor": "(주)대성토건",
       "contractor_tel": "055-000-0000"
     },
-    "20260831007-00": {
+    "R26BK000006-000": {
       "contractor": "(주)남부건설",
       "contractor_tel": ""
     }

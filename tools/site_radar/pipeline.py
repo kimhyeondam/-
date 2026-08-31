@@ -101,7 +101,12 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
     if keywords and not any(k in agency for k in keywords):
         return None
 
-    region = match_region(f"{agency} {title} {region_field}", config.get("target_regions") or [])
+    # 공사현장 지역명(cnstrtsiteRgnNm)이 있으면 그것만 본다. 이게 곧 물류 반경 판정 기준이다.
+    # 비어 있는 공고만 발주처명·공고명으로 되짚는다.
+    targets = config.get("target_regions") or []
+    region = match_region(region_field, targets) if region_field else ""
+    if not region:
+        region = match_region(f"{agency} {title}", targets)
     if not region:
         return None
 
