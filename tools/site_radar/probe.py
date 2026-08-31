@@ -58,6 +58,21 @@ SERVICES = {
         ],
         "no_date": True,
     },
+    "mas_dlvr": {
+        # 납품요구는 날짜 파라미터가 필수로 보인다. 이름과 형식을 모르니
+        # 후보를 훑는다. 문서상 검색조건은 '납품요구접수일자'다.
+        "label": "나라장터쇼핑몰 납품요구 (날짜 파라미터 탐색)",
+        "explicit_bases": ["https://apis.data.go.kr/1230000/at/ShoppingMallPrdctInfoService"],
+        "operations": ["getDlvrReqInfoList", "getDlvrReqDtlInfoList"],
+        "date_variants": [
+            ("inqryBgnDate", "inqryEndDate", "%Y%m%d"),
+            ("inqryBgnDt", "inqryEndDt", "%Y%m%d"),
+            ("inqryBgnDt", "inqryEndDt", "%Y%m%d%H%M"),
+            ("dlvrReqRcptDate", "dlvrReqRcptEndDate", "%Y%m%d"),
+            ("bgnDate", "endDate", "%Y%m%d"),
+        ],
+        "lookback_days": 3,
+    },
     "scsbid": {
         "label": "낙찰정보서비스 (공사 개찰결과)",
         "service": "ScsbidInfoService",
@@ -123,15 +138,35 @@ def attempt(url: str, params: dict) -> tuple[str, list, object]:
     head = header_of(payload)
     code, msg = head.get("resultCode"), head.get("resultMsg")
     items, total = items_of(payload)
+    if code is None:
+        # 표준 응답이 아니다. 본문을 그대로 보여줘야 이유를 안다.
+        raw = res.text.replace("\n", " ")[:220]
+        return f"(표준 응답 아님) {raw}", items, total
     return f"resultCode={code} {msg}", items, total
 
 
 def probe(key: str, cfg: dict) -> dict | None:
     end = datetime.now()
-    start = end - timedelta(days=7)
+    start = end - timedelta(days=cfg.get("lookback_days", 7))
     print(f"\n{'='*72}\n{cfg['label']} 탐색\n{'='*72}")
 
-    divs = [None] if cfg.get("no_date") else INQRY_DIVS
+    def param_sets():
+        """이 서비스에서 시도할 조회 파라미터 조합들. (설명, 파라미터) 목록."""
+        if cfg.get("no_date"):
+            return [("파라미터 없음", {})]
+        if cfg.get("date_variants"):
+            out = []
+            for bgn, endn, fmt in cfg["date_variants"]:
+                out.append((f"{bgn}/{endn} {fmt}",
+                            {bgn: start.strftime(fmt), endn: end.strftime(fmt)}))
+            return out
+        return [(f"inqryDiv={d}", {
+            "inqryDiv": d,
+            "inqryBgnDt": start.strftime("%Y%m%d%H%M"),
+            "inqryEndDt": end.strftime("%Y%m%d%H%M"),
+        }) for d in INQRY_DIVS]
+
+    sets = param_sets()
     if cfg.get("explicit_bases"):
         all_bases = cfg["explicit_bases"]
     else:
@@ -142,20 +177,15 @@ def probe(key: str, cfg: dict) -> dict | None:
             "http://apis.data.go.kr/1230000", "…")
         for op in cfg["operations"]:
             url = f"{base}/{op}"
-            for div in divs:
+            for label, extra in sets:
                 params = {"serviceKey": key, "pageNo": 1, "numOfRows": 1, "type": "json"}
-                if div is not None:
-                    params.update({
-                        "inqryDiv": div,
-                        "inqryBgnDt": start.strftime("%Y%m%d%H%M"),
-                        "inqryEndDt": end.strftime("%Y%m%d%H%M"),
-                    })
+                params.update(extra)
                 note, items, total = attempt(url, params)
-                tag = f"{shown_base}/{op} inqryDiv={div}"
+                tag = f"{shown_base}/{op} [{label}]"
                 if items:
                     print(f"  ✅ {tag}\n     {note} totalCount={total}")
-                    return {"base_url": base, "operation": op, "inqry_div": div,
-                            "item": items[0], "total": total}
+                    return {"base_url": base, "operation": op, "inqry_div": label,
+                            "params": extra, "item": items[0], "total": total}
                 print(f"  x  {tag}  {note}")
             # 같은 오퍼레이션에서 세 번 다 같은 사유로 죽으면 다음 오퍼레이션으로
     return None
@@ -205,7 +235,7 @@ def main() -> int:
             return 1
         print(f"base_url : {found['base_url']}")
         print(f"operation: {found['operation']}")
-        print(f"inqryDiv : {found['inqry_div']}")
+        print(f"조회조건 : {found['inqry_div']}  {found.get('params', {})}")
         print(f"totalCount: {found['total']}")
         print("응답 항목 (실제 필드명 = 값):")
         for k, v in found["item"].items():
