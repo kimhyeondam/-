@@ -199,6 +199,33 @@ def row_fingerprint(row: dict) -> str:
     return "|".join((row.get("현장명", ""), row.get("발주처", ""), row.get("공고일", "")))
 
 
+def name_key(row: dict) -> str:
+    """같은 현장인지 판정하는 열쇠.
+
+    한 현장이 재공고·정정공고로 여러 번 올라오면 공고번호가 매번 달라진다.
+    현장명만으로 묶으면 "마을안길 포장공사"처럼 흔한 이름이 다른 시군의
+    다른 공사까지 삼키므로, 지역과 발주처까지 함께 본다.
+    """
+    return "name:" + "|".join((
+        row.get("지역(시군)", ""), row.get("발주처", ""), row.get("현장명", ""),
+    ))
+
+
+def newest_first(row: dict) -> tuple:
+    """같은 현장이 여러 건이면 최근 공고를, 같은 날이면 관급자재가 큰 쪽을 남긴다."""
+    return (row.get("공고일", ""), govsply_value(row))
+
+
+def collapse_by_name(rows: list[dict]) -> tuple[list[dict], int]:
+    """같은 현장을 한 줄로 접는다. (남은 행, 접힌 건수)"""
+    best: dict[str, dict] = {}
+    for row in rows:
+        key = name_key(row)
+        if key not in best or newest_first(row) > newest_first(best[key]):
+            best[key] = row
+    return list(best.values()), len(rows) - len(best)
+
+
 def save_seen(data_dir: str, seen: set[str]) -> None:
     with open(os.path.join(data_dir, SEEN_INDEX), "w", encoding="utf-8") as fh:
         json.dump(sorted(seen), fh, ensure_ascii=False, indent=0)

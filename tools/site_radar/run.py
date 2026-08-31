@@ -131,36 +131,52 @@ def main(argv=None) -> int:
 
     fields = spec["bid"]["fields"]
     seen = pipeline.load_seen(args.data_dir)
-    rows, new_keys, skipped = [], [], 0
 
+    # 1) 필터를 통과한 행을 모은다
+    candidates, skipped = [], 0
     for record in raw_bids:
         row = pipeline.to_row(record, fields, config)
         if row is None:
             continue
         key = pipeline.bid_key(record, fields)
-        if key in seen or pipeline.row_fingerprint(row) in seen:
+        if (key in seen or pipeline.row_fingerprint(row) in seen
+                or pipeline.name_key(row) in seen):
             skipped += 1
             continue
+        row["_bid_no"] = pipeline.pick(record, fields, "bid_no")
+        row["_key"] = key
+        candidates.append(row)
+
+    # 2) 같은 현장이 재공고로 여러 번 올라온 것을 한 줄로 접는다
+    rows, collapsed = pipeline.collapse_by_name(candidates)
+
+    # 3) 살아남은 행만 개찰결과를 조회한다 (접기 전에 하면 호출이 낭비된다)
+    for row in rows:
         if scsbid_map is not None:
-            hit = scsbid_map.get(key, {})
+            hit = scsbid_map.get(row["_key"], {})
             row["낙찰시공사"] = hit.get("contractor", "개찰전")
             row["시공사연락처"] = hit.get("contractor_tel", "")
         elif scsbid_ready:
-            name, tel = fetch_contractor(client, spec, pipeline.pick(record, fields, "bid_no"))
-            row["낙찰시공사"], row["시공사연락처"] = name, tel
+            row["낙찰시공사"], row["시공사연락처"] = fetch_contractor(client, spec, row["_bid_no"])
         else:
             row["낙찰시공사"] = "미확인"
-        rows.append(row)
-        new_keys.append(key or pipeline.row_fingerprint(row))
+
+    new_keys = {r["_key"] for r in rows if r["_key"]}
+    new_keys |= {pipeline.name_key(r) for r in rows}
+    new_keys |= {pipeline.row_fingerprint(r) for r in rows}
+    for row in rows:
+        row.pop("_bid_no", None)
+        row.pop("_key", None)
 
     # 관급자재금액이 큰 순으로 정렬한다. 접촉 우선순위가 곧 이 순서다.
     rows.sort(key=pipeline.govsply_value, reverse=True)
-    print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외)")
+    note = f", 같은 현장 {collapsed}건 병합" if collapsed else ""
+    print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외{note})")
 
     out = os.path.join(args.data_dir, f"radar_{datetime.now():%Y-%m-%d}.csv")
     if rows:
         pipeline.write_csv(out, rows)
-        pipeline.save_seen(args.data_dir, seen | set(new_keys) | {pipeline.row_fingerprint(r) for r in rows})
+        pipeline.save_seen(args.data_dir, seen | new_keys)
         print(f"✅ 시트 기록 — {out}")
     else:
         print("✅ 시트 기록 — 신규 건 없음, 파일 변경 없음")
@@ -172,6 +188,7 @@ def main(argv=None) -> int:
     print(f"신규 등록       : {len(rows)}건")
     print(f"관급자재 합계   : {govsply_total:,}원")
     print(f"기존 중복 제외  : {skipped}건")
+    print(f"같은 현장 병합  : {collapsed}건")
     print(f"API 실패        : {client.failures if client else 0}건")
     hits = [(r, by_region[r]) for r in regions if by_region.get(r)]
     for region, n in sorted(hits, key=lambda kv: -kv[1]):
