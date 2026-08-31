@@ -150,7 +150,7 @@ def probe(key: str, cfg: dict) -> dict | None:
 
 def parse_custom(argv: list[str]) -> dict | None:
     """--service / --ops 로 임의의 서비스를 두드리게 한다."""
-    if "--service" not in argv:
+    if "--service" not in argv and "--base" not in argv:
         return None
     def value(flag, default=None):
         return argv[argv.index(flag) + 1] if flag in argv and argv.index(flag) + 1 < len(argv) else default
