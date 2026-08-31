@@ -70,6 +70,10 @@ SERVICES = {
             ("inqryBgnDt", "inqryEndDt", "%Y%m%d%H%M"),
             ("dlvrReqRcptDate", "dlvrReqRcptEndDate", "%Y%m%d"),
             ("bgnDate", "endDate", "%Y%m%d"),
+            # 입찰공고 쪽처럼 inqryDiv 를 함께 요구할 수도 있다
+            ("inqryBgnDate", "inqryEndDate", "%Y%m%d", {"inqryDiv": 1}),
+            ("inqryBgnDt", "inqryEndDt", "%Y%m%d", {"inqryDiv": 1}),
+            ("inqryBgnDt", "inqryEndDt", "%Y%m%d%H%M", {"inqryDiv": 1}),
         ],
         "lookback_days": 3,
     },
@@ -89,6 +93,9 @@ SERVICES = {
 }
 
 INQRY_DIVS = [1, 2, 3]
+
+# 마지막 탐색에서 나온 실패 사유들. 복사해 붙이는 블록에 같이 싣는다.
+FAILURES: list[str] = []
 
 CUSTOM_HELP = """
 아직 손대지 않은 서비스를 두드릴 때:
@@ -146,6 +153,7 @@ def attempt(url: str, params: dict) -> tuple[str, list, object]:
 
 
 def probe(key: str, cfg: dict) -> dict | None:
+    FAILURES.clear()
     end = datetime.now()
     start = end - timedelta(days=cfg.get("lookback_days", 7))
     print(f"\n{'='*72}\n{cfg['label']} 탐색\n{'='*72}")
@@ -156,9 +164,13 @@ def probe(key: str, cfg: dict) -> dict | None:
             return [("파라미터 없음", {})]
         if cfg.get("date_variants"):
             out = []
-            for bgn, endn, fmt in cfg["date_variants"]:
-                out.append((f"{bgn}/{endn} {fmt}",
-                            {bgn: start.strftime(fmt), endn: end.strftime(fmt)}))
+            for variant in cfg["date_variants"]:
+                bgn, endn, fmt = variant[0], variant[1], variant[2]
+                extra = dict(variant[3]) if len(variant) > 3 else {}
+                params = {bgn: start.strftime(fmt), endn: end.strftime(fmt)}
+                params.update(extra)
+                tail = f" +{extra}" if extra else ""
+                out.append((f"{bgn}/{endn} {fmt}{tail}", params))
             return out
         return [(f"inqryDiv={d}", {
             "inqryDiv": d,
@@ -187,6 +199,7 @@ def probe(key: str, cfg: dict) -> dict | None:
                     return {"base_url": base, "operation": op, "inqry_div": label,
                             "params": extra, "item": items[0], "total": total}
                 print(f"  x  {tag}  {note}")
+                FAILURES.append(f"{op} [{label}] → {note}")
             # 같은 오퍼레이션에서 세 번 다 같은 사유로 죽으면 다음 오퍼레이션으로
     return None
 
@@ -231,7 +244,9 @@ def main() -> int:
         found = probe(key, custom)
         print(f"\n\n{'#'*72}\n# 아래 내용을 통째로 복사해서 붙여넣어 주세요\n{'#'*72}\n")
         if not found:
-            print("성공한 조합 없음 (위 로그의 resultMsg 를 함께 봐주세요)")
+            print("성공한 조합 없음. 시도한 조합과 실패 사유:\n")
+            for line in dict.fromkeys(FAILURES):
+                print(f"  {line}")
             return 1
         print(f"base_url : {found['base_url']}")
         print(f"operation: {found['operation']}")
@@ -255,7 +270,9 @@ def main() -> int:
     for name, found in results.items():
         print(f"\n--- {name} ---")
         if not found:
-            print("성공한 조합 없음 (위 로그의 resultMsg 를 함께 봐주세요)")
+            print("성공한 조합 없음. 시도한 조합과 실패 사유:\n")
+            for line in dict.fromkeys(FAILURES):
+                print(f"  {line}")
             continue
         print(f"base_url : {found['base_url']}")
         print(f"operation: {found['operation']}")
