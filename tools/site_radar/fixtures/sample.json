@@ -49,23 +49,39 @@
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000011"
     },
     {
-      "bidNtceNo": "R26BK000012",
+      "bidNtceNo": "R26BK000030",
       "bidNtceOrd": "000",
-      "bidNtceNm": "첨단지구 도로개설공사",
-      "dminsttNm": "전남광주통합특별시 광산구",
-      "cnstrtsiteRgnNm": "전남광주통합특별시 북구",
+      "bidNtceNm": "오룡지구 단지조성 부대토목공사",
+      "dminsttNm": "전남개발공사",
+      "cnstrtsiteRgnNm": "",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
-      "presmptPrce": "2300000000",
+      "presmptPrce": "4200000000",
       "mainCnsttyNm": "토목공사",
-      "contrctrcnstrtnGovsplyMtrlAmt": "320000000",
+      "contrctrcnstrtnGovsplyMtrlAmt": "770000000",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
       "ntceInsttOfclTelNo": "061-270-0000",
-      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000012"
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000030"
     },
     {
-      "bidNtceNo": "R26BK000020",
+      "bidNtceNo": "R26BK000031",
+      "bidNtceOrd": "000",
+      "bidNtceNm": "동탄지구 단지조성공사",
+      "dminsttNm": "경기주택도시공사",
+      "cnstrtsiteRgnNm": "",
+      "bidNtceDt": "2026-08-28 09:00:00",
+      "opengDt": "2026-09-10 11:00:00",
+      "presmptPrce": "5000000000",
+      "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "900000000",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "061-270-0000",
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000031"
+    },
+    {
+      "bidNtceNo": "R26BK000005",
       "bidNtceOrd": "000",
       "bidNtceNm": "마을안길 측구정비공사",
       "dminsttNm": "전남광주통합특별시 진도군",
@@ -74,44 +90,11 @@
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "800000000",
       "mainCnsttyNm": "토목공사",
-      "contrctrcnstrtnGovsplyMtrlAmt": "60000000",
+      "contrctrcnstrtnGovsplyMtrlAmt": "0",
       "govcnstrtnGovsplyMtrlAmt": "0",
       "ntceInsttOfclNm": "김담당",
       "ntceInsttOfclTelNo": "061-270-0000",
-      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000020"
-    },
-    {
-      "bidNtceNo": "R26BK000021",
-      "bidNtceOrd": "000",
-      "bidNtceNm": "마을안길 측구정비공사",
-      "dminsttNm": "전남광주통합특별시 완도군",
-      "cnstrtsiteRgnNm": "전남광주통합특별시 완도군",
-      "bidNtceDt": "2026-08-28 09:00:00",
-      "opengDt": "2026-09-10 11:00:00",
-      "presmptPrce": "800000000",
-      "mainCnsttyNm": "토목공사",
-      "contrctrcnstrtnGovsplyMtrlAmt": "55000000",
-      "govcnstrtnGovsplyMtrlAmt": "0",
-      "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "061-270-0000",
-      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000021"
-    },
-    {
-      "bidNtceNo": "R26BK000006",
-      "bidNtceOrd": "000",
-      "bidNtceNm": "나주 혁신지구 하천 호안정비공사",
-      "dminsttNm": "한국토지주택공사",
-      "cnstrtsiteRgnNm": "",
-      "bidNtceDt": "2026-08-28 09:00:00",
-      "opengDt": "2026-09-10 11:00:00",
-      "presmptPrce": "3100000000",
-      "mainCnsttyNm": "토목공사",
-      "contrctrcnstrtnGovsplyMtrlAmt": "520000000",
-      "govcnstrtnGovsplyMtrlAmt": "0",
-      "ntceInsttOfclNm": "김담당",
-      "ntceInsttOfclTelNo": "061-270-0000",
-      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000006"
+      "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000005"
     }
-  ],
-  "scsbid": {}
+  ]
 }

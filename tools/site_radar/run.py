@@ -40,6 +40,11 @@ def parse_args(argv=None):
         help="필터 없이, 최근 공고에 실제로 찍힌 공사현장 지역명을 세어서 보여준다",
     )
     p.add_argument(
+        "--find-agency",
+        metavar="키워드",
+        help="최근 공고의 수요기관명 중 키워드가 들어간 것을 세어서 보여준다 (예: 개발공사)",
+    )
+    p.add_argument(
         "--fixture",
         help="네트워크 없이 저장된 응답으로 파이프라인만 돌린다 (자체 점검용)",
     )
@@ -63,18 +68,6 @@ def fetch_bids(client: api.Client, spec: dict, days: int) -> list[dict]:
     return list(client.paged("bid", query))
 
 
-def fetch_contractor(client: api.Client, spec: dict, bid_no: str) -> tuple[str, str]:
-    """개찰결과에서 낙찰 시공사를 찾는다. 아직 개찰 전이면 ('개찰전', '')."""
-    cfg = spec["scsbid"]
-    fields = cfg["fields"]
-    records = list(client.paged("scsbid", {cfg["params"]["bid_no"]: bid_no}, page_size=10, max_pages=1))
-    for record in records:
-        name = pipeline.pick(record, fields, "contractor")
-        if name:
-            return name, pipeline.pick(record, fields, "contractor_tel")
-    return "개찰전", ""
-
-
 def main(argv=None) -> int:
     args = parse_args(argv)
     config = load_yaml(args.config)
@@ -92,12 +85,10 @@ def main(argv=None) -> int:
     print(f"✅ 설정 로드 — 대상 지역 {len(regions)}곳 ({preview}), 최근 {days}일")
 
     client = None
-    scsbid_ready = False
     if args.fixture:
         with open(args.fixture, encoding="utf-8") as fh:
             payload = json.load(fh)
         raw_bids = payload.get("bids", [])
-        scsbid_map = payload.get("scsbid", {})
         print(f"✅ 픽스처 로드 — 원본 {len(raw_bids)}건 (네트워크 호출 없음)")
     else:
         try:
@@ -106,17 +97,22 @@ def main(argv=None) -> int:
         except (api.SpecIncomplete, api.MissingCredential) as exc:
             print(f"\n중단: {exc}\n", file=sys.stderr)
             return 2
-        # 낙찰정보 스펙은 없어도 수집은 진행한다. 그 경우 낙찰시공사 열만 비워둔다.
-        try:
-            api.require_complete(spec, ["scsbid"])
-            scsbid_ready = True
-        except api.SpecIncomplete:
-            scsbid_ready = False
-            print("  ⚠ 낙찰정보 스펙(scsbid)이 비어 있어 낙찰시공사 열은 '미확인'으로 둡니다.")
         client = api.Client(spec)
         raw_bids = fetch_bids(client, spec, days)
-        scsbid_map = None
         print(f"✅ 입찰공고 수집 — 원본 {len(raw_bids)}건")
+
+        if args.find_agency:
+            name_field = spec["bid"]["fields"]["agency"]
+            counts = collections.Counter(
+                (r.get(name_field) or "").strip() for r in raw_bids
+                if args.find_agency in (r.get(name_field) or "")
+            )
+            print(f"\n── 최근 {days}일 공고 중 수요기관명에 '{args.find_agency}' 가 들어간 곳 ──")
+            print("   (config.yaml 의 include_agencies 에 아래 이름을 그대로 쓰세요)\n")
+            for name, n in sorted(counts.items(), key=lambda kv: -kv[1]):
+                print(f"  {n:5d}건  {name}")
+            print(f"\n{len(counts)}곳 발견" if counts else "\n해당 기관 없음")
+            return 0
 
         if args.list_regions:
             counts = collections.Counter(
@@ -149,17 +145,6 @@ def main(argv=None) -> int:
 
     # 2) 같은 현장이 재공고로 여러 번 올라온 것을 한 줄로 접는다
     rows, collapsed = pipeline.collapse_by_name(candidates)
-
-    # 3) 살아남은 행만 개찰결과를 조회한다 (접기 전에 하면 호출이 낭비된다)
-    for row in rows:
-        if scsbid_map is not None:
-            hit = scsbid_map.get(row["_key"], {})
-            row["낙찰시공사"] = hit.get("contractor", "개찰전")
-            row["시공사연락처"] = hit.get("contractor_tel", "")
-        elif scsbid_ready:
-            row["낙찰시공사"], row["시공사연락처"] = fetch_contractor(client, spec, row["_bid_no"])
-        else:
-            row["낙찰시공사"] = "미확인"
 
     new_keys = {r["_key"] for r in rows if r["_key"]}
     new_keys |= {pipeline.name_key(r) for r in rows}
@@ -196,6 +181,9 @@ def main(argv=None) -> int:
     quiet = len(regions) - len(hits)
     if quiet:
         print(f"  (나머지 {quiet}곳 0건)")
+    unknown = by_region.get("(지역확인)", 0)
+    if unknown:
+        print(f"  (지역확인) {unknown}건 — 지정 발주처 건이라 담았으나 현장 지역명이 비어 있음")
     return 0
 
 

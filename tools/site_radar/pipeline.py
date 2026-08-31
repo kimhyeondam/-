@@ -11,8 +11,7 @@ import re
 # 관급자재금액을 앞쪽에 둔다. 이 시트를 여는 목적이 그 숫자이기 때문이다.
 COLUMNS = [
     "공고일", "지역(시군)", "현장명", "관급자재금액", "추정금액",
-    "발주처", "발주처담당자", "담당자연락처", "공사종류",
-    "개찰(예정)일", "낙찰시공사", "시공사연락처", "예상소요품목", "공고URL", "접촉상태",
+    "발주처", "공사종류", "예상소요품목", "공고URL", "접촉상태",
 ]
 
 # 공고번호는 시트 열에 넣지 않으므로, 중복 판정용 색인을 별도 파일로 둔다.
@@ -64,6 +63,20 @@ def region_patterns(region: str) -> list[re.Pattern]:
         patterns.append(re.compile(re.escape(stem) + r"(?![가-힣])"))
         patterns.append(re.compile(re.escape(stem) + r"(?=지구|일원|권역)"))
     return patterns
+
+
+def squash(text: str) -> str:
+    """띄어쓰기를 지운 형태로 비교한다. 기관명은 표기마다 공백이 들쭉날쭉하다."""
+    return re.sub(r"\s+", "", text or "")
+
+
+def match_agency(agency: str, wanted) -> str:
+    """수요기관명이 지정한 발주처 중 하나인지 본다. 맞으면 그 이름, 아니면 빈 문자열."""
+    flat = squash(agency)
+    for name in wanted or []:
+        if name and squash(name) in flat:
+            return name
+    return ""
 
 
 def normalize_targets(regions) -> list[tuple[str, list[re.Pattern]]]:
@@ -131,13 +144,17 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
     if keywords and not any(k in agency for k in keywords):
         return None
 
+    # 이 발주처들은 지역 판정과 무관하게 무조건 담는다.
+    # 공사현장 지역명이 비어 오는 경우가 있어 지역으로만 거르면 통째로 놓친다.
+    agency_hit = match_agency(agency, config.get("include_agencies"))
+
     # 공사현장 지역명(cnstrtsiteRgnNm)이 있으면 그것만 본다. 이게 곧 물류 반경 판정 기준이다.
     # 비어 있는 공고만 발주처명·공고명으로 되짚는다.
     targets = config.get("_targets") or normalize_targets(config.get("target_regions"))
     region = match_region(region_field, targets) if region_field else ""
     if not region:
         region = match_region(f"{agency} {title}", targets)
-    if not region:
+    if not region and not agency_hit:
         return None
 
     amount_raw = pick(record, field_map, "amount")
@@ -158,17 +175,12 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
 
     return {
         "공고일": normalize_date(pick(record, field_map, "posted_at")),
-        "지역(시군)": region,
+        "지역(시군)": region or "(지역확인)",
         "현장명": title,
         "관급자재금액": f"{govsply:,}" if govsply else "",
         "추정금액": format_amount(amount_raw),
         "발주처": agency,
-        "발주처담당자": pick(record, field_map, "official_name"),
-        "담당자연락처": pick(record, field_map, "official_tel"),
         "공사종류": pick(record, field_map, "work_type"),
-        "개찰(예정)일": normalize_date(pick(record, field_map, "open_at")),
-        "낙찰시공사": "",
-        "시공사연락처": "",
         "예상소요품목": match_items(title, config.get("item_rules")),
         "공고URL": pick(record, field_map, "url"),
         "접촉상태": "",
