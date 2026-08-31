@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 import time
+import urllib.parse
 from typing import Any
 
 import requests
@@ -60,12 +61,22 @@ def require_complete(spec: dict, sections: list[str]) -> None:
 
 
 def service_key() -> str:
-    key = os.environ.get("G2B_SERVICE_KEY", "").strip()
+    """인증키를 항상 '디코딩된' 형태로 돌려준다.
+
+    공공데이터포털은 같은 키를 Encoding(%2B, %2F, %3D)과 Decoding(+, /, =) 두 벌로 준다.
+    requests 가 파라미터를 다시 URL 인코딩하므로 여기서는 디코딩된 쪽이 맞다.
+    Encoding 키를 넣었어도 이중 인코딩으로 인증 실패하지 않도록 여기서 풀어준다.
+    """
+    key = os.environ.get("G2B_SERVICE_KEY", "").strip().strip("'\"")
     if not key:
         raise MissingCredential(
-            "환경변수 G2B_SERVICE_KEY 가 비어 있습니다. "
-            "공공데이터포털에서 발급받은 인증키를 export 하고 다시 실행하세요."
+            "환경변수 G2B_SERVICE_KEY 가 비어 있습니다.\n"
+            "공공데이터포털 마이페이지 → 개인 API 인증키 → '인증키 복사(Decoding)' 로 복사한 뒤\n"
+            "  export G2B_SERVICE_KEY='복사한키'\n"
+            "처럼 작은따옴표로 감싸서 넣고 다시 실행하세요 (키에 + 와 / 가 들어 있습니다)."
         )
+    if "%" in key:
+        key = urllib.parse.unquote(key)
     return key
 
 
