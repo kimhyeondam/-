@@ -123,6 +123,8 @@ def main(argv=None) -> int:
         rows.append(row)
         new_keys.append(key or pipeline.row_fingerprint(row))
 
+    # 관급자재금액이 큰 순으로 정렬한다. 접촉 우선순위가 곧 이 순서다.
+    rows.sort(key=pipeline.govsply_value, reverse=True)
     print(f"✅ 필터·중복 제거 — 신규 {len(rows)}건 (기존 중복 {skipped}건 제외)")
 
     out = os.path.join(args.data_dir, f"radar_{datetime.now():%Y-%m-%d}.csv")
@@ -134,9 +136,11 @@ def main(argv=None) -> int:
         print("✅ 시트 기록 — 신규 건 없음, 파일 변경 없음")
 
     by_region = collections.Counter(r["지역(시군)"] for r in rows)
+    govsply_total = sum(pipeline.govsply_value(r) for r in rows)
     print("\n── 요약 ──")
     print(f"총 수집(원본)   : {len(raw_bids)}건")
     print(f"신규 등록       : {len(rows)}건")
+    print(f"관급자재 합계   : {govsply_total:,}원")
     print(f"기존 중복 제외  : {skipped}건")
     print(f"API 실패        : {client.failures if client else 0}건")
     for region in config["target_regions"]:

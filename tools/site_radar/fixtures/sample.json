@@ -10,6 +10,10 @@
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "1450000000",
       "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "88540000",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "055-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000001"
     },
     {
@@ -22,18 +26,26 @@
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "2300000000",
       "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "310000000",
+      "govcnstrtnGovsplyMtrlAmt": "20000000",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "055-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000002"
     },
     {
       "bidNtceNo": "R26BK000003",
       "bidNtceOrd": "000",
-      "bidNtceNm": "태전로 노후 하수관거 정비공사",
+      "bidNtceNm": "태전로 하수관거 정비공사",
       "dminsttNm": "대구광역시 북구",
       "cnstrtsiteRgnNm": "대구광역시 북구",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "1800000000",
       "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "150000000",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "055-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000003"
     },
     {
@@ -46,6 +58,10 @@
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "900000000",
       "mainCnsttyNm": "전기공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "40000000",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "055-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000004"
     },
     {
@@ -56,8 +72,12 @@
       "cnstrtsiteRgnNm": "경상남도 밀양시",
       "bidNtceDt": "2026-08-28 09:00:00",
       "opengDt": "2026-09-10 11:00:00",
-      "presmptPrce": "50000000",
+      "presmptPrce": "800000000",
       "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "0",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "김담당",
+      "ntceInsttOfclTelNo": "055-330-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000005"
     },
     {
@@ -70,6 +90,10 @@
       "opengDt": "2026-09-10 11:00:00",
       "presmptPrce": "3100000000",
       "mainCnsttyNm": "토목공사",
+      "contrctrcnstrtnGovsplyMtrlAmt": "520000000",
+      "govcnstrtnGovsplyMtrlAmt": "0",
+      "ntceInsttOfclNm": "이담당",
+      "ntceInsttOfclTelNo": "055-922-0000",
       "bidNtceDtlUrl": "https://www.g2b.go.kr/link/PNPE027_01/single/?bidPbancNo=R26BK000006"
     }
   ],

@@ -40,6 +40,12 @@ bid:                        # 입찰공고정보서비스 (공사)
     open_at: opengDt
     region: cnstrtsiteRgnNm # 공사현장 지역명. 예) "대구광역시 북구"
     url: bidNtceDtlUrl
+    # 관급자재 금액 — 이 사업의 핵심 지표. 두 항목을 더해서 쓴다.
+    govsply_contractor: contrctrcnstrtnGovsplyMtrlAmt  # 도급자 설치 관급자재
+    govsply_gov: govcnstrtnGovsplyMtrlAmt              # 관급공사 관급자재
+    # 관급자재는 발주처가 구매하므로 발주처 담당자가 실제 접촉 상대다.
+    official_name: ntceInsttOfclNm
+    official_tel: ntceInsttOfclTelNo
 
 scsbid:                     # 낙찰정보서비스 (공사 개찰결과)
   base_url: TODO

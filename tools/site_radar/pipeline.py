@@ -8,8 +8,10 @@ import json
 import os
 import re
 
+# 관급자재금액을 앞쪽에 둔다. 이 시트를 여는 목적이 그 숫자이기 때문이다.
 COLUMNS = [
-    "공고일", "지역(시군)", "현장명", "발주처", "공사종류", "추정금액",
+    "공고일", "지역(시군)", "현장명", "관급자재금액", "추정금액",
+    "발주처", "발주처담당자", "담당자연락처", "공사종류",
     "개찰(예정)일", "낙찰시공사", "시공사연락처", "예상소요품목", "공고URL", "접촉상태",
 ]
 
@@ -117,13 +119,25 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
     if floor and amount is not None and amount < floor:
         return None
 
+    # 관급자재 금액 = 도급자설치 관급자재 + 관급공사 관급자재
+    govsply = sum(
+        parse_amount(pick(record, field_map, key)) or 0
+        for key in ("govsply_contractor", "govsply_gov")
+    )
+    govsply_floor = config.get("min_govsply_amt")
+    if govsply_floor and govsply < govsply_floor:
+        return None
+
     return {
         "공고일": normalize_date(pick(record, field_map, "posted_at")),
         "지역(시군)": region,
         "현장명": title,
-        "발주처": agency,
-        "공사종류": pick(record, field_map, "work_type"),
+        "관급자재금액": f"{govsply:,}" if govsply else "",
         "추정금액": format_amount(amount_raw),
+        "발주처": agency,
+        "발주처담당자": pick(record, field_map, "official_name"),
+        "담당자연락처": pick(record, field_map, "official_tel"),
+        "공사종류": pick(record, field_map, "work_type"),
         "개찰(예정)일": normalize_date(pick(record, field_map, "open_at")),
         "낙찰시공사": "",
         "시공사연락처": "",
@@ -131,6 +145,11 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
         "공고URL": pick(record, field_map, "url"),
         "접촉상태": "",
     }
+
+
+def govsply_value(row: dict) -> int:
+    """정렬용 — 시트에는 콤마가 찍힌 문자열로 들어 있다."""
+    return parse_amount(row.get("관급자재금액", "")) or 0
 
 
 def load_seen(data_dir: str) -> set[str]:
