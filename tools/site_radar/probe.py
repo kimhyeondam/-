@@ -22,11 +22,12 @@ import api  # noqa: E402
 # bid 는 /ad/BidPublicInfoService 에서 확정됐다. scsbid 도 /ad/ 아래일 가능성이 높으니
 # 그것부터 두드리고, 안 되면 버전 숫자와 /ad/ 없는 형태까지 넓힌다.
 def bases(service: str) -> list[str]:
-    root = "http://apis.data.go.kr/1230000"
-    out = [f"{root}/ad/{service}"]
-    out += [f"{root}/ad/{service}{n:02d}" for n in range(1, 8)]
-    out += [f"{root}/{service}"]
-    out += [f"{root}/{service}{n:02d}" for n in range(1, 8)]
+    # 조달청 서비스는 /ad/ 와 /at/ 두 갈래가 있고 버전 숫자도 붙는다.
+    out = []
+    for root in ("https://apis.data.go.kr/1230000", "http://apis.data.go.kr/1230000"):
+        for mid in ("at/", "ad/", ""):
+            out.append(f"{root}/{mid}{service}")
+            out += [f"{root}/{mid}{service}{n:02d}" for n in range(1, 8)]
     return out
 
 
@@ -67,6 +68,7 @@ CUSTOM_HELP = """
     py tools\\site_radar\\probe.py --service ShoppingMallPrdctInfoService \\
         --ops getShoppingMallPrdctInfoList,getPrdctInfoList
 
+  --base     문서의 End Point 를 통째로 (이걸 주면 변형을 훑지 않는다)
   --service  공공데이터포털 문서의 서비스 URL 마지막 조각
   --ops      쉼표로 구분한 오퍼레이션 후보 (모르면 문서에서 그대로 옮긴다)
   --no-date  조회기간 파라미터를 쓰지 않는 서비스일 때
@@ -117,10 +119,14 @@ def probe(key: str, cfg: dict) -> dict | None:
     print(f"\n{'='*72}\n{cfg['label']} 탐색\n{'='*72}")
 
     divs = [None] if cfg.get("no_date") else INQRY_DIVS
-    names = cfg.get("services") or [cfg["service"]]
-    all_bases = [b for name in names for b in bases(name)]
+    if cfg.get("explicit_bases"):
+        all_bases = cfg["explicit_bases"]
+    else:
+        names = cfg.get("services") or [cfg["service"]]
+        all_bases = [b for name in names for b in bases(name)]
     for base in all_bases:
-        shown_base = base.replace("http://apis.data.go.kr/1230000", "…")
+        shown_base = base.replace("https://apis.data.go.kr/1230000", "…").replace(
+            "http://apis.data.go.kr/1230000", "…")
         for op in cfg["operations"]:
             url = f"{base}/{op}"
             for div in divs:
@@ -150,6 +156,11 @@ def parse_custom(argv: list[str]) -> dict | None:
         return argv[argv.index(flag) + 1] if flag in argv and argv.index(flag) + 1 < len(argv) else default
     services = [x.strip() for x in (value("--service") or "").split(",") if x.strip()]
     ops = [o.strip() for o in (value("--ops") or "").split(",") if o.strip()]
+    explicit = value("--base")
+    if explicit and ops:
+        # 문서에서 End Point 를 그대로 옮겨온 경우. 변형을 훑지 않고 이것만 쓴다.
+        return {"label": f"직접 지정: {explicit}", "explicit_bases": [explicit.rstrip("/")],
+                "operations": ops, "no_date": "--no-date" in argv}
     if not services or not ops:
         print("  --service 와 --ops 를 함께 주세요." + CUSTOM_HELP, file=sys.stderr)
         return None
