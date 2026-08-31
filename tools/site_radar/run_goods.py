@@ -34,6 +34,11 @@ def parse_args(argv=None):
     p.add_argument("--spec", default=os.path.join(HERE, "api_spec.yaml"))
     p.add_argument("--data-dir", default=os.path.join(REPO, "data"))
     p.add_argument("--lookback-days", type=int, help="config 값을 덮어쓴다")
+    p.add_argument(
+        "--list-items",
+        action="store_true",
+        help="품목 필터를 끄고, 대상 지역 물품 공고의 세부품명을 세어서 보여준다",
+    )
     p.add_argument("--fixture", help="네트워크 없이 저장된 응답으로 돌린다 (자체 점검용)")
     return p.parse_args(argv)
 
@@ -80,6 +85,28 @@ def main(argv=None) -> int:
         print(f"✅ 물품 공고 수집 — 원본 {len(raw)}건")
 
     fields = spec["thng"]["fields"]
+
+    if args.list_items:
+        # 품목 키워드를 빼고, 지역·발주처만 통과한 공고의 품명을 전부 센다.
+        # 우리 키워드가 실제 품명과 어긋나 있는지 여기서 드러난다.
+        loose = dict(config)
+        loose["item_keywords"] = None
+        counts, total = collections.Counter(), 0
+        for record in raw:
+            probe_row = goods.to_row(record, fields, loose, require_items=False)
+            if probe_row is None:
+                continue
+            total += 1
+            name = goods.pick(record, fields, "item_name") or "(세부품명 없음)"
+            spec_txt = goods.pick(record, fields, "item_spec")
+            counts[f"{name}  |  {spec_txt[:30]}" if spec_txt else name] += 1
+        print(f"\n── 대상 지역 물품 공고 {total}건의 세부품명 ──")
+        print("   (우리 품목이 보이면 goods_config.yaml 의 item_keywords 에 그 단어를 넣으세요)\n")
+        for name, n in counts.most_common(80):
+            print(f"  {n:4d}건  {name}")
+        print(f"\n서로 다른 품명 {len(counts)}종")
+        return 0
+
     seen = pipeline.load_seen(args.data_dir, goods.CSV_PATTERN, goods.SEEN_INDEX)
 
     candidates, skipped = [], 0

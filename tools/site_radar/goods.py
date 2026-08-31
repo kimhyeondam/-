@@ -33,7 +33,7 @@ def match_items(text: str, keywords) -> str:
     return ", ".join(hits)
 
 
-def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
+def to_row(record: dict, field_map: dict, config: dict, require_items: bool = True) -> dict | None:
     """물품 공고 1건 → 시트 1행. 걸리는 게 없으면 None."""
     title = pick(record, field_map, "title")
     item_name = pick(record, field_map, "item_name")
@@ -50,7 +50,7 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
 
     # 우리가 만드는 품목이 아니면 볼 이유가 없다. 이게 1차 관문이다.
     items = match_items(haystack, config.get("item_keywords"))
-    if not items:
+    if require_items and not items:
         return None
 
     targets = config.get("_targets") or normalize_targets(config.get("target_regions"))
