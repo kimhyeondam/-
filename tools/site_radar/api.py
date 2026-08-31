@@ -69,11 +69,22 @@ def service_key() -> str:
     """
     key = os.environ.get("G2B_SERVICE_KEY", "").strip().strip("'\"")
     if not key:
+        shell = "PowerShell" if os.name == "nt" else "bash"
+        line = ("$env:G2B_SERVICE_KEY = '복사한키'" if os.name == "nt"
+                else "export G2B_SERVICE_KEY='복사한키'")
         raise MissingCredential(
             "환경변수 G2B_SERVICE_KEY 가 비어 있습니다.\n"
             "공공데이터포털 마이페이지 → 개인 API 인증키 → '인증키 복사(Decoding)' 로 복사한 뒤\n"
-            "  export G2B_SERVICE_KEY='복사한키'\n"
-            "처럼 작은따옴표로 감싸서 넣고 다시 실행하세요 (키에 + 와 / 가 들어 있습니다)."
+            f"{shell} 에서\n"
+            f"    {line}\n"
+            "처럼 작은따옴표로 감싸서 넣고 다시 실행하세요 (키에 + 와 / 가 들어 있습니다).\n"
+            "창을 새로 열 때마다 다시 넣기 번거로우면 한 번만:\n"
+            "    [Environment]::SetEnvironmentVariable('G2B_SERVICE_KEY', '복사한키', 'User')\n"
+            "  (첫 칸과 마지막 칸은 그대로 두고 가운데만 바꾼 뒤, PowerShell 을 닫았다 다시 여세요)"
+            if os.name == "nt" else
+            "환경변수 G2B_SERVICE_KEY 가 비어 있습니다.\n"
+            "공공데이터포털에서 발급받은 인증키를 다음처럼 넣고 다시 실행하세요.\n"
+            f"    {line}"
         )
     if "%" in key:
         key = urllib.parse.unquote(key)
