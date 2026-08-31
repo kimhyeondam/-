@@ -36,6 +36,14 @@ SERVICES = {
         "service": "BidPublicInfoService",
         "operations": ["getBidPblancListInfoCnstwk"],
     },
+    "thng": {
+        "label": "입찰공고정보서비스 (물품)",
+        "service": "BidPublicInfoService",
+        "operations": [
+            "getBidPblancListInfoThng",
+            "getBidPblancListInfoThngPPSSrch",
+        ],
+    },
     "scsbid": {
         "label": "낙찰정보서비스 (공사 개찰결과)",
         "service": "ScsbidInfoService",
@@ -126,7 +134,7 @@ def main() -> int:
         print(f"중단: {exc}", file=sys.stderr)
         return 2
 
-    wanted = sys.argv[1:] or ["scsbid"]
+    wanted = sys.argv[1:] or ["thng"]
     results = {}
     for name in wanted:
         if name not in SERVICES:

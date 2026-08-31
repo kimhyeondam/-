@@ -49,3 +49,29 @@ bid:                        # 입찰공고정보서비스 (공사)
 
 # 낙찰정보서비스(scsbid)는 시트에서 낙찰시공사 열이 빠지면서 쓰지 않는다.
 # 다시 필요해지면 probe.py 로 오퍼레이션을 찾아 이 아래에 붙인다.
+
+thng:                       # 입찰공고정보서비스 (물품)
+  # 공사와 같은 서비스라 base_url 은 같을 가능성이 높다.
+  # probe.py thng 로 확인한 값을 넣을 것.
+  base_url: http://apis.data.go.kr/1230000/ad/BidPublicInfoService
+  operation: TODO
+  params:
+    service_key: serviceKey
+    page_no: pageNo
+    num_of_rows: numOfRows
+    response_type: type
+    date_from: inqryBgnDt
+    date_to: inqryEndDt
+  extra_params:
+    inqryDiv: 1
+  date_format: "%Y%m%d%H%M"
+  fields:
+    bid_no: bidNtceNo
+    bid_ord: bidNtceOrd
+    title: bidNtceNm
+    agency: dminsttNm
+    posted_at: bidNtceDt
+    amount: presmptPrce
+    close_at: bidClseDt       # 입찰마감일시
+    url: bidNtceDtlUrl
+    item_name: TODO           # 세부품명 항목이 있으면 그 이름, 없으면 null

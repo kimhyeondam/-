@@ -192,15 +192,15 @@ def govsply_value(row: dict) -> int:
     return parse_amount(row.get("관급자재금액", "")) or 0
 
 
-def load_seen(data_dir: str) -> set[str]:
+def load_seen(data_dir: str, pattern: str = "radar_*.csv", index: str = SEEN_INDEX) -> set[str]:
     """이전 실행에서 이미 시트에 넣은 공고번호."""
-    path = os.path.join(data_dir, SEEN_INDEX)
+    path = os.path.join(data_dir, index)
     if os.path.exists(path):
         with open(path, encoding="utf-8") as fh:
             return set(json.load(fh))
     # 색인이 없어졌으면 기존 CSV의 (현장명, 발주처, 공고일)로 대체 판정한다.
     fallback = set()
-    for csv_path in sorted(glob.glob(os.path.join(data_dir, "radar_*.csv"))):
+    for csv_path in sorted(glob.glob(os.path.join(data_dir, pattern))):
         with open(csv_path, encoding="utf-8-sig", newline="") as fh:
             for row in csv.DictReader(fh):
                 fallback.add(row_fingerprint(row))
@@ -238,17 +238,17 @@ def collapse_by_name(rows: list[dict]) -> tuple[list[dict], int]:
     return list(best.values()), len(rows) - len(best)
 
 
-def save_seen(data_dir: str, seen: set[str]) -> None:
-    with open(os.path.join(data_dir, SEEN_INDEX), "w", encoding="utf-8") as fh:
+def save_seen(data_dir: str, seen: set[str], index: str = SEEN_INDEX) -> None:
+    with open(os.path.join(data_dir, index), "w", encoding="utf-8") as fh:
         json.dump(sorted(seen), fh, ensure_ascii=False, indent=0)
 
 
-def write_csv(path: str, rows: list[dict]) -> None:
+def write_csv(path: str, rows: list[dict], columns: list[str] | None = None) -> None:
     """엑셀에서 바로 열리도록 UTF-8 BOM으로 쓴다. 기존 파일이 있으면 이어 붙인다."""
     exists = os.path.exists(path)
     mode = "a" if exists else "w"
     with open(path, mode, encoding="utf-8-sig", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=COLUMNS)
+        writer = csv.DictWriter(fh, fieldnames=columns or COLUMNS)
         if not exists:
             writer.writeheader()
         writer.writerows(rows)
