@@ -26,31 +26,34 @@ sys.path.insert(0, HERE)
 
 WORKS = {"공사", "1", "work", "works", "c"}
 GOODS = {"물품", "2", "goods", "item", "g"}
-BOTH = {"전체", "둘다", "3", "all", "both", "a"}
-ITEMS = {"4", "품명", "품명목록", "items"}
-REGIONS = {"5", "지역", "지역목록", "regions"}
+MAS = {"납품", "납품요구", "3", "mas", "m"}
+BOTH = {"전체", "둘다", "4", "all", "both", "a"}
+ITEMS = {"5", "품명", "품명목록", "items"}
+REGIONS = {"6", "지역", "지역목록", "regions"}
+ALL_KINDS = WORKS | GOODS | MAS | BOTH | ITEMS | REGIONS
 
 
 def ask_kind() -> str:
     print()
     print("  무엇을 찾을까요?")
     print()
-    print("    1. 공사   — 관급자재가 잡힌 공사 공고 (착공 전 예고)")
-    print("    2. 물품   — 우리 품목의 물품 공고 (입찰 기회)")
-    print("    3. 전체   — 둘 다")
+    print("    1. 공사     — 관급자재가 잡힌 공사 공고 (착공 전 예고)")
+    print("    2. 물품     — 우리 품목의 물품 공고 (입찰 기회)")
+    print("    3. 납품요구  — 쇼핑몰로 실제 나간 물량 (수요처·경쟁사)")
+    print("    4. 전체     — 셋 다")
     print()
-    print("    4. 품명 목록  — 전남·광주에 실제로 나온 물품 품명 세어보기")
-    print("    5. 지역 목록  — 공고에 실제로 찍힌 지역명 세어보기")
+    print("    5. 품명 목록 — 납품요구에 실제로 찍힌 품명 세어보기")
+    print("    6. 지역 목록 — 공고에 실제로 찍힌 지역명 세어보기")
     print()
     while True:
         try:
-            answer = input("  번호 또는 공사/물품/전체 입력 > ").strip().lower()
+            answer = input("  번호 또는 공사/물품/납품/전체 입력 > ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\n  취소했습니다.")
             raise SystemExit(1)
-        if answer in WORKS | GOODS | BOTH | ITEMS | REGIONS:
+        if answer in ALL_KINDS:
             return answer
-        print("  1~5 중에 고르시거나 공사 / 물품 / 전체 라고 적어주세요.")
+        print("  1~6 중에 고르시거나 공사 / 물품 / 납품 / 전체 라고 적어주세요.")
 
 
 def ensure_key() -> bool:
@@ -126,9 +129,9 @@ def main() -> int:
         kind = ask_kind()
     kind = kind.strip().lower()
 
-    if kind not in WORKS | GOODS | BOTH | ITEMS | REGIONS:
+    if kind not in ALL_KINDS:
         print(f"  알 수 없는 값입니다: {kind}")
-        print("  공사 / 물품 / 전체 / 품명 / 지역 중에 하나를 쓰세요.")
+        print("  공사 / 물품 / 납품 / 전체 / 품명 / 지역 중에 하나를 쓰세요.")
         return 2
 
     if not ensure_key():
@@ -139,8 +142,8 @@ def main() -> int:
           + (f" (최근 {days}일)" if days else " (최근 14일)"))
 
     if kind in ITEMS:
-        import run_goods
-        return run_goods.main(["--list-items", "--lookback-days", days or "14"])
+        import run_mas
+        return run_mas.main(["--list-items", "--lookback-days", days or "14"])
     if kind in REGIONS:
         import run
         return run.main(["--list-regions", "--lookback-days", days or "14"])
@@ -150,6 +153,8 @@ def main() -> int:
         code |= run_one("공사 공고", "run", "radar", days)
     if kind in GOODS or kind in BOTH:
         code |= run_one("물품 공고", "run_goods", "goods", days)
+    if kind in MAS or kind in BOTH:
+        code |= run_one("납품요구 (쇼핑몰)", "run_mas", "mas", days)
     return code
 
 

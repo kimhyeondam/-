@@ -80,3 +80,32 @@ thng:                       # 입찰공고정보서비스 (물품)
     item_list: purchsObjPrdctList    # 구매대상 물품 목록 (여러 품목일 때)
     qty: prdctQty
     unit: prdctUnit
+
+dlvrreq:                    # 나라장터쇼핑몰 납품요구 현황 (MAS·단가계약 실제 납품)
+  # probe.py mas_dlvr 로 확정 (2026-08-31, 3일치 totalCount 4,889).
+  # 입찰공고와 달리 날짜가 필수이고 이름이 다르다(Date, 8자리) + inqryDiv 도 함께 요구한다.
+  base_url: https://apis.data.go.kr/1230000/at/ShoppingMallPrdctInfoService
+  operation: getDlvrReqInfoList
+  params:
+    service_key: serviceKey
+    page_no: pageNo
+    num_of_rows: numOfRows
+    response_type: type
+    date_from: inqryBgnDate
+    date_to: inqryEndDate
+  extra_params:
+    inqryDiv: 1
+  date_format: "%Y%m%d"
+  fields:
+    bid_no: dlvrReqNo           # 납품요구번호
+    bid_ord: dlvrReqChgOrd      # 변경차수. 같은 건이 차수만 늘어 여러 번 온다
+    title: dlvrReqNm            # 예) 수로관 구입[동산리 농어촌도로 확포장공사]
+    agency: dminsttNm           # 수요기관
+    region: dminsttRgnNm        # 수요기관 지역. 예) 경기도 이천시
+    posted_at: dlvrReqRcptDate  # 납품요구 접수일
+    qty: dlvrReqQty
+    amount: dlvrReqAmt
+    corp: corpNm                # 납품업체 — 경쟁사가 여기 드러난다
+    item_class: rprsntPrdctClsfcNoNm      # 예) 배수로
+    item_name: rprsntDtilPrdctClsfcNoNm   # 예) 철근콘크리트벤치플룸관
+    cntrct_type: cntrctCnclsStleNm        # 예) 제3자단가계약

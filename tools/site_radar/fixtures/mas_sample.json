@@ -1,0 +1,102 @@
+{
+  "rows": [
+    {
+      "dlvrReqNo": "1218100001",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "수로관 구입[삼향읍 농어촌도로 확포장공사]",
+      "dminsttNm": "전남광주통합특별시 무안군",
+      "dminsttRgnNm": "전남광주통합특별시 무안군",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "101",
+      "dlvrReqAmt": "11358010",
+      "corpNm": "(주)남도콘크리트",
+      "rprsntPrdctClsfcNoNm": "배수로",
+      "rprsntDtilPrdctClsfcNoNm": "철근콘크리트벤치플룸관",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100002",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "흄관 구입[진도읍 하수도정비]",
+      "dminsttNm": "전남광주통합특별시 진도군",
+      "dminsttRgnNm": "전남광주통합특별시 진도군",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "300",
+      "dlvrReqAmt": "45000000",
+      "corpNm": "(주)하나콘크리트",
+      "rprsntPrdctClsfcNoNm": "관",
+      "rprsntDtilPrdctClsfcNoNm": "원심력철근콘크리트관",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100002",
+      "dlvrReqChgOrd": "02",
+      "dlvrReqNm": "흄관 구입[진도읍 하수도정비]",
+      "dminsttNm": "전남광주통합특별시 진도군",
+      "dminsttRgnNm": "전남광주통합특별시 진도군",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "280",
+      "dlvrReqAmt": "41000000",
+      "corpNm": "(주)하나콘크리트",
+      "rprsntPrdctClsfcNoNm": "관",
+      "rprsntDtilPrdctClsfcNoNm": "원심력철근콘크리트관",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100003",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "콘크리트 경계블록 구입",
+      "dminsttNm": "전남광주통합특별시 북구",
+      "dminsttRgnNm": "전남광주통합특별시 북구",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "3400",
+      "dlvrReqAmt": "62000000",
+      "corpNm": "(주)남도콘크리트",
+      "rprsntPrdctClsfcNoNm": "블록",
+      "rprsntDtilPrdctClsfcNoNm": "콘크리트경계블록",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100004",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "수로관 구입",
+      "dminsttNm": "경기도 이천시",
+      "dminsttRgnNm": "경기도 이천시",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "101",
+      "dlvrReqAmt": "11358010",
+      "corpNm": "(주)하나콘크리트",
+      "rprsntPrdctClsfcNoNm": "배수로",
+      "rprsntDtilPrdctClsfcNoNm": "철근콘크리트벤치플룸관",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100005",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "사무용 의자 구입",
+      "dminsttNm": "전남광주통합특별시 여수시",
+      "dminsttRgnNm": "전남광주통합특별시 여수시",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "50",
+      "dlvrReqAmt": "8000000",
+      "corpNm": "(주)가구",
+      "rprsntPrdctClsfcNoNm": "가구",
+      "rprsntDtilPrdctClsfcNoNm": "사무용의자",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    },
+    {
+      "dlvrReqNo": "1218100006",
+      "dlvrReqChgOrd": "00",
+      "dlvrReqNm": "맨홀 구입",
+      "dminsttNm": "전남광주통합특별시 순천시",
+      "dminsttRgnNm": "전남광주통합특별시 순천시",
+      "dlvrReqRcptDate": "2026-08-28",
+      "dlvrReqQty": "20",
+      "dlvrReqAmt": "5000000",
+      "corpNm": "(주)피이",
+      "rprsntPrdctClsfcNoNm": "맨홀",
+      "rprsntDtilPrdctClsfcNoNm": "플라스틱계맨홀",
+      "cntrctCnclsStleNm": "제3자단가계약"
+    }
+  ]
+}
