@@ -85,7 +85,9 @@ def main(argv=None) -> int:
     days = args.lookback_days or config.get("lookback_days") or 7
 
     os.makedirs(args.data_dir, exist_ok=True)
-    regions = config["target_regions"]
+    # 지역 표기 패턴은 한 번만 컴파일해서 재사용한다.
+    config["_targets"] = pipeline.normalize_targets(config.get("target_regions"))
+    regions = [name for name, _ in config["_targets"]]
     preview = ", ".join(regions[:4]) + (f" 외 {len(regions)-4}곳" if len(regions) > 4 else "")
     print(f"✅ 설정 로드 — 대상 지역 {len(regions)}곳 ({preview}), 최근 {days}일")
 
@@ -171,10 +173,10 @@ def main(argv=None) -> int:
     print(f"관급자재 합계   : {govsply_total:,}원")
     print(f"기존 중복 제외  : {skipped}건")
     print(f"API 실패        : {client.failures if client else 0}건")
-    hits = [(r, by_region[r]) for r in config["target_regions"] if by_region.get(r)]
+    hits = [(r, by_region[r]) for r in regions if by_region.get(r)]
     for region, n in sorted(hits, key=lambda kv: -kv[1]):
         print(f"  {region}: {n}건")
-    quiet = len(config["target_regions"]) - len(hits)
+    quiet = len(regions) - len(hits)
     if quiet:
         print(f"  (나머지 {quiet}곳 0건)")
     return 0

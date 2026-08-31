@@ -66,13 +66,41 @@ def region_patterns(region: str) -> list[re.Pattern]:
     return patterns
 
 
-def match_region(haystack: str, regions: list[str]) -> str:
-    """발주처·공고명에서 대상 시·군을 찾는다. 없으면 빈 문자열."""
-    for region in regions:
-        if not region:
+def normalize_targets(regions) -> list[tuple[str, list[re.Pattern]]]:
+    """설정의 target_regions 를 (표시이름, 매칭패턴들) 목록으로 편다.
+
+    한 지역이 여러 표기로 올 수 있다. 행정구역 통합처럼 이름이 바뀌면
+    한동안 옛 표기와 새 표기가 섞여 오므로, 둘 다 등록해 두고 하나로 묶는다.
+
+        - 광양시                          # 표기가 하나뿐인 경우
+        - name: 광주 북구                  # 여러 표기를 한 이름으로 묶는 경우
+          match: [전남광주통합특별시 북구, 광주광역시 북구]
+    """
+    out = []
+    for entry in regions or []:
+        if isinstance(entry, dict):
+            name = entry.get("name")
+            forms = entry.get("match") or ([name] if name else [])
+        else:
+            name, forms = entry, [entry]
+        if not name:
             continue
-        if any(p.search(haystack) for p in region_patterns(region)):
-            return region
+        patterns = [p for form in forms if form for p in region_patterns(form)]
+        out.append((name, patterns))
+    return out
+
+
+def target_names(regions) -> list[str]:
+    return [name for name, _ in normalize_targets(regions)]
+
+
+def match_region(haystack: str, targets) -> str:
+    """발주처·공고명에서 대상 시·군을 찾는다. 없으면 빈 문자열."""
+    if targets and isinstance(targets[0], str):
+        targets = normalize_targets(targets)
+    for name, patterns in targets:
+        if any(p.search(haystack) for p in patterns):
+            return name
     return ""
 
 
@@ -105,7 +133,7 @@ def to_row(record: dict, field_map: dict, config: dict) -> dict | None:
 
     # 공사현장 지역명(cnstrtsiteRgnNm)이 있으면 그것만 본다. 이게 곧 물류 반경 판정 기준이다.
     # 비어 있는 공고만 발주처명·공고명으로 되짚는다.
-    targets = config.get("target_regions") or []
+    targets = config.get("_targets") or normalize_targets(config.get("target_regions"))
     region = match_region(region_field, targets) if region_field else ""
     if not region:
         region = match_region(f"{agency} {title}", targets)
