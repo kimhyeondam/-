@@ -136,14 +136,14 @@ def main() -> int:
         return 2
 
     print(f"\n  {datetime.now():%Y-%m-%d %H:%M} 검색 시작"
-          + (f" (최근 {days}일)" if days else " (최근 7일)"))
+          + (f" (최근 {days}일)" if days else " (최근 14일)"))
 
     if kind in ITEMS:
         import run_goods
-        return run_goods.main(["--list-items", "--lookback-days", days or "30"])
+        return run_goods.main(["--list-items", "--lookback-days", days or "14"])
     if kind in REGIONS:
         import run
-        return run.main(["--list-regions", "--lookback-days", days or "30"])
+        return run.main(["--list-regions", "--lookback-days", days or "14"])
 
     code = 0
     if kind in WORKS or kind in BOTH:
