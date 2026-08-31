@@ -4,8 +4,9 @@
 후보 조합을 실제로 호출해서 되는 것을 찾고, 성공한 응답의 '실제' 항목명을
 그대로 출력한다. 추측이 들어갈 자리가 없다. 인증키는 화면에 출력하지 않는다.
 
-    py tools\\site_radar\\probe.py            # 남은 서비스 전부
-    py tools\\site_radar\\probe.py scsbid     # 낙찰정보서비스만
+    py tools\\site_radar\\probe.py mas        # 나라장터쇼핑몰 (납품요구)
+    py tools\\site_radar\\probe.py thng       # 물품 입찰공고
+    py tools\\site_radar\\probe.py scsbid     # 낙찰정보서비스
 """
 
 from __future__ import annotations
@@ -44,6 +45,18 @@ SERVICES = {
             "getBidPblancListInfoThng",
             "getBidPblancListInfoThngPPSSrch",
         ],
+    },
+    "mas": {
+        # 조달청_나라장터쇼핑몰 품목정보 서비스. 문서의 End Point 를 그대로 쓴다.
+        # 파라미터를 안 주면 하루분이 돌아온다고 문서에 적혀 있어 날짜를 붙이지 않는다.
+        "label": "나라장터쇼핑몰 품목정보 (납품요구·다수공급자계약)",
+        "explicit_bases": ["https://apis.data.go.kr/1230000/at/ShoppingMallPrdctInfoService"],
+        "operations": [
+            "getDlvrReqDtlInfoList",        # 납품요구 상세 — 세부품명·수량
+            "getDlvrReqInfoList",           # 납품요구 현황 — 수요기관·계약업체
+            "getMASCntrctPrdctInfoList",    # 다수공급자계약 품목
+        ],
+        "no_date": True,
     },
     "scsbid": {
         "label": "낙찰정보서비스 (공사 개찰결과)",
