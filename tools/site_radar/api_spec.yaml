@@ -51,10 +51,9 @@ bid:                        # 입찰공고정보서비스 (공사)
 # 다시 필요해지면 probe.py 로 오퍼레이션을 찾아 이 아래에 붙인다.
 
 thng:                       # 입찰공고정보서비스 (물품)
-  # 공사와 같은 서비스라 base_url 은 같을 가능성이 높다.
-  # probe.py thng 로 확인한 값을 넣을 것.
+  # probe.py thng 로 실제 호출해 확정 (2026-08-31, 최근 7일 totalCount 2686).
   base_url: http://apis.data.go.kr/1230000/ad/BidPublicInfoService
-  operation: TODO
+  operation: getBidPblancListInfoThng
   params:
     service_key: serviceKey
     page_no: pageNo
@@ -71,7 +70,13 @@ thng:                       # 입찰공고정보서비스 (물품)
     title: bidNtceNm
     agency: dminsttNm
     posted_at: bidNtceDt
-    amount: presmptPrce
+    amount: presmptPrce       # 추정가격. 배정예산은 asignBdgtAmt
     close_at: bidClseDt       # 입찰마감일시
     url: bidNtceDtlUrl
-    item_name: TODO           # 세부품명 항목이 있으면 그 이름, 없으면 null
+    # 품목 판정에 쓰는 항목들. 공고명만 보면 "관급자재 구매"처럼
+    # 뭉뚱그린 제목에서 우리 품목을 놓친다.
+    item_name: dtilPrdctClsfcNoNm    # 세부품명. 예) 골수술기
+    item_spec: prdctSpecNm           # 규격
+    item_list: purchsObjPrdctList    # 구매대상 물품 목록 (여러 품목일 때)
+    qty: prdctQty
+    unit: prdctUnit

@@ -2,17 +2,16 @@
 
 ## 상태
 
-**입찰공고 수집은 완성됐다. 낙찰(개찰결과) 연결만 남았다.**
+**완성. 공사·물품 두 레이더 모두 동작한다.**
 
-`bid` 스펙은 문서를 옮겨 적은 것이 아니라 `probe.py` 로 실제 호출해서 확정했다.
+스펙은 문서를 옮겨 적은 것이 아니라 `probe.py` 로 실제 호출해서 확정했다.
+둘 다 같은 서비스 아래에 있다.
 
 ```
 base_url  http://apis.data.go.kr/1230000/ad/BidPublicInfoService
-operation getBidPblancListInfoCnstwk   (inqryDiv=1)
+공사      getBidPblancListInfoCnstwk   (inqryDiv=1, 7일 2,385건)
+물품      getBidPblancListInfoThng     (inqryDiv=1, 7일 2,686건)
 ```
-
-`scsbid`(낙찰정보서비스)는 아직 되는 조합을 찾지 못했다. 그동안 낙찰시공사
-열은 "개찰전"으로 채워진다. 나머지 기능은 전부 동작한다.
 
 ## 두 개의 레이더
 
