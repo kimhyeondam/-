@@ -153,8 +153,6 @@ def 설정미완():
         return []
     할일 = ["판매단가 — 원가는 들어와 있습니다. 마진을 정하면 한 번에 채웁니다:",
             "     python3 scripts/ops.py 판매가설정 --마진 25"]
-    if all(num(r.get("차량당운반비")) == 0 for r in read("운반비")):
-        할일.append("data/운반비.csv 의 거리 구간별 차량당 운반비")
     if not read("재고"):
         할일.append("data/재고.csv — 상시 보유하는 품목만 넣으십시오 (전 품목 아님)")
     return 할일
@@ -361,14 +359,6 @@ def cmd_조정(args):
 
 # ─────────────────────────────── 견적 ───────────────────────────────
 
-def 운반비계산(거리, 차량수):
-    표 = sorted(read("운반비"), key=lambda r: num(r["최대거리km"]))
-    for r in 표:
-        if 거리 <= num(r["최대거리km"]):
-            return num(r["차량당운반비"]) * 차량수, num(r["최대거리km"])
-    return 0, 0
-
-
 def cmd_견적(args):
     품목 = 품목맵()
     항목 = []
@@ -394,12 +384,9 @@ def cmd_견적(args):
 
     소계 = sum(i["금액"] for i in 항목)
     할인 = int(소계 * args.할인 / 100)
-    미상 = [i for i in 항목 if i["적재"] <= 0]
-    차량수 = max(1, math.ceil(sum(i["수량"] / i["적재"] for i in 항목 if i["적재"] > 0)))
-    운반비, 구간 = 운반비계산(args.거리, 차량수) if args.거리 else (0, 0)
-    if 미상 and args.거리:
-        print(f"  ⚠ 차량적재수량이 없는 품목이 있어 운반비가 과소 계산됩니다: "
-              f"{', '.join(i['코드'] for i in 미상)}")
+    운반비 = args.운반비
+    적재가능 = [i for i in 항목 if i["적재"] > 0]
+    차량수 = math.ceil(sum(i["수량"] / i["적재"] for i in 적재가능)) if 적재가능 else 0
     공급가 = 소계 - 할인 + 운반비
     부가세 = int(round(공급가 * 0.1))
     합계 = 공급가 + 부가세
@@ -414,7 +401,11 @@ def cmd_견적(args):
     if 할인:
         print(f"  할인 {args.할인}% △{won(할인)}")
     if 운반비:
-        print(f"  운반비 {차량수}대 × {구간}km 구간 = {won(운반비)}")
+        print(f"  운반비 {won(운반비)}")
+    else:
+        print("  운반비 별도 — 넣으시려면 --운반비 금액")
+    if 차량수 and len(적재가능) == len(항목):
+        print(f"  · 차량 {차량수}대 분량 (적재수량 기준, 운반비 산정 참고용)")
     print(f"  ─ 공급가 {won(공급가)} / 부가세 {won(부가세)} / 합계 {won(합계)}")
 
     원가 = sum(num(품목[i['코드']].get('원가')) * i['수량'] for i in 항목)
@@ -424,7 +415,7 @@ def cmd_견적(args):
               f"{마진/max(소계-할인,1)*100:.1f}%  (내부 참고용, 견적서에는 안 나갑니다)")
 
     회신 = 오늘 + dt.timedelta(days=args.회신일)
-    파일 = 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 차량수, 공급가, 부가세, 합계, 오늘)
+    파일 = 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 공급가, 부가세, 합계, 오늘)
     append("견적", {
         "번호": 번호, "일자": f"{오늘:%Y-%m-%d}", "거래처": args.거래처,
         "현장": args.현장 or "", "공급가": str(공급가), "부가세": str(부가세),
@@ -435,7 +426,7 @@ def cmd_견적(args):
     print(f"  발송하면: python3 scripts/ops.py 견적상태 --번호 {번호} --상태 발송\n")
 
 
-def 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 차량수, 공급가, 부가세, 합계, 오늘):
+def 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 공급가, 부가세, 합계, 오늘):
     회사 = 회사정보()
     os.makedirs(견적서_DIR, exist_ok=True)
     f = os.path.join(견적서_DIR, f"{번호}_{re.sub(r'[^가-힣A-Za-z0-9]', '', args.거래처)}.html")
@@ -446,7 +437,8 @@ def 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 차량수, �
     if 할인:
         줄.append(f"<tr><td colspan=5>할인 {args.할인}%</td><td class=r>-{할인:,}</td></tr>")
     if 운반비:
-        줄.append(f"<tr><td>운반비</td><td>{args.거리}km · {차량수}대</td><td colspan=3></td><td class=r>{운반비:,}</td></tr>")
+        줄.append(f"<tr><td>운반비</td><td>{args.운반비메모 or '현장 도착도'}</td>"
+                  f"<td colspan=3></td><td class=r>{운반비:,}</td></tr>")
     html = f"""<!doctype html><html lang=ko><meta charset=utf-8>
 <title>견적서 {번호} {args.거래처}</title>
 <style>
@@ -783,7 +775,7 @@ def cmd_예시삭제(args):
         남길 = 실데이터(rows)
         지움 += len(rows) - len(남길)
         write(name, 남길)
-    for name in ("품목", "운반비"):
+    for name in ("품목",):
         rows = read(name)
         for r in rows:
             if (r.get("비고") or "").startswith("예시"):
@@ -830,7 +822,8 @@ def main():
     p.add_argument("--품목", required=True, help="'HP600:120,MH1200:8' 형식")
     p.add_argument("--현장", default="")
     p.add_argument("--담당", default="")
-    p.add_argument("--거리", type=int, default=0, help="현장까지 km (운반비 자동 계산)")
+    p.add_argument("--운반비", type=int, default=0, help="운반비 (직접 계산해서 넣으십시오)")
+    p.add_argument("--운반비메모", default="", help="견적서에 찍을 운반 조건 (예: 25톤 2대 도착도)")
     p.add_argument("--할인", type=float, default=0, help="%")
     p.add_argument("--유효일", type=int, default=15)
     p.add_argument("--회신일", type=int, default=3, help="며칠 뒤에 재연락할지")

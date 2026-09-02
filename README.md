@@ -17,8 +17,8 @@ Claude Code 에서 `/초기설정` 을 실행하십시오. 순서대로 물어�
 | 채울 것 | 파일 |
 |---|---|
 | 회사 정보·견적 조건 | `설정/회사정보.md` |
-| 품목·단가·원가·차량적재수량 | `data/품목.csv` |
-| 거리 구간별 운반비 | `data/운반비.csv` |
+| 품목·판매단가·원가(매입가)·조달가 | `data/품목.csv` |
+| 대분류별 마진율 | `data/마진율.csv` |
 | 야적장 실사 재고·안전재고 | `data/재고.csv` |
 | 거래처 (거래/휴면/미거래) | `data/거래처.csv` |
 
@@ -54,7 +54,9 @@ python3 scripts/ops.py 재고            # 재고 현황과 경보
 python3 scripts/ops.py 출고 --코드 HP600 --수량 12 --상대처 대창건자재
 python3 scripts/ops.py 입고 --코드 HP600 --수량 40
 python3 scripts/ops.py 조정 --코드 HP600 --수량 33      # 실사 결과로 덮어쓰기
-python3 scripts/ops.py 견적 --거래처 한길종합건설 --품목 "HP600:120,MH1200:8" --거리 35
+python3 scripts/ops.py 품목 --찾기 648              # 품목 코드 검색 (수백 개라 필수)
+python3 scripts/ops.py 견적 --거래처 한길종합건설 --품목 "CP503:120,JC001:8" --운반비 450000
+python3 scripts/ops.py 판매가설정                   # 원가 + 마진율.csv 로 판매단가 생성
 python3 scripts/ops.py 견적상태 --번호 20260901-01 --상태 수주
 python3 scripts/ops.py 활동 --상대 "김부장" --내용 "재고 문의" --다음 "견적 발송" --다음일 2026-09-05
 python3 scripts/ops.py 현장            # 현장 레이더 (--미접촉 으로 놓친 것만)
