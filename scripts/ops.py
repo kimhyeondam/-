@@ -70,6 +70,13 @@ def num(v, default=0):
         return default
 
 
+def fnum(v, default=0.0):
+    try:
+        return float(re.sub(r"[^\d.\-]", "", str(v)) or default)
+    except ValueError:
+        return default
+
+
 def date(v):
     if not v:
         return None
@@ -413,7 +420,8 @@ def cmd_견적(args):
     원가 = sum(num(품목[i['코드']].get('원가')) * i['수량'] for i in 항목)
     if 원가:
         마진 = 소계 - 할인 - 원가
-        print(f"  · 마진 {won(마진)} ({마진/max(소계-할인,1)*100:.1f}%) — 내부 참고용, 견적서에는 안 나갑니다")
+        print(f"  · 마진 {won(마진)} — 원가 대비 {마진/원가*100:.1f}% / 매출 대비 "
+              f"{마진/max(소계-할인,1)*100:.1f}%  (내부 참고용, 견적서에는 안 나갑니다)")
 
     회신 = 오늘 + dt.timedelta(days=args.회신일)
     파일 = 견적서_HTML(번호, args, 항목, 소계, 할인, 운반비, 차량수, 공급가, 부가세, 합계, 오늘)
@@ -721,10 +729,20 @@ def cmd_품목(args):
     print()
 
 
+def 적용마진(품목행):
+    """data/마진율.csv 를 위에서부터 훑어 먼저 걸리는 규칙을 쓴다."""
+    건초 = 품목행.get("대분류", "") + 품목행.get("품목명", "")
+    for r in read("마진율"):
+        말 = (r.get("매칭어") or "").strip()
+        if 말 and 말 in 건초:
+            return fnum(r.get("마진율")), r.get("구분", 말)
+    return None, None
+
+
 def cmd_판매가설정(args):
     """원가에 마진을 얹어 판매단가를 만든다. 이미 값이 있으면 --덮어쓰기 없이는 건드리지 않는다."""
     rows = read("품목")
-    바뀜, 건너뜀 = 0, 0
+    적용, 건너뜀, 규칙없음 = {}, 0, []
     for r in rows:
         if args.대분류 and args.대분류 not in r["대분류"]:
             continue
@@ -734,14 +752,26 @@ def cmd_판매가설정(args):
         if num(r["판매단가"]) > 0 and not args.덮어쓰기:
             건너뜀 += 1
             continue
-        값 = 원가 * (1 + args.마진 / 100)
-        r["판매단가"] = str(int(round(값 / args.반올림) * args.반올림))
-        바뀜 += 1
+        if args.마진 is not None:
+            마진, 이름 = args.마진, f"일괄 {args.마진}%"
+        else:
+            마진, 이름 = 적용마진(r)
+            if 마진 is None:
+                규칙없음.append(r["코드"])
+                continue
+        r["판매단가"] = str(int(round(원가 * (1 + 마진 / 100) / args.반올림) * args.반올림))
+        적용.setdefault((이름, 마진), []).append(r)
     write("품목", rows)
-    print(f"  판매단가 {바뀜}건 설정 (마진 {args.마진}%, {args.반올림}원 단위 반올림)")
+    title("판매단가 설정 완료")
+    for (이름, 마진), 목록 in sorted(적용.items(), key=lambda x: -x[0][1]):
+        print(f"  {pad(이름, 18)} {pad(f'{마진:g}%', 5, True)}  {len(목록):>4}건")
+    print(f"  {'─'*40}\n  {pad('합계', 18)} {'':>5}  {sum(len(v) for v in 적용.values()):>4}건")
     if 건너뜀:
-        print(f"  · 이미 단가가 있는 {건너뜀}건은 그대로 두었습니다. 바꾸려면 --덮어쓰기")
-    print("  개별 품목은 data/품목.csv 를 엑셀로 열어 직접 고치십시오.")
+        print(f"\n  · 이미 단가가 있는 {건너뜀}건은 그대로 두었습니다. 바꾸려면 --덮어쓰기")
+    if 규칙없음:
+        print(f"\n  ⚠ 마진 규칙에 안 걸린 {len(규칙없음)}건: {', '.join(규칙없음[:10])}")
+        print("    data/마진율.csv 에 매칭어를 추가하십시오.")
+    print("\n  개별 품목은 data/품목.csv 를 엑셀로 열어 직접 고치면 됩니다.")
 
 
 # ─────────────────────────────── 정리 ───────────────────────────────
@@ -780,7 +810,7 @@ def main():
     p.set_defaults(func=cmd_품목)
 
     p = sub.add_parser("판매가설정", help="원가 + 마진으로 판매단가 일괄 생성")
-    p.add_argument("--마진", type=float, required=True, help="%%")
+    p.add_argument("--마진", type=float, help="%% (생략하면 data/마진율.csv 규칙을 씁니다)")
     p.add_argument("--대분류", default="", help="특정 대분류만 (예: 주철)")
     p.add_argument("--반올림", type=int, default=100, help="원 단위 반올림 (기본 100)")
     p.add_argument("--덮어쓰기", action="store_true", help="이미 있는 판매단가도 다시 계산")
