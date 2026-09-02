@@ -727,8 +727,10 @@ def 적용마진(품목행):
     for r in read("마진율"):
         말 = (r.get("매칭어") or "").strip()
         if 말 and 말 in 건초:
-            return fnum(r.get("마진율")), r.get("구분", 말)
-    return None, None
+            단위 = num(r.get("원단위"), 0) or None
+            올림 = (r.get("올림") or "").strip().upper().startswith("Y")
+            return fnum(r.get("마진율")), r.get("구분", 말), 단위, 올림
+    return None, None, None, False
 
 
 def cmd_판매가설정(args):
@@ -745,13 +747,15 @@ def cmd_판매가설정(args):
             건너뜀 += 1
             continue
         if args.마진 is not None:
-            마진, 이름 = args.마진, f"일괄 {args.마진}%"
+            마진, 이름, 단위, 올림 = args.마진, f"일괄 {args.마진}%", None, False
         else:
-            마진, 이름 = 적용마진(r)
+            마진, 이름, 단위, 올림 = 적용마진(r)
             if 마진 is None:
                 규칙없음.append(r["코드"])
                 continue
-        r["판매단가"] = str(int(round(원가 * (1 + 마진 / 100) / args.반올림) * args.반올림))
+        단위 = args.반올림 or 단위 or 100
+        값 = 원가 * (1 + 마진 / 100) / 단위
+        r["판매단가"] = str(int((math.ceil(값) if 올림 else round(값)) * 단위))
         적용.setdefault((이름, 마진), []).append(r)
     write("품목", rows)
     title("판매단가 설정 완료")
@@ -804,7 +808,7 @@ def main():
     p = sub.add_parser("판매가설정", help="원가 + 마진으로 판매단가 일괄 생성")
     p.add_argument("--마진", type=float, help="%% (생략하면 data/마진율.csv 규칙을 씁니다)")
     p.add_argument("--대분류", default="", help="특정 대분류만 (예: 주철)")
-    p.add_argument("--반올림", type=int, default=100, help="원 단위 반올림 (기본 100)")
+    p.add_argument("--반올림", type=int, help="원 단위 반올림 (생략하면 마진율.csv 의 원단위)")
     p.add_argument("--덮어쓰기", action="store_true", help="이미 있는 판매단가도 다시 계산")
     p.set_defaults(func=cmd_판매가설정)
 
