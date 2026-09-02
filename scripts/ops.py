@@ -140,15 +140,17 @@ def 소진예측(코드, 재고수, 이력, 오늘):
 
 
 def 설정미완():
-    """단가가 전부 0이면 아직 세팅 전이다. 그 상태에서 경보를 울려봐야 소음이다."""
+    """판매단가가 하나도 없으면 견적을 낼 수 없다. 그 상태에서 다른 경보를 울려봐야 소음이다."""
     품목 = read("품목")
-    미입력 = [r for r in 품목 if num(r.get("판매단가")) == 0]
-    운반 = all(num(r.get("차량당운반비")) == 0 for r in read("운반비"))
-    if 품목 and len(미입력) == len(품목):
-        return ["data/품목.csv 의 판매단가·원가 (견적이 여기서 나옵니다)",
-                "data/재고.csv 의 현재고·안전재고 (야적장 실사 1회)"] + (
-                ["data/운반비.csv 의 거리 구간별 차량당 운반비"] if 운반 else [])
-    return []
+    if not 품목 or any(num(r.get("판매단가")) > 0 for r in 품목):
+        return []
+    할일 = ["판매단가 — 원가는 들어와 있습니다. 마진을 정하면 한 번에 채웁니다:",
+            "     python3 scripts/ops.py 판매가설정 --마진 25"]
+    if all(num(r.get("차량당운반비")) == 0 for r in read("운반비")):
+        할일.append("data/운반비.csv 의 거리 구간별 차량당 운반비")
+    if not read("재고"):
+        할일.append("data/재고.csv — 상시 보유하는 품목만 넣으십시오 (전 품목 아님)")
+    return 할일
 
 
 def cmd_브리핑(args):
@@ -380,13 +382,17 @@ def cmd_견적(args):
         항목.append({
             "코드": 코드, "품명": p["품목명"], "규격": p["규격"], "단위": p["단위"],
             "수량": 수량, "단가": 단가, "금액": 단가 * 수량,
-            "적재": max(num(p.get("차량적재수량"), 1), 1),
+            "적재": num(p.get("차량적재수량")),
         })
 
     소계 = sum(i["금액"] for i in 항목)
     할인 = int(소계 * args.할인 / 100)
-    차량수 = max(1, math.ceil(sum(i["수량"] / i["적재"] for i in 항목)))
+    미상 = [i for i in 항목 if i["적재"] <= 0]
+    차량수 = max(1, math.ceil(sum(i["수량"] / i["적재"] for i in 항목 if i["적재"] > 0)))
     운반비, 구간 = 운반비계산(args.거리, 차량수) if args.거리 else (0, 0)
+    if 미상 and args.거리:
+        print(f"  ⚠ 차량적재수량이 없는 품목이 있어 운반비가 과소 계산됩니다: "
+              f"{', '.join(i['코드'] for i in 미상)}")
     공급가 = 소계 - 할인 + 운반비
     부가세 = int(round(공급가 * 0.1))
     합계 = 공급가 + 부가세
@@ -690,6 +696,54 @@ def cmd_대시보드(args):
         f.write(html)
     print(f"  대시보드 갱신 → 대시보드.html")
 
+def cmd_품목(args):
+    """품목이 수백 개라 검색이 없으면 코드를 못 찾는다."""
+    말 = (args.찾기 or "").lower().replace(" ", "")
+    rows = read("품목")
+    if 말:
+        rows = [r for r in rows
+                if 말 in (r["코드"] + r["대분류"] + r["품목명"] + r["규격"] + r.get("비고", ""))
+                            .lower().replace(" ", "")]
+    if not rows:
+        print(f"  '{args.찾기}' 로 찾은 품목이 없습니다. 다른 말로 찾아보십시오.")
+        return
+    title(f"품목 {len(rows)}건" + (f" — '{args.찾기}'" if 말 else ""))
+    for r in rows[:args.최대]:
+        판, 원 = num(r["판매단가"]), num(r["원가"])
+        가격 = f"판매 {판:,}" if 판 else f"원가 {원:,}"
+        조달 = f" · 조달 {num(r['조달가']):,}" if num(r.get("조달가")) else ""
+        print(f"  {pad(r['코드'],7)} {pad(r['품목명'],22)} {pad(r['규격'],20)} "
+              f"{pad(r['단위'],4)} {가격}{조달}")
+        if r.get("비고"):
+            print(f"          {r['비고']}")
+    if len(rows) > args.최대:
+        print(f"  … 외 {len(rows)-args.최대}건. --최대 로 늘리거나 검색어를 좁히십시오.")
+    print()
+
+
+def cmd_판매가설정(args):
+    """원가에 마진을 얹어 판매단가를 만든다. 이미 값이 있으면 --덮어쓰기 없이는 건드리지 않는다."""
+    rows = read("품목")
+    바뀜, 건너뜀 = 0, 0
+    for r in rows:
+        if args.대분류 and args.대분류 not in r["대분류"]:
+            continue
+        원가 = num(r["원가"])
+        if 원가 <= 0:
+            continue
+        if num(r["판매단가"]) > 0 and not args.덮어쓰기:
+            건너뜀 += 1
+            continue
+        값 = 원가 * (1 + args.마진 / 100)
+        r["판매단가"] = str(int(round(값 / args.반올림) * args.반올림))
+        바뀜 += 1
+    write("품목", rows)
+    print(f"  판매단가 {바뀜}건 설정 (마진 {args.마진}%, {args.반올림}원 단위 반올림)")
+    if 건너뜀:
+        print(f"  · 이미 단가가 있는 {건너뜀}건은 그대로 두었습니다. 바꾸려면 --덮어쓰기")
+    print("  개별 품목은 data/품목.csv 를 엑셀로 열어 직접 고치십시오.")
+
+
 # ─────────────────────────────── 정리 ───────────────────────────────
 
 def cmd_예시삭제(args):
@@ -719,6 +773,18 @@ def main():
     sub.add_parser("재고공개", help="대리점 발송용 재고 문자 생성").set_defaults(func=cmd_재고공개)
     sub.add_parser("대시보드", help="대시보드.html 갱신").set_defaults(func=cmd_대시보드)
     sub.add_parser("예시삭제", help="시드로 넣은 예시 데이터 정리").set_defaults(func=cmd_예시삭제)
+
+    p = sub.add_parser("품목", help="품목 검색 (코드·품명·규격·비고에서 찾습니다)")
+    p.add_argument("--찾기", default="", help="예: 648, 사각맨홀, 유공, 트렌치")
+    p.add_argument("--최대", type=int, default=40)
+    p.set_defaults(func=cmd_품목)
+
+    p = sub.add_parser("판매가설정", help="원가 + 마진으로 판매단가 일괄 생성")
+    p.add_argument("--마진", type=float, required=True, help="%%")
+    p.add_argument("--대분류", default="", help="특정 대분류만 (예: 주철)")
+    p.add_argument("--반올림", type=int, default=100, help="원 단위 반올림 (기본 100)")
+    p.add_argument("--덮어쓰기", action="store_true", help="이미 있는 판매단가도 다시 계산")
+    p.set_defaults(func=cmd_판매가설정)
 
     for 이름, fn in (("입고", cmd_입고), ("출고", cmd_출고), ("조정", cmd_조정)):
         p = sub.add_parser(이름, help=f"{이름} 기록 + 재고 반영")
