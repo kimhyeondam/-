@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>고창 신공장 건립 사업계획서 (초안 v3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#ECEFEE; --surface:#FBFCFB; --surface-2:#E2E7E5;
+  --ink:#141A19; --ink-2:#3B4746; --muted:#66716F;
+  --line:#CBD3D1; --line-soft:#DDE3E1;
+  --accent:#1D5C57; --accent-soft:#D6E4E1;
+  --hot:#C04D18; --hot-soft:#F0DFD4;
+  --shadow:0 1px 2px rgba(20,26,25,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1211; --surface:#161C1B; --surface-2:#1E2625;
+    --ink:#E7ECEA; --ink-2:#C0C9C7; --muted:#8B9694;
+    --line:#2A3432; --line-soft:#222B2A;
+    --accent:#5CB0A6; --accent-soft:#1B2E2C;
+    --hot:#E97B45; --hot-soft:#2E211A;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1211; --surface:#161C1B; --surface-2:#1E2625;
+  --ink:#E7ECEA; --ink-2:#C0C9C7; --muted:#8B9694;
+  --line:#2A3432; --line-soft:#222B2A;
+  --accent:#5CB0A6; --accent-soft:#1B2E2C;
+  --hot:#E97B45; --hot-soft:#2E211A;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans KR","Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-size:16px;line-height:1.75;-webkit-font-smoothing:antialiased;word-break:keep-all}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px 96px}
+.mast{border-bottom:1px solid var(--line);padding:56px 0 28px;margin-bottom:40px}
+.eyebrow{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-family:"Noto Serif KR",Georgia,serif;font-weight:700;font-size:clamp(28px,4.6vw,40px);line-height:1.3;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
+.mast h2{font-family:"IBM Plex Sans KR",sans-serif;font-weight:400;font-size:17px;color:var(--ink-2);margin:0;border:0;padding:0}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;font-size:13.5px;color:var(--ink-2)}
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:18px 22px;margin:0 0 44px;box-shadow:var(--shadow)}
+.toc .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px;font-size:14.5px}
+.toc li{break-inside:avoid;margin:2px 0}
+.toc a{color:var(--accent);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+article h2{font-family:"Noto Serif KR",Georgia,serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:56px 0 18px;padding-top:28px;border-top:1px solid var(--line-soft)}
+article h3{font-size:17.5px;font-weight:600;margin:30px 0 10px;color:var(--ink)}
+article h4{font-size:15.5px;font-weight:600;margin:22px 0 8px;color:var(--ink-2)}
+article p{margin:0 0 14px}
+article ul,article ol{margin:0 0 16px;padding-left:24px}
+article li{margin:4px 0}
+article li>ul,article li>ol{margin:4px 0 4px}
+article blockquote{margin:0 0 20px;padding:14px 20px;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 3px 3px 0;color:var(--ink-2);font-size:15px;box-shadow:var(--shadow)}
+article blockquote p:last-child{margin:0}
+article hr{border:0;border-top:1px solid var(--line-soft);margin:36px 0}
+article hr+h2{border-top:0;padding-top:0;margin-top:0}
+article strong{font-weight:600;color:var(--ink)}
+article code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9em;background:var(--surface-2);padding:1px 6px;border-radius:3px}
+article pre{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:14px 18px;overflow-x:auto;font-size:13.5px;line-height:1.6}
+article pre code{background:none;padding:0}
+.tbl{overflow-x:auto;margin:0 0 22px;border:1px solid var(--line);border-radius:3px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:9px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line-soft)}
+th{background:var(--surface-2);font-weight:600;white-space:nowrap;font-size:13.5px}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:500}
+.chk{display:inline-block;background:var(--hot-soft);color:var(--hot);font-weight:600;font-size:.86em;padding:0 7px;border-radius:3px;white-space:nowrap}
+.asm{display:inline-block;background:var(--accent-soft);color:var(--accent);font-weight:600;font-size:.86em;padding:0 7px;border-radius:3px;white-space:nowrap}
+.task-list-item{list-style:none;margin-left:-20px}
+@media (max-width:640px){.toc ol{columns:1}}
+@media print{
+  body{background:#fff;color:#000;font-size:12.5px}
+  .wrap{max-width:none;padding:0}
+  .toc{display:none}
+  article h2{page-break-after:avoid;break-after:avoid}
+  .tbl,blockquote,table{page-break-inside:avoid;break-inside:avoid}
+  .chk{background:none;color:#000;text-decoration:underline}
+  .asm{background:none;color:#000;font-style:italic}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">사업계획서 · 사업계획서-초안-v3</p>
+    <h1>고창 신공장 건립 사업계획서 (초안 v3)</h1>
+    <h2>중소벤처기업진흥공단 창업기업지원자금 · 시설자금 신청용 · 주식회사 현담토목</h2>
+    <div class="legend"><span><span class="chk">[확인]</span> 대표가 채우거나 맞는지 확인할 칸</span><span><span class="asm">(가정)</span> 임의로 넣은 숫자, 실제 값으로 교체</span></div>
+  </header>
+  <nav class="toc"><span class="k">목차</span><ol><li><a href="#0">0. 먼저 결정할 것</a></li><li><a href="#1">1. 기업 개요</a></li><li><a href="#2-problem">2. 사업 추진 배경 (Problem)</a></li><li><a href="#3-solution">3. 사업 내용 (Solution: 고창 신공장)</a></li><li><a href="#4-scale">4. 시장 및 판매 계획 (Scale)</a></li><li><a href="#5">5. 소요자금 (억원)</a></li><li><a href="#6">6. 조달 계획 (억원)</a></li><li><a href="#7">7. 추진 일정</a></li><li><a href="#8-15">8. 손익 추정 및 상환 계획 (억원, 이익률 15% 가정)</a></li><li><a href="#9-team">9. 조직 및 고용 계획 (Team)</a></li><li><a href="#10">10. 위험과 대응</a></li><li><a href="#11">11. 심사역 예상 질문과 답</a></li><li><a href="#a">부록 A. 준비 서류</a></li><li><a href="#b">부록 B. 다음 회차에 채워 주실 것 (우선순위)</a></li></ol></nav>
+  <article>
+<blockquote>
+<p><strong>v2 → v3 변경</strong>: 대표님이 주신 현재·신공장 생산능력, 미수주 월 2,000만원, 나라장터 2025 관급 발주 자료(6개 파일), 경쟁사 명단을 반영함.
+설비 42억은 "전부 갖춰야 생산 가능"하다는 말씀에 따라 <strong>1·2단계 분할안을 없애고 68억 일괄 투자</strong>를 기본안으로 다시 짬.
+관급 시장 수치는 <code>01-관급시장-분석-2025.md</code>에서 가져온 <strong>실측 자료</strong>(출처: 나라장터 종합쇼핑몰 납품요구 내역). <span class="asm">(가정)</span>은 제가 넣은 숫자, <span class="chk">[확인]</span>은 대표님 확인 필요.</p>
+</blockquote>
+<hr />
+<h2 id="0">0. 먼저 결정할 것</h2>
+<h3 id="0-1-68">0-1. 68억 일괄 투자가 요구하는 매출</h3>
+<p>소요 68억 − 자기자금 9억 = <strong>차입 59억</strong>(중진공 + 은행·보증·리스 합계). 상환기에 매년 갚아야 할 돈과 그걸 감당할 매출은 아래와 같음.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>차입 합계</th>
+<th>거치기 이자(연)</th>
+<th>상환기 첫해 원리금(연)</th>
+<th>필요 매출 · 이익률 12%</th>
+<th>15%</th>
+<th>18%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>45억</td>
+<td>1.6억</td>
+<td>9.1억</td>
+<td>37억</td>
+<td>29억</td>
+<td>24억</td>
+</tr>
+<tr>
+<td>50억</td>
+<td>1.8억</td>
+<td>10.1억</td>
+<td>45억</td>
+<td>36억</td>
+<td>30억</td>
+</tr>
+<tr>
+<td><strong>59억</strong></td>
+<td><strong>2.1억</strong></td>
+<td><strong>11.9억</strong></td>
+<td><strong>60억</strong></td>
+<td><strong>48억</strong></td>
+<td><strong>40억</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><span class="asm">(가정)</span> 금리 3.5%, 4년 거치 6년 분할, 감가상각 연 4.7억(건물 20억/40년 + 기계 42억/10년)을 상환 재원에 포함.</p>
+<ul>
+<li>아래 4-3 매출 계획(2031년 46억)은 <strong>이익률 15%에서 59억 차입을 간신히 감당</strong>하는 수준. 이익률이 12%면 부족함</li>
+<li>따라서 이 계획서의 성패는 두 가지에 달림: ① <strong>2025년 결산 원가율</strong>로 15%가 방어되는지 <span class="chk">[확인]</span> ② 차입을 59억보다 줄이는 지렛대(0-2)</li>
+</ul>
+<h3 id="0-2-4-9">0-2. 차입을 줄이는 지렛대 4가지 (자기자금 9억은 그대로)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>지렛대</th>
+<th>효과<span class="asm">(가정)</span></th>
+<th>확인할 곳</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>지방투자촉진보조금 (전북, 신·증설 유형)</td>
+<td>설비투자의 일정 비율 보조 → 수억 원</td>
+<td>전북도 기업유치과, 고창군 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>고창군 기업유치 조례 보조금·고용보조금</td>
+<td>수천만~수억</td>
+<td>고창군청 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>산업단지 임대용지 활용</td>
+<td>토지 6억 → 임대료로 전환, 차입 6억 감소</td>
+<td>고창 일반산단 분양 담당 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>성형라인 리스·할부</td>
+<td>중진공 차입 감소, 상환 기간 분산</td>
+<td>설비사 금융 조건 <span class="chk">[확인]</span></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>보조금 5억 + 토지 임대 6억이면 차입 48억 → 이익률 15%에서 필요 매출 34억으로 내려감. <strong>이 조합이면 심사 통과 가능성이 크게 올라감</strong></li>
+</ul>
+<h3 id="0-3">0-3. 심사역이 계산기로 확인할 숫자</h3>
+<ul>
+<li>현재 이론 생산능력을 매출로 환산하면 연 10억 안팎 <code>(가정, 단가 기준)</code>인데 2026년 매출은 5억 → "설비가 부족한 게 아니라 못 파는 것 아닌가?"라는 질문이 나옴</li>
+<li>답은 2-1에 씀: 병목은 성형 능력이 아니라 <strong>양생·야적 면적(재고생산 불가 → 납기 확정 불가 → 월 2,000만원 미수주)</strong> 과 <strong>관급 진입 불가(전북 외 소재, KS·MAS 미등록)</strong>. 이 두 가지가 맞는지 확인 <span class="chk">[확인]</span></li>
+</ul>
+<hr />
+<h2 id="1">1. 기업 개요</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>회사명</td>
+<td>주식회사 현담토목 (2025.01 주식회사현담 설립, 2026.01 사명 변경)</td>
+</tr>
+<tr>
+<td>설립일</td>
+<td>2025년 1월 2일 · 업력 1년 8개월 · 창업기업(7년 미만) 요건 충족</td>
+</tr>
+<tr>
+<td>대표자</td>
+<td>만 39세 이하 여부 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>소재지</td>
+<td>광주광역시 광산구 (IC 5분 거리, 철골 조립식 임차 공장 <span class="chk">[확인]</span>)</td>
+</tr>
+<tr>
+<td>업종</td>
+<td>콘크리트 제품 제조업</td>
+</tr>
+<tr>
+<td>제품</td>
+<td>원형·사각 맨홀, 사각 집수정, 자중식 옹벽블록, 원형·사각 수로관, 콘크리트 기초</td>
+</tr>
+<tr>
+<td>인원</td>
+<td>3명 (역할 <span class="chk">[확인]</span>)</td>
+</tr>
+<tr>
+<td>매출</td>
+<td>2025년 305백만원 / 2026년 500백만원 예상 (8월까지 실적 <span class="chk">[확인]</span>)</td>
+</tr>
+<tr>
+<td>보유 형틀</td>
+<td>수로관 50EA, 옹벽블록 28EA, 사각맨홀 30EA, 원형맨홀 3EA (80% 운용 중)</td>
+</tr>
+<tr>
+<td>인증</td>
+<td>KS 미보유 → 2027년 취득 계획</td>
+</tr>
+<tr>
+<td>기존 정책자금</td>
+<td>중진공 청년전용창업자금 150백만원 (2026년 초, 정상 상환 중 <span class="chk">[확인]</span>)</td>
+</tr>
+<tr>
+<td>거래처</td>
+<td>정원산업·인우기업·제일이앤씨(실수요처), 이에스건설·삼호·주안이앤씨(2026 신규), 토목자재상</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="_1">대표자 역량</h3>
+<ul>
+<li>콘크리트 구조물 제조업 12년: 생산관리팀장 4년(2014~2018), 품질관리팀장 4년(2020~2024), 영업팀장 겸임</li>
+<li>품질관리담당자 자격(한국표준협회, 2020) → KS 공장심사·MAS 등록을 직접 준비할 수 있는 내부 인력</li>
+<li>창업 20개월 만에 매출 3.05억 → 5억, 거래처 7개사</li>
+<li>회계·생산·출고·영업 직접 운영 → 원가와 현장 요구를 동시에 파악</li>
+</ul>
+<hr />
+<h2 id="2-problem">2. 사업 추진 배경 (Problem)</h2>
+<h3 id="2-1">2-1. 현 사업장의 한계: 만들 수는 있는데 "언제 준다"를 못 함</h3>
+<p><strong>현재 1일 생산능력</strong> (형틀 80% 운용, 월 22일)</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>품목</th>
+<th>1일</th>
+<th>월(22일)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>원형맨홀 1호 (하부·연직·상부 1조)</td>
+<td>4조</td>
+<td>88조</td>
+</tr>
+<tr>
+<td>사각집수정 600×600×H600</td>
+<td>2개</td>
+<td>44개</td>
+</tr>
+<tr>
+<td>사각집수정 300×400×H600</td>
+<td>2개</td>
+<td>44개</td>
+</tr>
+<tr>
+<td>사각집수정 300×400×H900</td>
+<td>2개</td>
+<td>44개</td>
+</tr>
+<tr>
+<td>사각집수정 1000×1000×H1000</td>
+<td>1개</td>
+<td>22개</td>
+</tr>
+<tr>
+<td>자중식 옹벽블록 1200×600×H600</td>
+<td>32EA</td>
+<td>704EA</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>이론 능력을 관급 단가로 환산하면 연 10억 안팎 <span class="asm">(가정)</span>인데 실제 출하는 5억 → 병목은 성형이 아니라 <strong>증기양생 공간과 야적장</strong></li>
+<li>임차 공장이라 양생·야적 면적을 늘릴 수 없음 → <strong>재고생산 불가 → 주문 후 생산 → 납기 확정 불가</strong></li>
+<li>그 결과 <strong>납기 확정 불가로 놓치는 주문이 월 약 2,000만원(연 2.4억, 현재 매출의 48%)</strong> <code><span class="chk">[확인]</span> 사례 2~3건: 품목·수량·시기</code></li>
+<li>경쟁사(나주)는 재고생산 일 50EA·납기 7일, 우리는 일 30EA → 같은 단가에서 납기로 짐</li>
+</ul>
+<h3 id="2-2-ks-mas-0">2-2. 관급 시장은 "전북 소재 + KS + MAS"가 없으면 0원</h3>
+<ul>
+<li>2025년 전북 14개 시군 관급 콘크리트 2차제품(블록·배수로·맨홀) 발주 <strong>465억 원</strong>, 고창 반경 50km 6개 시군 <strong>177.5억 원</strong> [출처: 나라장터 종합쇼핑몰 납품요구 내역 2025, 최종 변경차수 기준]</li>
+<li>이 시장의 <strong>92~98%를 전북 소재 업체가 공급</strong> → 광주 소재로는 접근 불가</li>
+<li>세 품목 모두 <strong>MAS(다수공급자계약) 비중 99~100%</strong> → KS + 직접생산확인 + 나라장터 MAS 등록이 전제</li>
+<li>현 임차 공장은 KS 공장심사 요건(시험실·양생 설비·자재 보관)을 갖추기 어려움 <span class="chk">[확인]</span></li>
+<li>즉, 관급 177.5억 시장에 들어가려면 <strong>전북에 KS 심사를 통과할 자가 공장</strong>이 있어야 함. 이것이 이 사업의 출발점</li>
+</ul>
+<h3 id="2-3-3">2-3. 임차 공장 3곳을 거친 이유 (심사역이 반드시 물음)</h3>
+<ul>
+<li>2025.01 순창(창업, 소규모 임차) → 2026.01 광주 광산구(거래처 밀집지, 형틀 확충) → 2028 고창(자가 공장 정착)</li>
+<li>두 곳 모두 임차·소규모라 양생·야적 확장이 불가능했음. 이번은 "옮기는 것"이 아니라 <strong>임차를 끝내고 자가 공장을 짓는 것</strong></li>
+<li>올해 초 청년전용창업자금으로 형틀을 늘렸으나, 형틀이 아니라 <strong>면적이 병목</strong>임을 8개월 만에 확인 → 시설자금 신청으로 이어짐</li>
+</ul>
+<h3 id="2-4">2-4. 한 문장 요약</h3>
+<blockquote>
+<p>"5억 매출은 시장이 아니라 공장의 한계다. 전북에 KS 자가 공장을 지으면 관급 177억 시장의 문이 열리고, 재고생산으로 매달 놓치던 2,000만원을 잡는다."</p>
+</blockquote>
+<hr />
+<h2 id="3-solution">3. 사업 내용 (Solution: 고창 신공장)</h2>
+<h3 id="3-1">3-1. 신공장 개요</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>위치</td>
+<td>전북특별자치도 고창군 <code><span class="chk">[확인]</span> 읍·면, 산단/개별입지, 지번</code></td>
+</tr>
+<tr>
+<td>부지</td>
+<td><span class="chk">[확인]</span>㎡, 매입 6억 (또는 산단 임대용지, 0-2 참조)</td>
+</tr>
+<tr>
+<td>건축</td>
+<td>생산동·증기양생장·야적장·시험실·사무동 <code><span class="chk">[확인]</span> 면적</code>, 20억</td>
+</tr>
+<tr>
+<td>설비</td>
+<td>배처플랜트·성형라인·몰드·양생설비·호이스트 일괄 42억 (분할 불가, 견적서 <span class="chk">[확인]</span>)</td>
+</tr>
+<tr>
+<td>인원</td>
+<td>3명 → 2028년 <span class="chk">[확인]</span>명 (생산 책임자 1, 품질 1 포함)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-2-1-7-80">3-2. 신공장 1일 생산능력 (7개 품목, 가동률 80% 기준)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>라인</th>
+<th>품목</th>
+<th>1일 능력</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>블록 성형라인 (1일 1,000사이클, 택일 생산)</td>
+<td>인터로킹블록(보도블럭)</td>
+<td>25,000장 (약 500㎡)</td>
+<td>서남권 유일</td>
+</tr>
+<tr>
+<td></td>
+<td>보강토옹벽블록</td>
+<td>4,000장</td>
+<td>주로 민간</td>
+</tr>
+<tr>
+<td></td>
+<td>식생블록</td>
+<td>1,000장</td>
+<td>관급 대형 식생 시장</td>
+</tr>
+<tr>
+<td>별도 라인 (동시 생산)</td>
+<td>원형맨홀 1호</td>
+<td>10조</td>
+<td>현재 4조</td>
+</tr>
+<tr>
+<td></td>
+<td>사각집수정</td>
+<td>15개</td>
+<td>현재 7개</td>
+</tr>
+<tr>
+<td></td>
+<td>자중식 옹벽블록</td>
+<td>32EA</td>
+<td>현재와 동일 <code><span class="chk">[확인]</span> 증설 의도 여부</code></td>
+</tr>
+<tr>
+<td></td>
+<td>측구수로관</td>
+<td>30EA</td>
+<td>신규</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>이론 능력(100%)을 매출로 환산하면 연 약 80억 <code>(가정 단가)</code>, 80%면 약 65억 → <strong>4-3 매출 계획(2031년 46억)은 가동률 약 57%</strong> 로 달성 가능. 능력은 병목이 아님</li>
+<li>심사역에게는 "80% 가동" 대신 <strong>"시장 점유율 기준으로 잡은 매출이 가동률 57%"</strong> 라고 설명하는 편이 설득력 있음</li>
+<li><span class="chk">[확인]</span> 자중식 옹벽블록이 신공장에서도 일 32EA인데, 6개군 관급 옹벽·호안블록 87.4억(가장 큰 시장)의 주력이 대형 옹벽블록(W1000×L600~750×H500, 4.1~5.1만원/개)임. 이 라인 증설을 42억 안에 넣을지 검토</li>
+</ul>
+<h3 id="3-3">3-3. 왜 고창인가 (자료 근거)</h3>
+<ol>
+<li><strong>전북 소재 요건</strong>: 전북 관급 465억의 92~98%가 도내 업체 → 전북 이전 없이는 관급 0원</li>
+<li><strong>맨홀 공백</strong>: 6개군 맨홀 19.2억 중 63%(약 12억)가 50km 밖 익산·김제·완주에서 공급됨. 고창·부안 현지 4개사 합계 4억뿐 → 운반비 우위로 대체 가능</li>
+<li><strong>인터로킹 생산자 0</strong>: 전북 인터로킹 7개사 모두 전주·익산·김제·무주·임실. 고창·부안·정읍·순창·남원에는 없음. 경기 화성 업체가 6개군에 4.9억 납품 중</li>
+<li><strong>광주 40km</strong>: 기존 거래처(광주·나주·담양·화순)와 직원 유지</li>
+<li><strong>서해안고속도로</strong>: 고창 IC <code><span class="chk">[확인]</span> 거리</code> → 정읍·부안·김제(배수로 최대 발주처 39억)·영광·함평 커버</li>
+<li><strong>토지·면적</strong>: 광주 대비 단가 <span class="chk">[확인]</span>% → 재고생산에 필요한 양생·야적 면적 확보</li>
+</ol>
+<h3 id="3-4-42">3-4. 설비 투자 내역 (42억) <span class="chk">[확인 필수: 견적서 기준]</span></h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>품목</th>
+<th>금액(억)</th>
+<th>생산 품목</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>배합</td>
+<td>배처플랜트, 시멘트 사일로</td>
+<td></td>
+<td>전 품목 (현재 레미콘 구매 → 자체 배합, 원가 <span class="chk">[확인]</span>% 절감)</td>
+</tr>
+<tr>
+<td>성형</td>
+<td>블록 자동 성형라인 (1,000사이클/일)</td>
+<td></td>
+<td>인터로킹·보강토·식생</td>
+</tr>
+<tr>
+<td>성형</td>
+<td>맨홀·집수정·옹벽·측구 몰드</td>
+<td></td>
+<td>기존 형틀 111EA 이관 + 추가</td>
+</tr>
+<tr>
+<td>양생</td>
+<td>증기양생 설비, 보일러</td>
+<td></td>
+<td>전 품목</td>
+</tr>
+<tr>
+<td>운반</td>
+<td>호이스트, 지게차</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>품질</td>
+<td>압축강도 시험기 등 KS 시험 장비</td>
+<td></td>
+<td>KS 공장심사 필수</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>합계</strong></td>
+<td><strong>42</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="3-5">3-5. 경쟁력 (기존 계획서 논리 유지 + 자료 보강)</h3>
+<ul>
+<li>단가: 자중식 옹벽블록 4만원(경쟁 4.2~4.5만원), 자체 배합으로 원가 여력 확대</li>
+<li>납기: 재고생산 체계 → 규격품 당일·익일 출고. 현재 7일 → <span class="chk">[확인]</span>일</li>
+<li>혼적: 맨홀·집수정·옹벽·측구·인터로킹을 <strong>한 현장에 한 차로</strong> → 운반비와 현장 편의</li>
+<li>품질: 대표 직접 품질관리, KS·단체표준·직접생산확인 → 관급 MAS 등록</li>
+<li>판로: 대표 1인이 못 도는 곳은 대리점·자재상·운송기사·원자재 공급사 네트워크</li>
+</ul>
+<hr />
+<h2 id="4-scale">4. 시장 및 판매 계획 (Scale)</h2>
+<h3 id="4-1">4-1. 시장 규모 (억원)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>6개군 (반경 50km)</th>
+<th>전북 14개</th>
+<th>출처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>관급 · 호안·옹벽블록</td>
+<td>87.4</td>
+<td>223.1</td>
+<td>나라장터 2025</td>
+</tr>
+<tr>
+<td>관급 · 보차도용 블록</td>
+<td>24.8</td>
+<td>65.4</td>
+<td>나라장터 2025</td>
+</tr>
+<tr>
+<td>관급 · 배수로</td>
+<td>46.1</td>
+<td>133.5</td>
+<td>나라장터 2025</td>
+</tr>
+<tr>
+<td>관급 · 맨홀</td>
+<td>19.2</td>
+<td>42.5</td>
+<td>나라장터 2025</td>
+</tr>
+<tr>
+<td><strong>관급 소계</strong></td>
+<td><strong>177.5</strong></td>
+<td><strong>465.1</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>민간 (광주·전남·전북 영업권역)</td>
+<td>약 198</td>
+<td></td>
+<td>한국물가협회 (기존 계획서, 재확인 <span class="chk">[확인]</span>)</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-2">4-2. 품목별 목표 시장과 진입 순서</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>우선순위</th>
+<th>품목</th>
+<th>근거</th>
+<th>2031 목표 매출(억)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>맨홀·집수정</td>
+<td>6개군 관급 19.2억의 63%가 원거리 공급, 현지 공백</td>
+<td>관급 6.5 (점유 34%) + 민간 3.5 = <strong>10</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>인터로킹블록</td>
+<td>서남권 생산자 0, 6개군 관급 24.8억</td>
+<td>관급 6 (24%) + 인접 전북 3 + 민간 4 = <strong>13</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>옹벽·식생블록 (블록라인 + 자중식)</td>
+<td>6개군 관급 87.4억(최대), 상위 1사 21%</td>
+<td>관급 9 (10%) + 민간 4 = <strong>13</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>배수로·측구</td>
+<td>6개군 46.1억이나 현지 7개사 밀집 → 보조 품목</td>
+<td>관급 2 (4%) + 민간 2 = <strong>4</strong></td>
+</tr>
+<tr>
+<td>5</td>
+<td>기존 광주권 (수로관·기초·옹벽)</td>
+<td>현 거래처 유지·확대</td>
+<td><strong>6</strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>합계</strong></td>
+<td></td>
+<td><strong>46</strong></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="4-3">4-3. 매출 계획 (억원)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>연도</th>
+<th>매출</th>
+<th>관급</th>
+<th>민간</th>
+<th>가동률(이론 80억 대비)</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025 (실적)</td>
+<td>3.05</td>
+<td>0</td>
+<td>3.05</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2026 (예상)</td>
+<td>5</td>
+<td>0</td>
+<td>5</td>
+<td></td>
+<td>현 공장</td>
+</tr>
+<tr>
+<td>2027</td>
+<td>6</td>
+<td>0</td>
+<td>6</td>
+<td></td>
+<td>현 공장, 건설·KS·MAS 등록</td>
+</tr>
+<tr>
+<td>2028</td>
+<td>15</td>
+<td>5</td>
+<td>10</td>
+<td>19%</td>
+<td>가동 첫해, 맨홀·인터로킹 관급 개시</td>
+</tr>
+<tr>
+<td>2029</td>
+<td>27</td>
+<td>12</td>
+<td>15</td>
+<td>34%</td>
+<td>옹벽·식생 관급 추가</td>
+</tr>
+<tr>
+<td>2030</td>
+<td>38</td>
+<td>19</td>
+<td>19</td>
+<td>48%</td>
+<td></td>
+</tr>
+<tr>
+<td>2031</td>
+<td>46</td>
+<td>24</td>
+<td>22</td>
+<td>57%</td>
+<td>4-2 목표 도달</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>2031 관급 24억 = 6개군 관급 177.5억의 <strong>13.5%</strong> → 무일콘크리트(정읍) 한 회사가 6개군 블록에서 21%를 가져가는 시장이므로 무리한 수치는 아님</li>
+<li>민간 22억 = 영업권역 민간 198억의 11%</li>
+<li>산식 검증: 맨홀 10조 × 60만원 <span class="asm">(가정)</span> × 264일 = 15.8억 능력 대비 목표 10억 → 63%. 인터로킹 500㎡ × 2.3만원 × 264일 × 블록라인 배정 40% = 12.1억 능력 대비 목표 13억 → 블록라인 배정 비율 조정 <span class="chk">[확인]</span></li>
+</ul>
+<h3 id="4-4">4-4. 판매 경로</h3>
+<ol>
+<li><strong>관급 (MAS)</strong>: 2027년 직접생산확인 → KS → 단체표준 → 나라장터 종합쇼핑몰 MAS 등록 → 2028년 6개군 지자체 납품. 전북콘크리트공업협동조합 가입 검토(전북 블록 관급 1위 31.9억) <span class="chk">[확인]</span></li>
+<li><strong>건설사·시공사 직납</strong>: 착공 전 현장 파악, 낙찰 직후 접촉(기존 방식)</li>
+<li><strong>대리점·자재상</strong>: 고창·정읍·부안 토목자재상 <span class="chk">[확인]</span>개소</li>
+<li><strong>온라인</strong>: 스마트스토어·블로그(민간 소량, 시공 사례 축적)</li>
+</ol>
+<hr />
+<h2 id="5">5. 소요자금 (억원)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>금액</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>토지</td>
+<td>6</td>
+<td>고창군 <span class="chk">[확인]</span>㎡ (산단 임대 시 0)</td>
+</tr>
+<tr>
+<td>건물</td>
+<td>20</td>
+<td>생산동·양생장·야적장·시험실·사무동, 설계·인허가 포함 여부 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>기계설비</td>
+<td>42</td>
+<td>배처플랜트·성형라인·몰드·양생·호이스트 일괄</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td><strong>68</strong></td>
+<td>예비비(5~10%) 포함 여부 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>(별도) 초기 운전자금</td>
+<td><span class="chk">[확인]</span></td>
+<td>원자재·인건비 6개월분, 운전자금 별도 신청 또는 자기자금</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="6">6. 조달 계획 (억원)</h2>
+<h3 id="68">기본안: 68억 일괄</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>조달처</th>
+<th>금액</th>
+<th>비율</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자기자금</td>
+<td>9</td>
+<td>13%</td>
+<td>잔고증명</td>
+</tr>
+<tr>
+<td>중진공 창업기업지원자금 (시설)</td>
+<td>45~50</td>
+<td>66~74%</td>
+<td>한도 60억 이내, 사전상담에서 현실적 범위 확인 <span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>지자체 보조금</td>
+<td><span class="chk">[확인]</span></td>
+<td></td>
+<td>지방투자촉진보조금, 고창군 조례</td>
+</tr>
+<tr>
+<td>은행 시설자금 / 보증부 / 설비리스</td>
+<td>잔여 (9~14)</td>
+<td></td>
+<td>신보·기보 보증, 성형라인 리스</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td><strong>68</strong></td>
+<td>100%</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>자기자금 13%는 낮은 편 → 보조금·토지 임대로 차입 총액을 줄이는 것이 자기자금 비율을 올리는 효과</li>
+<li>심사역 관점: "차입 59억을 매출 46억으로 갚는다"보다 <strong>"보조금·임대로 차입 48억, 매출 46억"</strong> 이 훨씬 안전하게 보임</li>
+</ul>
+<h3 id="_2">예비안: 토지 임대 + 보조금 확보 시</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>조달처</th>
+<th>금액</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자기자금</td>
+<td>9</td>
+</tr>
+<tr>
+<td>중진공 시설자금</td>
+<td>40~45</td>
+</tr>
+<tr>
+<td>지자체 보조금</td>
+<td>5 <span class="asm">(가정)</span></td>
+</tr>
+<tr>
+<td>은행·리스</td>
+<td>3~8</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td><strong>62</strong> (토지 제외)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="7">7. 추진 일정</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>시기</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026.09~10</td>
+<td>중진공 사전상담, 고창군 공장설립 사전검토·보조금·산단 용지 문의, 토지 (가)계약, 설비 견적 3사</td>
+</tr>
+<tr>
+<td>2026.11~12</td>
+<td>정책자금 신청, 기업진단·현장평가, 건축 설계</td>
+</tr>
+<tr>
+<td>2027.01~03</td>
+<td>승인, 토지 잔금(또는 임대 계약), 공장설립 승인·건축허가, 비산먼지·소음·폐수 신고</td>
+</tr>
+<tr>
+<td>2027.04~10</td>
+<td>건축, 설비 발주(납기 4~6개월), 직접생산확인·단체표준 준비, 조합 가입</td>
+</tr>
+<tr>
+<td>2027.11~12</td>
+<td>설비 설치·시운전, 형틀 이관, <strong>KS 공장심사</strong></td>
+</tr>
+<tr>
+<td>2028.01~03</td>
+<td>가동, 본점 이전, <strong>나라장터 MAS 등록</strong> → 관급 납품 개시</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>MAS 등록은 KS 취득 후 심사 기간이 별도로 걸림 → 2028년 1분기 관급 매출은 보수적으로 잡을 것 <code><span class="chk">[확인]</span> 등록 소요 기간</code></li>
+</ul>
+<hr />
+<h2 id="8-15">8. 손익 추정 및 상환 계획 (억원, 이익률 15% 가정)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>연도</th>
+<th>매출</th>
+<th>영업이익(15%)</th>
+<th>감가상각</th>
+<th>상환 재원</th>
+<th>원리금 (차입 59억)</th>
+<th>원리금 (차입 48억)</th>
+<th>여유(59억 / 48억)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2028</td>
+<td>15</td>
+<td>2.3</td>
+<td>4.7</td>
+<td>7.0</td>
+<td>2.1 (이자)</td>
+<td>1.7</td>
+<td>4.9 / 5.3</td>
+</tr>
+<tr>
+<td>2029</td>
+<td>27</td>
+<td>4.1</td>
+<td>4.7</td>
+<td>8.8</td>
+<td>2.1</td>
+<td>1.7</td>
+<td>6.7 / 7.1</td>
+</tr>
+<tr>
+<td>2030</td>
+<td>38</td>
+<td>5.7</td>
+<td>4.7</td>
+<td>10.4</td>
+<td>2.1</td>
+<td>1.7</td>
+<td>8.3 / 8.7</td>
+</tr>
+<tr>
+<td>2031</td>
+<td>46</td>
+<td>6.9</td>
+<td>4.7</td>
+<td>11.6</td>
+<td>11.9 (원금 시작)</td>
+<td>9.7</td>
+<td><strong>−0.3</strong> / 1.9</td>
+</tr>
+<tr>
+<td>2032</td>
+<td>48</td>
+<td>7.2</td>
+<td>4.7</td>
+<td>11.9</td>
+<td>11.6</td>
+<td>9.4</td>
+<td>0.3 / 2.5</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>차입 59억이면 2031년 상환 재원이 원리금에 0.3억 모자람 → <strong>거치기간 3년간 여유분(약 20억) 적립</strong>으로 메울 수 있으나, 심사역은 "빠듯하다"고 봄</li>
+<li>차입 48억이면 매년 2억 안팎 여유 → 이 구조가 목표</li>
+<li>기존 청년전용창업자금 1.5억 상환(2029~)도 표에 넣을 것 <code><span class="chk">[확인]</span> 조건</code></li>
+<li>이익률 15%의 근거: 기존 계획서 19%(현 구조) − 신공장 고정비 증가분 → 2025년 결산 원가율로 확정 <span class="chk">[확인]</span></li>
+</ul>
+<hr />
+<h2 id="9-team">9. 조직 및 고용 계획 (Team)</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>현재</th>
+<th>2028</th>
+<th>2030</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>대표 (경영·품질 총괄·영업)</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>생산 (블록라인·몰드·양생)</td>
+<td><span class="chk">[확인]</span></td>
+<td><span class="chk">[확인]</span></td>
+<td><span class="chk">[확인]</span></td>
+</tr>
+<tr>
+<td>품질·시험 (KS·MAS 담당)</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>영업·관리</td>
+<td><span class="chk">[확인]</span></td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td><strong>합계</strong></td>
+<td>3</td>
+<td><span class="chk">[확인]</span></td>
+<td><span class="chk">[확인]</span></td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>기존 계획서 약점 "인력 채용 부실" → 자가 공장·정규 채용·고창 지역 인력·광주 통근권으로 답함</li>
+<li>생산 책임자 1명 채용(2027.3Q)이 가동의 전제</li>
+<li>협력: 시험기관(KCL·KTR), 원자재 공급사, 설비사 A/S, 물류사(기존 계약), 전북콘크리트공업협동조합, 고창·정읍·부안 자재상</li>
+</ul>
+<hr />
+<h2 id="10">10. 위험과 대응</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>위험</th>
+<th>대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KS·MAS 등록 지연 → 2028 관급 매출 지연</td>
+<td>설계 단계부터 KS 심사 기준 반영, 대표 자격 보유, 2028 관급을 5억으로 보수 설정</td>
+</tr>
+<tr>
+<td>관급 발주 감소 (기존 계획서: 2024 1,040 → 2025 900억)</td>
+<td>민간 198억 권역 병행, 7개 품목 혼적으로 현장당 매출 방어</td>
+</tr>
+<tr>
+<td>공사비·설비비 상승</td>
+<td>예비비, 견적 3사, 리스 활용</td>
+</tr>
+<tr>
+<td>상환기(2031~) 매출 미달</td>
+<td>거치기간 여유분 적립(약 20억), 보조금·임대로 차입 축소</td>
+</tr>
+<tr>
+<td>인력 확보</td>
+<td>고창 지역 채용 + 광주 통근권, 자동화 라인</td>
+</tr>
+<tr>
+<td>대표 1인 의존</td>
+<td>생산 책임자·품질 담당 채용, 업무 매뉴얼화</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="11">11. 심사역 예상 질문과 답</h2>
+<ol>
+<li><strong>올해 초 1.5억 받을 때는 현 설비로 2028년 15억이라더니?</strong> → 형틀을 늘렸더니 양생·야적 면적이 병목. 15억은 자가 공장 없이는 불가능하다는 것을 8개월 만에 확인</li>
+<li><strong>이론 능력 10억인데 왜 5억밖에 못 파나?</strong> → 재고생산이 안 돼 납기 확정을 못 하고, 그래서 월 2,000만원을 놓침. 관급은 소재지·KS 때문에 0원</li>
+<li><strong>2년에 세 번 이전?</strong> → 임차 소규모 → 임차 확장 → 자가 정착. 마지막 이전</li>
+<li><strong>매출 5억에 68억 투자 근거는?</strong> → 관급 177.5억 시장의 13.5% + 민간 11%로 46억. 같은 시장에서 정읍 1개사가 21%를 가져감</li>
+<li><strong>첫해 15억은 누가 사나?</strong> → 기존 거래처 6억 + 맨홀·인터로킹 관급 5억(현지 공백) + 서남권 자재상 4억, 공급 의향서 <span class="chk">[확인]</span></li>
+<li><strong>설비를 나눠 살 수 없나?</strong> → 배처·성형·양생·호이스트가 한 공정이라 하나라도 빠지면 생산 불가. 대신 보조금·임대·리스로 차입 축소</li>
+<li><strong>자기자금 9억 출처와 증빙?</strong></li>
+<li><strong>KS·MAS 일정이 늦어지면?</strong> → 2028 관급 5억만 반영, 민간 10억으로 시작</li>
+<li><strong>고창 부지 확보·공장설립 가능 지역?</strong> <span class="chk">[확인]</span></li>
+<li><strong>상환 시작 시 매출이 70%면?</strong> → 거치기간 적립 20억 + 2단계 없는 구조라 추가 차입 없음</li>
+</ol>
+<hr />
+<h2 id="a">부록 A. 준비 서류</h2>
+<ul>
+<li class="task-list-item">☐ 사업자등록증, 법인등기부등본, 정관</li>
+<li class="task-list-item">☐ 2025년 결산 재무제표, 2026년 부가세 과세표준증명, 8월까지 매출 자료</li>
+<li class="task-list-item">☐ 기존 청년전용창업자금 상환 내역</li>
+<li class="task-list-item">☐ 대표자 청년 요건 서류, 품질관리담당자 자격증, 경력증명</li>
+<li class="task-list-item">☐ 토지 (가)계약서 또는 산단 임대 협의 자료, 토지이용계획확인원, 공장설립 사전검토</li>
+<li class="task-list-item">☐ 건축 설계 개요·공사비 견적, 설비 견적서 3사·카탈로그</li>
+<li class="task-list-item">☐ 자기자금 잔고증명</li>
+<li class="task-list-item">☐ 거래처 거래 실적·공급 의향서</li>
+<li class="task-list-item">☐ 나라장터 2025 발주 집계표 (<code>01-관급시장-분석-2025</code>), 경쟁사 명단</li>
+<li class="task-list-item">☐ 고용 계획서, 고창군·전북도 보조금 협의 자료</li>
+</ul>
+<h2 id="b">부록 B. 다음 회차에 채워 주실 것 (우선순위)</h2>
+<ol>
+<li><strong>2025년 결산 매출원가율·영업이익률</strong> → 이익률 15% 방어 여부, 차입 규모 확정</li>
+<li><strong>병목 확인</strong>: 현재 못 파는 이유가 양생·야적 면적이 맞는지, 미수주 사례 2~3건(품목·수량·시기)</li>
+<li><strong>단가 확인</strong>: 원형맨홀 1호 1조 판매가, 집수정 평균, 보강토·식생·인터로킹 민간 단가, 측구수로관 단가 (제 가정: 60만·20만·7천·3만·2.2만/㎡·8만)</li>
+<li><strong>자중식 옹벽블록 32EA</strong>: 신공장에서 증설 안 하는 이유 또는 대형 옹벽블록 라인 추가 여부</li>
+<li><strong>보강토블록 4,000장/일의 판로</strong>: 관급은 전북 전체 4.9억뿐이라 민간 근거 필요</li>
+<li>고창 부지 위치·면적·산단 여부, 임대용지 가능성, 보조금 문의 결과</li>
+<li>현 광주 공장 임차 조건·만료, 대표 만 39세 이하 여부, 직원 3명 역할</li>
+<li>대표님 블록·배수로 집계에서 뺀 세부품명 기준 (제 숫자와 맞추기 위해)</li>
+</ol>
+  </article>
+</div>
+</body>
+</html>
