@@ -1,0 +1,43 @@
+# 서버에서: docker compose up -d
+services:
+  app:
+    # 깃허브가 미리 만들어 둔 완성품을 씁니다. 없으면(처음 설치 등) 서버에서 직접 조립합니다.
+    image: ghcr.io/kimhyeondam/hyundam-app:latest
+    build: .
+    restart: unless-stopped
+    env_file: .env.production
+    environment:
+      # 메모리가 작은 서버에서 Node 가 스스로 정한 한도(약 450MB)에 걸려 꺼지지 않도록 한도를 올립니다 (스왑 2GB 전제)
+      NODE_OPTIONS: --max-old-space-size=1536
+    volumes:
+      - ./data:/app/data          # 업무 데이터 (반드시 백업)
+    expose:
+      - "3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: .env.production   # DOMAIN 값을 여기서 읽음
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+  backup:
+    image: alpine:3
+    restart: unless-stopped
+    volumes:
+      - ./data:/data:ro
+      - ./backups:/backups
+      - ./deploy/backup.sh:/backup.sh:ro
+    # 하루 한 번 data 폴더를 압축해 backups/ 에 저장, 30일 지난 백업은 삭제
+    command: sh /backup.sh
+
+volumes:
+  caddy_data:
+  caddy_config:

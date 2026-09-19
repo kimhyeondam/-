@@ -1,0 +1,53 @@
+// 현담토목 기본 규격표. 흄관·PC맨홀·측구·집수정·경계석·옹벽블록의 KS 표준 규격을 출발점으로 넣어 두었습니다.
+// 재고관리 → 「카탈로그 품목 불러오기」로 한꺼번에 등록한 뒤, 단가·조달식별번호·안전재고·별칭은 품목 수정에서 우리 제품에 맞게 고칩니다.
+// 규격이 다르거나 없는 제품은 이 파일을 고치고(id 는 품명+규격에서 만든 고정값이라 여러 번 불러와도 중복되지 않음) 「카탈로그와 맞추기」를 누르면 됩니다.
+import type { Product } from "@/data/sample";
+
+export const catalogCategories = ["흄관", "PC맨홀", "맨홀 부속자재", "측구", "집수정", "경계석", "옹벽블록"];
+
+export const catalogProducts: Product[] = [
+  {"id": "cat_4bea5ae6", "name": "흄관 D300", "spec": "내경300 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_3c21d537", "name": "흄관 D350", "spec": "내경350 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_e180e475", "name": "흄관 D400", "spec": "내경400 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_36e94fd4", "name": "흄관 D450", "spec": "내경450 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_f3ff66e5", "name": "흄관 D500", "spec": "내경500 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_74a458f8", "name": "흄관 D600", "spec": "내경600 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_8527e87d", "name": "흄관 D700", "spec": "내경700 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_84d1b4c5", "name": "흄관 D800", "spec": "내경800 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_f164d3f2", "name": "흄관 D900", "spec": "내경900 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_c32fb1a3", "name": "흄관 D1000", "spec": "내경1000 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_05b9cec4", "name": "흄관 D1100", "spec": "내경1100 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_5c499ae4", "name": "흄관 D1200", "spec": "내경1200 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_fb325e0b", "name": "흄관 D1350", "spec": "내경1350 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_760ec924", "name": "흄관 D1500", "spec": "내경1500 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_672aaddb", "name": "흄관 D1650", "spec": "내경1650 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_b68de910", "name": "흄관 D1800", "spec": "내경1800 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_151749c8", "name": "흄관 D2000", "spec": "내경2000 · L=2430 · 2종", "unit": "본", "category": "흄관", "safetyStock": 0, "memo": "KS F 4403 원심력 철근콘크리트관 · 1종·3종은 품목 추가", "createdAt": "2026-09-19"},
+  {"id": "cat_c77cfcf0", "name": "PC원형맨홀 1호", "spec": "내경900 · 조립식", "unit": "조", "category": "PC맨홀", "safetyStock": 0, "memo": "KS F 4012 · 상부·하부·직벽 구성은 현장 도면 기준", "createdAt": "2026-09-19"},
+  {"id": "cat_b01f934e", "name": "PC원형맨홀 2호", "spec": "내경1200 · 조립식", "unit": "조", "category": "PC맨홀", "safetyStock": 0, "memo": "KS F 4012 · 상부·하부·직벽 구성은 현장 도면 기준", "createdAt": "2026-09-19"},
+  {"id": "cat_2534256f", "name": "PC원형맨홀 3호", "spec": "내경1500 · 조립식", "unit": "조", "category": "PC맨홀", "safetyStock": 0, "memo": "KS F 4012 · 상부·하부·직벽 구성은 현장 도면 기준", "createdAt": "2026-09-19"},
+  {"id": "cat_527b9c59", "name": "맨홀 뚜껑(주철)", "spec": "D648 · 중하중용", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_2f3829b4", "name": "맨홀 뚜껑(주철)", "spec": "D648 · 보통하중용", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_870e0511", "name": "PC맨홀 조정링", "spec": "높이100", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_25918382", "name": "PC맨홀 조정링", "spec": "높이200", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_ec582673", "name": "맨홀 이음재(고무링)", "spec": "1호용", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_b47bdb5f", "name": "맨홀 이음재(고무링)", "spec": "2호용", "unit": "EA", "category": "맨홀 부속자재", "safetyStock": 0, "memo": "흄관·맨홀 견적 시 함께 제안하는 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_0f160538", "name": "U형측구 300×300", "spec": "안폭300×깊이300 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010 · 뚜껑은 별도 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_2534d89d", "name": "U형측구 300×400", "spec": "안폭300×깊이400 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010 · 뚜껑은 별도 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_98995c82", "name": "U형측구 400×400", "spec": "안폭400×깊이400 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010 · 뚜껑은 별도 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_019981b3", "name": "U형측구 500×500", "spec": "안폭500×깊이500 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010 · 뚜껑은 별도 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_30daa928", "name": "U형측구 600×600", "spec": "안폭600×깊이600 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010 · 뚜껑은 별도 품목", "createdAt": "2026-09-19"},
+  {"id": "cat_9a136a5c", "name": "U형측구 뚜껑 300", "spec": "300용 · 콘크리트", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "U형측구용 뚜껑", "createdAt": "2026-09-19"},
+  {"id": "cat_65e161e5", "name": "U형측구 뚜껑 400", "spec": "400용 · 콘크리트", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "U형측구용 뚜껑", "createdAt": "2026-09-19"},
+  {"id": "cat_66427a37", "name": "U형측구 뚜껑 500", "spec": "500용 · 콘크리트", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "U형측구용 뚜껑", "createdAt": "2026-09-19"},
+  {"id": "cat_910aa898", "name": "L형측구", "spec": "250 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010", "createdAt": "2026-09-19"},
+  {"id": "cat_79184976", "name": "L형측구", "spec": "300 · L=1000", "unit": "EA", "category": "측구", "safetyStock": 0, "memo": "KS F 4010", "createdAt": "2026-09-19"},
+  {"id": "cat_3752f510", "name": "집수정 400×400×600", "spec": "내부 400×400 · 깊이600", "unit": "EA", "category": "집수정", "safetyStock": 0, "memo": "그레이팅은 별도", "createdAt": "2026-09-19"},
+  {"id": "cat_e2dd4ac0", "name": "집수정 500×500×700", "spec": "내부 500×500 · 깊이700", "unit": "EA", "category": "집수정", "safetyStock": 0, "memo": "그레이팅은 별도", "createdAt": "2026-09-19"},
+  {"id": "cat_d8359bc5", "name": "집수정 600×600×800", "spec": "내부 600×600 · 깊이800", "unit": "EA", "category": "집수정", "safetyStock": 0, "memo": "그레이팅은 별도", "createdAt": "2026-09-19"},
+  {"id": "cat_91f83a65", "name": "도로경계석", "spec": "150×150×1000", "unit": "EA", "category": "경계석", "safetyStock": 0, "memo": "KS F 4006", "createdAt": "2026-09-19"},
+  {"id": "cat_60bc0c1a", "name": "도로경계석", "spec": "180×205×1000", "unit": "EA", "category": "경계석", "safetyStock": 0, "memo": "KS F 4006", "createdAt": "2026-09-19"},
+  {"id": "cat_5a81fa85", "name": "도로경계석", "spec": "200×250×1000", "unit": "EA", "category": "경계석", "safetyStock": 0, "memo": "KS F 4006", "createdAt": "2026-09-19"},
+  {"id": "cat_dc402a45", "name": "보강토 옹벽블록 표준형", "spec": "폭400×높이200×깊이300", "unit": "EA", "category": "옹벽블록", "safetyStock": 0, "memo": "규격은 우리 제품에 맞게 수정", "createdAt": "2026-09-19"},
+  {"id": "cat_423c6857", "name": "보강토 옹벽블록 캡블록", "spec": "폭400×높이100×깊이300", "unit": "EA", "category": "옹벽블록", "safetyStock": 0, "memo": "규격은 우리 제품에 맞게 수정", "createdAt": "2026-09-19"},
+];

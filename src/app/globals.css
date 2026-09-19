@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+/* ── DESIGN.md(Vercel 스타일) 토큰. 여기 없는 색·글꼴은 쓰지 않습니다 ── */
+:root {
+  --background: #fafafa;    /* canvas-soft: 화면 바탕 */
+  --foreground: #171717;    /* ink */
+  --primary: #171717;       /* primary(ink). 시스템 설정에서 바꾸면 <html> 인라인 변수가 덮어씀 */
+  --primary-dark: #4d4d4d;  /* body: 눌렀을 때 */
+  --primary-soft: #f5f5f5;  /* canvas-soft-2: 선택된 줄·연한 배경 */
+  --card: #ffffff;          /* canvas */
+  --border: #ebebeb;        /* hairline */
+  --border-strong: #a1a1a1; /* hairline-strong */
+  --muted: #888888;         /* mute */
+  --body: #4d4d4d;          /* body */
+  --link: #0070f3;
+  --shadow-card: 0px 1px 1px #00000005, 0px 2px 2px #0000000a; /* 겹친 아주 옅은 그림자 */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-soft: var(--primary-soft);
+  --color-card: var(--card);
+  --color-line: var(--border);
+  --color-muted: var(--muted);
+  --shadow-card: var(--shadow-card);
+}
+
+/* 화면 곳곳의 Tailwind 색 이름을 DESIGN.md 색으로 고정합니다 (회색 계열 → ink/body/mute/hairline/canvas, 상태색 → error/warning/success/cyan/violet) */
+@theme {
+  /* DESIGN.md: 글자 굵기는 600이 최대(700 이상 없음) → font-bold/extrabold/black 을 600으로 */
+  --font-weight-bold: 600; --font-weight-extrabold: 600; --font-weight-black: 600;
+  --font-sans: var(--font-geist-sans), "Geist", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  --radius-sm: 4px;   /* xs */
+  --radius-md: 6px;   /* sm */
+  --radius-lg: 6px;   /* sm */
+  --radius-xl: 8px;   /* md */
+  --radius-2xl: 12px; /* lg */
+  --radius-3xl: 16px; /* xl */
+  --color-white: #ffffff;
+  --color-black: #171717;
+  --color-slate-50: #fafafa;  --color-slate-100: #f5f5f5; --color-slate-200: #ebebeb; --color-slate-300: #a1a1a1;
+  --color-slate-400: #888888; --color-slate-500: #888888; --color-slate-600: #4d4d4d; --color-slate-700: #4d4d4d;
+  --color-slate-800: #171717; --color-slate-900: #171717; --color-slate-950: #171717;
+  --color-gray-50: #fafafa;  --color-gray-100: #f5f5f5; --color-gray-200: #ebebeb; --color-gray-300: #a1a1a1;
+  --color-gray-400: #888888; --color-gray-500: #888888; --color-gray-600: #4d4d4d; --color-gray-700: #4d4d4d;
+  --color-gray-800: #171717; --color-gray-900: #171717;
+  --color-red-50: #f7d4d6;   --color-red-100: #f7d4d6;  --color-red-200: #f7d4d6;  --color-red-300: #ee0000;
+  --color-red-400: #ee0000;  --color-red-500: #ee0000;  --color-red-600: #c50000;  --color-red-700: #c50000;  --color-red-800: #c50000;
+  --color-amber-50: #ffefcf; --color-amber-100: #ffefcf; --color-amber-200: #ffefcf; --color-amber-300: #f5a623;
+  --color-amber-400: #f5a623; --color-amber-500: #f5a623; --color-amber-600: #ab570a; --color-amber-700: #ab570a; --color-amber-800: #ab570a;
+  --color-green-50: #aaffec; --color-green-100: #aaffec; --color-green-200: #aaffec; --color-green-500: #29bc9b;
+  --color-green-600: #29bc9b; --color-green-700: #29bc9b; --color-green-800: #29bc9b;
+  --color-sky-50: #d3e5ff;   --color-sky-100: #d3e5ff;  --color-sky-200: #d3e5ff;  --color-sky-600: #0070f3;  --color-sky-700: #0761d1;
+  --color-blue-50: #d3e5ff;  --color-blue-100: #d3e5ff; --color-blue-200: #d3e5ff; --color-blue-500: #0070f3; --color-blue-600: #0070f3; --color-blue-700: #0761d1;
+  --color-purple-50: #d8ccf1; --color-purple-100: #d8ccf1; --color-purple-600: #7928ca; --color-purple-700: #4c2889;
+  --color-violet-50: #d8ccf1; --color-violet-100: #d8ccf1; --color-violet-600: #7928ca; --color-violet-700: #4c2889;
+  --color-teal-50: #aaffec;  --color-teal-600: #29bc9b; --color-teal-700: #29bc9b;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), "Geist", "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 14px; line-height: 20px; letter-spacing: -0.28px; /* body-sm */
+}
+::selection { background: #171717; color: #f2f2f2; }
+@layer base { h1, h2, h3 { letter-spacing: -0.03em; font-weight: 600; } } /* display: 600, 음수 자간. base 층에 두어 tracking-* 유틸리티가 우선함 */
+code, kbd, pre { font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; font-size: 13px; }
+
+/* 양식 문서 인쇄: 문서만 A4로 출력 */
+@media print {
+  /* 양식 문서(.doc-print-root)가 있는 화면은 그 문서만, 그 외 화면은 메뉴·비서 버튼을 뺀 본문을 인쇄합니다 */
+  body:has(.doc-print-root) * { visibility: hidden; }
+  .doc-print-root, .doc-print-root * { visibility: visible; }
+  aside, [data-print-hide], .print\:hidden { display: none !important; }
+  main { padding: 0 !important; }
+  .doc-print-root { position: absolute; inset: 0; padding: 0; background: #fff; }
+  .doc-sheet { box-shadow: none !important; border: 0 !important; max-width: none !important; }
+  @page { size: A4; margin: 12mm; }
+}
+
+/* 화면 전체 다듬기: 표 머리글, 줄 강조, 입력 칸 초점, 얇은 스크롤바, 불러오는 중 반짝임 */
+table thead th { font-family: var(--font-geist-mono), "Geist Mono", ui-monospace, Menlo, monospace; font-weight: 400; font-size: 12px; line-height: 16px; letter-spacing: 0; color: #4d4d4d; background: #fafafa; }
+table tbody tr { transition: background-color 120ms ease; }
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]), select, textarea {
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: #a1a1a1; box-shadow: 0 0 0 3px #ebebeb; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible { outline: 2px solid #0070f3; outline-offset: 2px; border-radius: 6px; }
+.thin-scroll { scrollbar-width: thin; scrollbar-color: #ebebeb transparent; }
+.thin-scroll::-webkit-scrollbar { width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: #ebebeb; border-radius: 6px; }
+.skeleton { background: linear-gradient(90deg, #f5f5f5 25%, #fafafa 50%, #f5f5f5 75%); background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+/* 회사 소개 페이지: 구역이 살짝 떠오르며 나타남 (차분한 움직임, 동작 줄이기 설정이면 없음) */
+.rise { animation: rise 600ms cubic-bezier(.2,.7,.2,1) both; }
+.rise:nth-of-type(2) { animation-delay: 80ms; } .rise:nth-of-type(3) { animation-delay: 160ms; } .rise:nth-of-type(4) { animation-delay: 240ms; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; } }
+html { scroll-behavior: smooth; }
+/* 카드 그림자 유틸 */
+.shadow-card { box-shadow: var(--shadow-card); }
+
+/* 표 안의 작은 알약 버튼·배지는 줄바꿈하지 않습니다 (휴대폰에서 세 줄로 갈라지는 것 방지) */
+td button.rounded-full, td span.rounded-full, td a.rounded-full { white-space: nowrap; }
