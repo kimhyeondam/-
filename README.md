@@ -37,3 +37,4 @@ Claude에게 이렇게 말하면 됩니다.
 |---|---|
 | `메모/` | 날짜별 메모 파일과 `목록.md` |
 | `marketing/` | 이전에 만든 콘크리트 2차제품 수주 전략 문서 3개 (브라우저에서 열림) |
+| `CLAUDE.md`, `.claude/` | Claude Code 공통 설정(claude-kit). `kimhyeondam/pr-practice-calculator` 저장소에서 가져옴 |
