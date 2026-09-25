@@ -185,8 +185,26 @@ textarea.backup{width:100%;min-height:80px;font-family:var(--mono);font-size:11p
 .ex-head .cnt.full{color:var(--good)}
 .prev{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 16px 8px;padding:8px 10px;border-radius:10px;background:var(--accent-soft);font-size:12px}
 .prev span{min-width:0;overflow-wrap:anywhere}
-.set{display:grid;grid-template-columns:52px 1fr 1fr 44px;gap:8px;align-items:center;padding:7px 16px;border-top:1px solid var(--line)}
-.set .no{font-size:13px;color:var(--muted);white-space:nowrap}
+.set{display:grid;grid-template-columns:66px 1fr 1fr 44px;gap:8px;align-items:center;padding:7px 16px;border-top:1px solid var(--line)}
+.set .no{font-size:13px;color:var(--muted);white-space:nowrap;display:flex;flex-direction:column;line-height:1.25}
+.set .no small{font-size:10.5px;color:var(--muted);font-family:var(--mono)}
+.set .no .up{color:var(--good);font-weight:700}
+.guide{font-size:13px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:10px 12px;margin:0}
+.wcard{display:flex;flex-direction:column;gap:12px}
+.wtop{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.wbig{font-family:var(--mono);font-size:34px;font-weight:600;line-height:1}
+.wbig small{font-size:16px;margin-left:2px;color:var(--muted)}
+.chg{display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:700;border-radius:8px;padding:3px 8px;background:var(--surface-2)}
+.wst{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.wst div{background:var(--bg);border-radius:10px;padding:8px 4px}
+.wst b{display:block;font-family:var(--mono);font-size:15px}
+.wst span{font-size:11px;color:var(--muted)}
+.wform{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.wlist{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.wlist .r{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.wlist .x{border:0;background:none;color:var(--muted);font-size:13px;padding:4px 6px}
+.wmini{width:100%;text-align:left;display:flex;align-items:center;gap:12px;color:inherit}
+.wmini svg{flex:1;min-width:0;height:40px}
 .set label{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
 .set input{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:7px 8px;font-family:var(--mono);font-size:15px;font-weight:600;text-align:right;color:var(--ink)}
 .set.done{background:var(--accent-soft)}
@@ -394,14 +412,19 @@ function ensureLog(s){
   return db.logs[s];
 }
 function elapsed(l){ if (!l) return 0; return (l.sec||0) + (l.run ? Math.floor((Date.now() - l.run)/1000) : 0); }
+function defaultSets(s, ex){
+  const prev = s ? lastSession(ex.id, s) : null;
+  if (prev) return prev.sets.map(x => ({ kg: x.kg || '', reps: x.reps || '', done: false }));
+  return Array.from({length: ex.sets}, () => ({ kg:'', reps:'', done:false }));
+}
 function setsOf(s, ex){
   const l = s && db.logs[s];
   if (l && l.ex && l.ex[ex.id]) return l.ex[ex.id];
-  return Array.from({length: ex.sets}, () => ({ kg:'', reps:'', done:false }));
+  return defaultSets(s, ex);
 }
 function materialize(s, ex){
   const l = ensureLog(s);
-  if (!l.ex[ex.id]) l.ex[ex.id] = setsOf(null, ex).map(x => ({...x}));
+  if (!l.ex[ex.id]) l.ex[ex.id] = defaultSets(s, ex);
   return l.ex[ex.id];
 }
 function summary(s){
@@ -472,7 +495,7 @@ function streak(){
 /* ───────── 차트 (선 · 막대, 하나의 계열) ───────── */
 const charts = {}; let chartSeq = 0;
 function niceStep(x){ const p = Math.pow(10, Math.floor(Math.log10(x))); const f = x / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p; }
-function chart(points, { type = 'line', unit = '' } = {}){
+function chart(points, { type = 'line', unit = '', area = false } = {}){
   const id = 'c' + (++chartSeq);
   const W = 320, H = 160, L = 38, R = 12, T = 16, B = 24, pw = W - L - R, ph = H - T - B, n = points.length;
   const vals = points.map(p => p.value);
@@ -503,7 +526,9 @@ function chart(points, { type = 'line', unit = '' } = {}){
       marks += `<path d="M${x0} ${base} V${top + r} Q${x0} ${top} ${x0 + r} ${top} H${x1 - r} Q${x1} ${top} ${x1} ${top + r} V${base} Z" fill="var(--accent)"/>`;
     });
   } else {
-    marks += `<path d="${points.map((p, i) => (i ? 'L' : 'M') + x(i) + ' ' + y(p.value)).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    const line = points.map((p, i) => (i ? 'L' : 'M') + x(i) + ' ' + y(p.value)).join(' ');
+    if (area && n > 1) marks += `<path d="${line} L${x(n-1)} ${y(lo)} L${x(0)} ${y(lo)} Z" fill="var(--accent)" fill-opacity=".12"/>`;
+    marks += `<path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
     points.forEach((p, i) => {
       const last = i === n - 1;
       marks += `<circle cx="${x(i)}" cy="${y(p.value)}" r="${last ? 5 : 4}" fill="${last ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--accent)" stroke-width="2"/>`;
@@ -596,6 +621,8 @@ function renderHome(){
       </div>
       <div class="box pad"><span class="muted">연속 목표 달성</span><div class="big">${st}주</div><span class="muted">${st ? '흐름 좋아요' : '이번 주부터 시작!'}</span></div>
     </div>
+    ${(() => { const ws = Object.keys(db.weights).sort(); const last = ws.length ? +db.weights[ws[ws.length-1]] : null;
+      return `<button class="box pad wmini" data-tab="grow"><div><span class="muted">체중</span><div class="big num" style="font-size:24px">${last !== null ? last + 'kg' : '기록하기'}</div></div>${spark(ws.slice(-14).map(d => +db.weights[d]))}<span class="link">그래프 ›</span></button>`; })()}
     <h3>이번 주</h3>
     <div class="strip">${week.map((s, i) => { const p = partFor(s); return `<button class="sd${didWorkout(s) ? ' done' : ''}${s === t ? ' is-today' : ''}" data-part="${p}" data-open="${s}" aria-label="${md(s)} ${partName(p)}${didWorkout(s) ? ' 완료' : ''}">
       <span class="w">${DOW[i]}</span><span class="n">${parse(s).getDate()}</span><span class="bar"></span><span class="w" style="font-size:11px">${partName(p)}</span></button>`; }).join('')}</div>
@@ -656,6 +683,40 @@ function renderLib(){
 }
 
 /* ───────── 성장 ───────── */
+let wRange = '3m';
+function weightSeries(range){
+  const t = todayStr(), days = range === '1m' ? 31 : range === '3m' ? 92 : 100000;
+  return Object.keys(db.weights).sort().filter(d => daysBetween(d, t) < days).map(d => ({ date: d, label: md(d), value: +db.weights[d] }));
+}
+function chgChip(diff, label){
+  const v = r1(diff), col = v === 0 ? 'var(--muted)' : 'var(--ink)';
+  return `<span class="chg" style="color:${col}">${v > 0 ? '▲' : v < 0 ? '▼' : '−'} ${Math.abs(v)}kg<span class="muted" style="font-weight:500">${label}</span></span>`;
+}
+function weightCard(){
+  const all = Object.keys(db.weights).sort(), t = todayStr();
+  const pts = weightSeries(wRange);
+  const cur = all.length ? +db.weights[all[all.length-1]] : null;
+  const vals = pts.map(p => p.value);
+  const chips = all.length >= 2 ? chgChip(cur - +db.weights[all[all.length-2]], '지난 기록보다') + (pts.length >= 2 ? chgChip(pts[pts.length-1].value - pts[0].value, wRange === 'all' ? '처음보다' : wRange === '1m' ? '1개월 동안' : '3개월 동안') : '') : '';
+  return `<section class="box pad wcard">
+    <div class="wtop"><div><span class="muted">현재 체중${all.length ? ` · ${md(all[all.length-1])}` : ''}</span><div class="wbig">${cur !== null ? cur + '<small>kg</small>' : '—'}</div></div>
+      <div class="row" style="flex-wrap:wrap;justify-content:flex-end">${chips}</div></div>
+    <div class="seg3" role="group" aria-label="기간" style="align-self:flex-start">${[['1m','1개월'],['3m','3개월'],['all','전체']].map(([k, l]) => `<button data-wr="${k}" aria-pressed="${k === wRange}">${l}</button>`).join('')}</div>
+    ${pts.length ? chart(pts, { unit:'kg', area:true }) : `<div class="empty" style="padding:10px">${all.length ? '이 기간에는 기록이 없어요. ‘전체’를 눌러 보세요.' : '아래에 오늘 체중을 넣으면 여기에 바로 그래프가 그려져요.'}</div>`}
+    ${pts.length ? `<div class="wst"><div><b>${Math.min(...vals)}</b><span>최저(kg)</span></div><div><b>${r1(vals.reduce((a, b) => a + b, 0) / vals.length)}</b><span>평균(kg)</span></div><div><b>${Math.max(...vals)}</b><span>최고(kg)</span></div></div>` : ''}
+    <form class="wform" id="wform">
+      <label class="lab">날짜<input class="field" id="wDate" type="date" max="${t}" value="${t}"></label>
+      <label class="lab">체중(kg)<input class="field num" id="wIn" type="number" inputmode="decimal" step="0.1" min="20" max="300" placeholder="예: 72.5" value="${db.weights[t] || ''}"></label>
+      <button class="btn primary" type="submit">저장</button></form>
+    ${all.length ? `<div class="wlist">${all.slice(-5).reverse().map(d => `<div class="r"><span>${parse(d).getMonth()+1}월 ${parse(d).getDate()}일</span><span class="row"><b class="num">${db.weights[d]}kg</b><button class="x" data-wdel="${d}" aria-label="${md(d)} 기록 지우기">지우기</button></span></div>`).join('')}</div>` : ''}
+  </section>`;
+}
+function spark(vals){
+  if (vals.length < 2) return '<svg viewBox="0 0 100 40" aria-hidden="true"></svg>';
+  const lo = Math.min(...vals), hi = Math.max(...vals), rg = hi - lo || 1;
+  const d = vals.map((v, i) => (i ? 'L' : 'M') + (i / (vals.length - 1) * 96 + 2) + ' ' + (36 - (v - lo) / rg * 32)).join(' ');
+  return `<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`;
+}
 function renderGrow(){
   let days = 0, secs = 0, vol = 0;
   for (const s in db.logs){ const m = summary(s); if (didWorkout(s)) days++; secs += m.sec; vol += m.vol; }
@@ -665,25 +726,20 @@ function renderGrow(){
   const counts = {}; PART_KEYS.forEach(p => counts[p] = 0);
   for (let i = 1; i <= nd; i++){ const s = ymd(new Date(y, m, i)); if (didWorkout(s)){ const p = partFor(s); if (p in counts) counts[p]++; } }
   const cmax = Math.max(1, ...Object.values(counts));
-  const wts = Object.keys(db.weights).sort().slice(-30).map(d => ({ label: md(d), value: +db.weights[d] }));
-  const tw = db.weights[todayStr()] || '';
+  const wHtml = weightCard();
   const prs = [];
   for (const d of sortedDates()) { const l = db.logs[d]; if (l.ex) for (const id in l.ex) for (const x of l.ex[id]) if (x.done && x.pr) { const e = getEx(id); if (e) prs.push({ d, e, x }); } }
   prs.reverse();
   document.getElementById('v-grow').innerHTML = `
     <h1 class="title">성장</h1>
+    <h3>체중 변화</h3>
+    ${wHtml}
     <div class="kpis"><div class="kpi"><b>${fmtNum(days)}일</b><span>총 운동한 날</span></div><div class="kpi"><b>${fmtMin(secs)}</b><span>총 운동 시간</span></div><div class="kpi"><b>${fmtNum(vol)}</b><span>총 볼륨(kg)</span></div></div>
     <h3>주별 운동 시간 (분)</h3>
     <div class="box pad">${weeks.some(w => w.value) ? chart(weeks, { type:'bar', unit:'분' }) : '<div class="empty">운동 시간을 기록하면 최근 8주 막대그래프가 나타나요.</div>'}
       <p class="muted" style="margin:6px 0 0">아래 날짜는 그 주의 월요일이에요. 막대를 누르면 숫자가 보여요.</p></div>
     <h3>이번 달 부위별 횟수</h3>
     <div class="box pad pbars">${PART_KEYS.map(p => `<div class="pbar" data-part="${p}"><span>${PARTS[p].name}</span><div class="tr"><div class="fl" style="width:${counts[p]/cmax*100}%"></div></div><span class="v">${counts[p]}</span></div>`).join('')}</div>
-    <h3>체중 기록</h3>
-    <div class="box pad" style="display:flex;flex-direction:column;gap:12px">
-      <form class="row" id="wform"><input class="field num" id="wIn" type="number" inputmode="decimal" step="0.1" min="20" max="300" placeholder="오늘 체중" value="${tw}" aria-label="오늘 체중(kg)" style="flex:1"><span class="muted">kg</span><button class="btn primary" type="submit">저장</button></form>
-      ${wts.length >= 2 ? chart(wts, { unit:'kg' }) + `<p class="muted" style="margin:0">처음 기록(${wts[0].label}) 대비 <b style="color:var(--ink)">${(wts[wts.length-1].value - wts[0].value >= 0 ? '+' : '') + r1(wts[wts.length-1].value - wts[0].value)}kg</b></p>`
-        : '<div class="empty" style="padding:6px">체중을 이틀 이상 기록하면 변화 그래프가 나타나요.</div>'}
-    </div>
     <h3>최근 신기록</h3>
     <div class="box prl">${prs.length ? prs.slice(0, 8).map(p => `<div class="r"><b>${esc(p.e.name)}<span class="prb">PR</span></b><span class="num">${setText(p.x)}</span><span class="muted">${md(p.d)}</span><span class="muted">예상 1회 최대 ${r1(e1rm(p.x))}kg</span></div>`).join('')
       : '<div class="empty">지난번보다 무겁게 들거나 더 많이 하면 여기에 신기록이 쌓여요.</div>'}</div>`;
@@ -775,14 +831,24 @@ function stopOthers(keep){ for (const k in db.logs){ const l = db.logs[k]; if (k
 function statsHtml(m){
   return `<div class="kpi"><b>${m.sets}</b><span>완료 세트</span></div><div class="kpi"><b>${m.reps}</b><span>총 횟수</span></div><div class="kpi"><b>${fmtNum(m.vol)}</b><span>볼륨(kg)</span></div>`;
 }
+function prevHint(p, x){
+  if (!p) return '';
+  if (x.done){
+    const dk = r1((+x.kg || 0) - (+p.kg || 0)), dr = (+x.reps || 0) - (+p.reps || 0);
+    if (dk > 0) return `<small class="up">▲${dk}kg</small>`;
+    if (dk === 0 && dr > 0) return `<small class="up">▲${dr}회</small>`;
+  }
+  return `<small>지난 ${+p.kg ? p.kg + '×' : ''}${p.reps || 0}</small>`;
+}
 function exCard(ex){
   const sets = setsOf(sess, ex), done = sets.filter(x => x.done).length, prev = lastSession(ex.id, sess);
   return `<article class="ex" data-part="${ex.part}">
     <div class="ex-head"><span class="sw"></span><div class="t"><b>${esc(ex.name)}</b><span>${esc(ex.target || PARTS[ex.part].name)} · 권장 ${ex.sets}×${ex.reps}</span></div>
       <span class="cnt${done === sets.length ? ' full' : ''}">${done}/${sets.length}</span></div>
-    ${prev ? `<div class="prev"><span><b>지난번 ${md(prev.date)}</b> ${prev.sets.map(setText).join(' · ')}</span><button class="link" data-copyprev="${ex.id}" style="white-space:nowrap">그대로 채우기</button></div>` : ''}
+    ${prev ? `<div class="prev"><span><b>지난번 ${md(prev.date)}</b> ${prev.sets.map(setText).join(' · ')}</span>
+      <span class="row" style="flex:none;gap:10px"><button class="link" data-copyprev="${ex.id}">지난번대로</button>${prev.sets.some(x => +x.kg) ? `<button class="link" data-bump="${ex.id}">+2.5kg</button>` : ''}</span></div>` : ''}
     ${sets.map((x, i) => `<div class="set${x.done ? ' done' : ''}">
-      <span class="no">${i+1}세트${x.pr ? '<span class="prb">PR</span>' : ''}</span>
+      <span class="no"><span>${i+1}세트${x.pr ? '<span class="prb">PR</span>' : ''}</span>${prevHint(prev && prev.sets[i], x)}</span>
       <label><input type="number" inputmode="decimal" min="0" step="0.5" placeholder="0" value="${esc(x.kg)}" data-ex="${ex.id}" data-i="${i}" data-f="kg" aria-label="${esc(ex.name)} ${i+1}세트 무게">kg</label>
       <label><input type="number" inputmode="numeric" min="0" placeholder="${ex.reps}" value="${esc(x.reps)}" data-ex="${ex.id}" data-i="${i}" data-f="reps" aria-label="${esc(ex.name)} ${i+1}세트 횟수">회</label>
       <button class="done-btn" data-done="${ex.id}" data-i="${i}" aria-pressed="${x.done}" aria-label="${i+1}세트 완료">✓</button></div>`).join('')}
@@ -809,6 +875,7 @@ function renderSession(){
       <label class="manual">시간 직접 입력 <input id="manualMin" type="number" inputmode="numeric" min="0" placeholder="분" ${running ? 'disabled' : ''} value="${!running && m.sec ? Math.round(m.sec/60) : ''}"> 분</label>
     </section>
     <section class="stats" id="stats">${statsHtml(m)}</section>
+    ${part !== 'rest' ? '<p class="guide">지난번에 한 무게·횟수가 미리 채워져 있어요. 그대로 했으면 ✓만 누르세요. 첫 세트 숫자를 고치면 아래 세트도 같이 바뀌어요.</p>' : ''}
     ${body}
     <textarea id="memo" class="memo" placeholder="메모: 컨디션, 다음에 올릴 무게 등" aria-label="메모">${esc((l && l.memo) || '')}</textarea>
   </div>
@@ -865,8 +932,15 @@ document.addEventListener('click', e => {
   if (ds.setpart){ ensureLog(sess).part = ds.setpart; save(); return renderSession(); }
   if (ds.how){ howOpen[ds.how] = !howOpen[ds.how]; return renderSession(); }
   if (ds.rest){ restEnd = Date.now() + (+ds.rest) * 1000; return updateRest(); }
-  if (ds.addset){ const s = materialize(sess, getEx(ds.addset)); const last = s[s.length-1] || {}; s.push({ kg: last.kg || '', reps: '', done: false }); save(); return renderSession(); }
+  if (ds.addset){ const s = materialize(sess, getEx(ds.addset)); const last = s[s.length-1] || {}; s.push({ kg: last.kg || '', reps: last.reps || '', done: false }); save(); return renderSession(); }
   if (ds.delset){ const s = materialize(sess, getEx(ds.delset)); if (s.length > 1) s.pop(); save(); return renderSession(); }
+  if (ds.bump){
+    const s = materialize(sess, getEx(ds.bump)); let n = 0;
+    s.forEach(x => { if (!x.done && +x.kg){ x.kg = String(r1(+x.kg + 2.5)); n++; } });
+    save(); renderSession(); return toast(n ? '남은 세트 무게를 2.5kg씩 올렸어요' : '올릴 세트가 없어요');
+  }
+  if (ds.wdel){ delete db.weights[ds.wdel]; save(); renderGrow(); return toast(`${md(ds.wdel)} 체중 기록을 지웠어요`); }
+  if (ds.wr){ wRange = ds.wr; return renderGrow(); }
   if (ds.copyprev){
     const ex = getEx(ds.copyprev), prev = lastSession(ex.id, sess), s = materialize(sess, ex);
     prev.sets.forEach((p, i) => { if (!s[i]) s.push({ kg:'', reps:'', done:false }); if (!s[i].done){ s[i].kg = p.kg; s[i].reps = p.reps; } });
@@ -926,7 +1000,9 @@ document.addEventListener('submit', e => {
   if (e.target.id === 'wform'){
     const v = +document.getElementById('wIn').value;
     if (!(v >= 20 && v <= 300)) return toast('체중을 kg 단위로 넣어 주세요 (예: 72.5)');
-    db.weights[todayStr()] = r1(v); save(); renderGrow(); toast('오늘 체중을 저장했어요');
+    const d = document.getElementById('wDate').value || todayStr();
+    if (d > todayStr()) return toast('미래 날짜에는 기록할 수 없어요');
+    db.weights[d] = r1(v); save(); renderGrow(); toast(`${md(d)} 체중 ${r1(v)}kg 저장`);
   } else if (e.target.id === 'addForm'){
     const name = document.getElementById('aName').value.trim(); if (!name) return;
     const ex = { id: 'u' + Date.now(), custom: true, part: document.getElementById('aPart').value, name,
@@ -939,8 +1015,16 @@ document.addEventListener('submit', e => {
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.ex){
-    const x = materialize(sess, getEx(t.dataset.ex))[+t.dataset.i];
-    x[t.dataset.f] = t.value; save();
+    const ex = getEx(t.dataset.ex), sets = materialize(sess, ex), i = +t.dataset.i, f = t.dataset.f;
+    const old = sets[i][f]; sets[i][f] = t.value;
+    // 아래 세트 중 아직 안 한 세트는 같은 값으로 따라 채운다 (따로 고친 세트를 만나면 멈춤)
+    for (let j = i + 1; j < sets.length; j++){
+      const y = sets[j]; if (y.done) continue;
+      if (y[f] !== '' && y[f] !== old) break;
+      y[f] = t.value;
+      const inp = document.querySelector(`input[data-ex="${ex.id}"][data-i="${j}"][data-f="${f}"]`); if (inp) inp.value = t.value;
+    }
+    save();
     document.getElementById('stats').innerHTML = statsHtml(summary(sess));
   } else if (t.id === 'memo'){ ensureLog(sess).memo = t.value; save(); }
   else if (t.id === 'manualMin'){ const l = ensureLog(sess); if (!l.run){ l.sec = Math.max(0, Math.round((+t.value || 0) * 60)); save(); document.getElementById('clock').textContent = fmtClock(l.sec); } }
