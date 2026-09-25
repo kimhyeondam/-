@@ -3,220 +3,252 @@
 <meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<script>
+try { if (localStorage.getItem('plate-log-theme') === 'light') document.documentElement.classList.add('app-light'); else document.documentElement.classList.add('app-dark'); }
+catch (e) { document.documentElement.classList.add('app-dark'); }
+</script>
 <style>
 :root{
-  --bg:#EDF0F3;
-  --surface:#FFFFFF;
-  --surface-2:#E2E7EC;
-  --ink:#12171C;
-  --muted:#5A6570;
-  --line:#D2D9E0;
-  --on-ink:#F4F6F8;
-  --good:#1F8A4C;
-  /* 역도 원판 색 규칙: 25kg 빨강 · 20kg 파랑 · 15kg 노랑 · 10kg 초록 · 5kg 흰색 */
-  --p-legs:#D6342A;  --p-legs-fg:#FFFFFF;
-  --p-back:#1D5DB5;  --p-back-fg:#FFFFFF;
-  --p-chest:#E3AE12; --p-chest-fg:#1B1606;
-  --p-shoulders:#23874F; --p-shoulders-fg:#FFFFFF;
-  --p-arms:#F6F6F1;  --p-arms-fg:#1B1F24;
-  --p-rest:#B7C0C9;  --p-rest-fg:#1B1F24;
-  --radius:14px;
-  --display:"Black Han Sans","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+  --bg:#F2F4F7; --surface:#FFFFFF; --surface-2:#E8EBF0; --ink:#121418; --muted:#6B7382;
+  --line:#E1E5EB; --accent:#3350E0; --accent-2:#5C74F0; --on-accent:#FFFFFF;
+  --accent-soft:rgba(51,80,224,.12); --good:#1E9E5A; --body:#C9CFD8; --shadow:0 1px 2px rgba(18,20,24,.06);
+  --i-blue:#3350E0; --i-pink:#D0245E; --i-orange:#F29A0B; --i-lav:#7D8BD0; --i-slate:#5E7784; --i-green:#1E9E5A;
+  --font:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#0F1317; --surface:#182028; --surface-2:#232C35; --ink:#E7ECF1;
-    --muted:#95A2AF; --line:#2D3741; --on-ink:#0F1317; --good:#3DBA73;
-    --p-arms:#DCDDD6; --p-rest:#4A5561; --p-rest-fg:#E7ECF1;
-  }
-}
-:root[data-theme="dark"]{
+:root.app-dark{
   color-scheme:dark;
-  --bg:#0F1317; --surface:#182028; --surface-2:#232C35; --ink:#E7ECF1;
-  --muted:#95A2AF; --line:#2D3741; --on-ink:#0F1317; --good:#3DBA73;
-  --p-arms:#DCDDD6; --p-rest:#4A5561; --p-rest-fg:#E7ECF1;
+  --bg:#0E0F12; --surface:#1F232A; --surface-2:#2A2F38; --ink:#F2F4F7; --muted:#8C94A2;
+  --line:#2F353F; --accent:#3D57E8; --accent-2:#5C74F0; --on-accent:#FFFFFF;
+  --accent-soft:rgba(61,87,232,.2); --good:#3DBA73; --body:#3B4452; --shadow:none;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{background:var(--bg)}
-body{margin:0;color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+body{margin:0;color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
 
-.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:16px 110px;display:flex;flex-direction:column;gap:18px}
-header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-.brand{font-family:var(--display);font-size:26px;line-height:1;letter-spacing:.5px}
-.brand small{display:block;font-family:var(--body);font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.08em;margin-top:6px}
-.date-label{text-align:right;font-size:13px;color:var(--muted)}
-.date-label b{display:block;color:var(--ink);font-size:16px}
-
-h2{font-family:var(--display);font-weight:400;font-size:20px;margin:0;text-wrap:balance}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
-.section{display:flex;flex-direction:column;gap:10px}
-.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.spread{display:flex;align-items:center;justify-content:space-between;gap:8px}
-
-/* 원판 모양 배지 */
-.plate{--c:var(--p-rest);--fg:var(--p-rest-fg);width:30px;height:30px;border-radius:50%;background:var(--c);color:var(--fg);display:inline-grid;place-items:center;font-size:11px;font-weight:700;flex:none;position:relative;box-shadow:inset 0 0 0 3px rgba(0,0,0,.12)}
-.plate::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--bg);box-shadow:0 0 0 1px rgba(0,0,0,.15)}
-.plate.sm{width:14px;height:14px}
-.plate.sm::after{width:3px;height:3px}
-.plate.lg{width:54px;height:54px}
-.plate.lg{font-size:15px;font-family:var(--mono)}
-.plate.lg::after{display:none}
-[data-part="chest"]{--c:var(--p-chest);--fg:var(--p-chest-fg)}
-[data-part="back"]{--c:var(--p-back);--fg:var(--p-back-fg)}
-[data-part="arms"]{--c:var(--p-arms);--fg:var(--p-arms-fg)}
-[data-part="shoulders"]{--c:var(--p-shoulders);--fg:var(--p-shoulders-fg)}
-[data-part="legs"]{--c:var(--p-legs);--fg:var(--p-legs-fg)}
-[data-part="rest"]{--c:var(--p-rest);--fg:var(--p-rest-fg)}
-
-/* 주간 띠 */
-.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.day{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
-.day .dw{font-size:12px;color:var(--muted);font-weight:500}
-.day .dn{font-family:var(--mono);font-size:15px;font-weight:600}
-.day .pn{font-size:10px;color:var(--muted);white-space:nowrap}
-.day.sel{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
-.day.sel .dw,.day.sel .pn{color:var(--on-ink);opacity:.8}
-.day.today .dn{text-decoration:underline;text-underline-offset:3px}
-.day .chk{height:12px;font-size:11px;line-height:12px;color:var(--good);font-weight:700}
-.day.sel .chk{color:var(--on-ink)}
-
-/* 부위 선택 칩 */
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px 6px 6px;white-space:nowrap;font-weight:500;font-size:14px}
-.chip[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-
-/* 타이머 */
-.timer{background:var(--ink);color:var(--on-ink);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
-.timer .clock{font-family:var(--mono);font-size:46px;font-weight:600;line-height:1;letter-spacing:-1px}
-.timer .sub{font-size:12px;opacity:.75}
-.timer .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.btn{border:0;border-radius:12px;padding:12px 14px;font-weight:700;font-size:15px}
-.btn.light{background:var(--on-ink);color:var(--ink)}
-.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1px currentColor}
-.btn.dark{background:var(--ink);color:var(--on-ink)}
-.btn.line{background:var(--surface);border:1px solid var(--line)}
-.btn.small{padding:7px 10px;font-size:13px;border-radius:10px}
-.rest-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.rest-row span{font-size:12px;opacity:.75;margin-right:2px}
-.pill{border:0;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;background:rgba(255,255,255,.14);color:inherit}
-:root[data-theme="dark"] .pill{background:rgba(0,0,0,.12)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill{background:rgba(0,0,0,.12)}}
-.manual{display:flex;gap:6px;align-items:center;font-size:13px}
-.manual input{width:70px;border-radius:10px;border:1px solid rgba(127,127,127,.5);background:transparent;padding:6px 8px;text-align:right}
-
-/* 요약 */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
-.stat b{display:block;font-family:var(--mono);font-size:20px;font-weight:600;font-variant-numeric:tabular-nums}
-.stat span{font-size:12px;color:var(--muted)}
-
-/* 운동 카드 */
-.ex{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.ex-head{display:flex;gap:10px;align-items:center;padding:12px 14px}
-.ex-head .t{flex:1;min-width:0}
-.ex-head .t b{display:block;font-size:16px}
-.ex-head .t span{font-size:12px;color:var(--muted)}
-.ex-head .prog{font-family:var(--mono);font-size:13px;color:var(--muted)}
-.ex-head .prog.full{color:var(--good);font-weight:600}
-.sets{display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.set{display:grid;grid-template-columns:44px 1fr 1fr 48px;gap:8px;align-items:center;padding:8px 14px;border-bottom:1px dashed var(--line)}
-.set:last-child{border-bottom:0}
-.set .no{font-family:var(--mono);font-size:13px;color:var(--muted)}
-.set label{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
-.set input[type=number]{width:100%;min-width:0;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:7px 8px;font-family:var(--mono);font-size:15px;text-align:right;color:var(--ink)}
-.set.done{background:color-mix(in srgb,var(--good) 9%,transparent)}
-.done-btn{width:40px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);font-size:18px;font-weight:700;color:var(--muted);justify-self:end}
-.set.done .done-btn{background:var(--good);border-color:var(--good);color:#fff}
-.ex-foot{display:flex;gap:6px;padding:8px 14px 12px;flex-wrap:wrap}
-.how{padding:0 14px 14px;font-size:14px;color:var(--ink)}
-.how ol{margin:6px 0 8px;padding-left:20px;display:flex;flex-direction:column;gap:4px}
-.tip{background:var(--surface-2);border-radius:10px;padding:8px 10px;font-size:13px}
-.tip b{margin-right:4px}
-
-textarea.memo{width:100%;min-height:72px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;resize:vertical}
-
-.rest-day{background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);padding:18px;text-align:center;color:var(--muted)}
-
-/* 달력 */
-.cal-nav{display:flex;align-items:center;justify-content:space-between}
-.cal-nav button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-size:18px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal .h{text-align:center;font-size:12px;color:var(--muted);font-weight:500;padding:4px 0}
-.cal .h.sun{color:var(--p-legs)}
-.cell{aspect-ratio:1/1.15;max-width:100%;border-radius:10px;border:1px solid transparent;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:5px 2px;gap:3px;min-width:0}
-.cell.blank{background:transparent}
-.cell .n{font-family:var(--mono);font-size:13px}
-.cell.today{border-color:var(--ink)}
-.cell.sel{background:var(--ink);color:var(--on-ink)}
-.cell .tag{font-size:10px;line-height:1.2;padding:1px 5px;border-radius:6px;background:var(--c);color:var(--fg);white-space:nowrap;max-width:100%;overflow:hidden}
-.cell .plan{font-size:10px;color:var(--muted)}
-.cell.sel .plan{color:var(--on-ink);opacity:.7}
-.cell .min{font-size:10px;font-family:var(--mono);color:var(--muted)}
-.cell.sel .min{color:var(--on-ink);opacity:.8}
-.bars{display:flex;flex-direction:column;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
-.bar{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;align-items:center;font-size:13px}
-.bar .track{height:10px;background:var(--surface-2);border-radius:6px;overflow:hidden}
-.bar .fill{height:100%;background:var(--c);border-radius:6px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-.bar .v{text-align:right;font-family:var(--mono);color:var(--muted)}
-
-/* 운동법 */
-.guide{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:6px}
-.guide .meta{display:flex;gap:6px;flex-wrap:wrap}
-.tagx{font-size:12px;background:var(--surface-2);border-radius:6px;padding:2px 8px}
-.guide ol{margin:4px 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
-.routine{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.routine .r{display:grid;grid-template-columns:36px 30px 1fr;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
-.routine .r:last-child{border-bottom:0}
-.routine select{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg)}
+.app{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:8px 104px}
+main{display:flex;flex-direction:column;gap:16px}
+.page-title{font-size:28px;font-weight:700;margin:14px 0 2px;letter-spacing:-.5px}
+h3{font-size:20px;font-weight:700;margin:6px 0 0;letter-spacing:-.3px}
 .muted{color:var(--muted);font-size:13px}
-textarea.backup{width:100%;min-height:80px;font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px}
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow)}
+.spread{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.link{border:0;background:none;color:var(--accent-2);font-weight:600;padding:4px 0}
+
+/* 상단 계획/훈련 전환 */
+.seg{display:grid;grid-template-columns:1fr 1fr;margin-top:6px}
+.seg button{border:0;background:none;font-size:20px;font-weight:700;padding:10px 0 12px;color:var(--muted);position:relative}
+.seg button[aria-selected="true"]{color:var(--ink)}
+.seg button[aria-selected="true"]::after{content:"";position:absolute;left:50%;bottom:0;width:64px;height:5px;margin-left:-32px;border-radius:3px;background:var(--accent)}
+
+/* 히어로 */
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:22px 20px;min-height:170px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;
+  background:radial-gradient(120% 90% at 85% 10%,#2B3F9E 0%,#141A33 55%,#0B0D16 100%);color:#fff}
+.hero svg{position:absolute;right:-14px;top:14px;width:200px;opacity:.95}
+.hero b{font-size:26px;letter-spacing:-.5px;position:relative}
+.hero span{position:relative;font-size:14px;opacity:.85}
+.hero .prog{position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,.18);margin-top:10px;overflow:hidden}
+.hero .prog i{display:block;height:100%;background:#fff;border-radius:3px}
+
+/* 요일 카드 */
+.days{display:flex;flex-direction:column;gap:10px}
+.dayc{width:100%;border:0;text-align:left;display:flex;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}
+.dayc .t{flex:1;min-width:0}
+.dayc .t b{display:block;font-size:22px;line-height:1.2;letter-spacing:-.3px}
+.dayc .t span{font-size:14px;color:var(--muted)}
+.dayc.today{background:var(--accent);color:var(--on-accent)}
+.dayc.today .t span{color:var(--on-accent);opacity:.85}
+.dayc .go{background:#fff;color:var(--accent);font-weight:700;border-radius:14px;padding:12px 26px;font-size:16px}
+.dayc .badge{font-size:13px;font-weight:700;color:var(--good);display:flex;align-items:center;gap:4px}
+.dayc .date{font-size:13px;color:var(--muted)}
+.dayc.rest .t b{font-size:20px}
+
+/* 월 달력 */
+.cal-nav{display:flex;align-items:center;justify-content:space-between}
+.cal-nav button{width:38px;height:38px;border-radius:12px;border:0;background:var(--surface);font-size:18px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:12px}
+.cal .h{text-align:center;font-size:12px;color:var(--muted);padding-bottom:4px}
+.cell{border:0;background:none;aspect-ratio:1/1.1;max-width:100%;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:2px;min-width:0}
+.cell .n{font-size:14px;font-weight:600;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.cell .p{font-size:10px;color:var(--muted);white-space:nowrap}
+.cell.done .n{background:var(--accent);color:var(--on-accent)}
+.cell.done .p{color:var(--accent-2);font-weight:600}
+.cell.today .n{box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* 부위 카드 (훈련) */
+.pcard{padding:22px 20px 16px;display:flex;flex-direction:column;gap:12px}
+.pcard .head{display:flex;justify-content:space-between;gap:10px}
+.pcard .head b{display:block;font-size:24px;letter-spacing:-.4px}
+.pcard .head span{color:var(--muted)}
+.fig{width:74px;height:74px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;flex:none;overflow:hidden}
+.fig svg{height:64px}
+.exl{display:flex;flex-direction:column;gap:10px;margin:4px 0 0;padding:0;list-style:none}
+.exl li{display:flex;justify-content:space-between;gap:10px;font-size:16px}
+.exl li b{font-weight:700}
+.pcard .foot{display:flex;justify-content:space-between;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:700;font-size:15px}
+.btn.accent{background:var(--accent);color:var(--on-accent)}
+.btn.soft{background:var(--surface-2)}
+.btn.small{padding:8px 12px;font-size:13px;border-radius:11px}
+
+/* 운동 목록 */
+.search{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:14px;padding:10px 14px}
+.search input{border:0;background:none;outline:none;flex:1;min-width:0;font-size:15px}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:0;background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;white-space:nowrap;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.group{font-size:14px;color:var(--muted);margin:6px 0 -6px 6px}
+.item{width:100%;border:0;text-align:left;display:flex;align-items:center;gap:16px;padding:14px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.thumb{width:64px;height:64px;border-radius:14px;background:#F3F4F6;display:grid;place-items:center;flex:none}
+.thumb svg{height:56px}
+.item b{display:block;font-size:17px}
+.item span{color:var(--muted);font-size:14px}
+.detail{padding:4px 18px 16px;margin-top:-14px;border-radius:0 0 18px 18px;background:var(--surface)}
+.detail ol{margin:8px 0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.tip{background:var(--surface-2);border-radius:12px;padding:10px 12px;font-size:13px}
+.tip b{color:var(--accent-2);margin-right:6px}
+
+/* 리포트 */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);padding:20px 8px}
+.kpis>div{padding:0 14px;border-left:1px solid var(--line)}
+.kpis>div:first-child{border-left:0}
+.kpi-l{font-size:14px;color:var(--ink)}
+.kpi-v{font-size:26px;font-weight:700;color:var(--accent-2);line-height:1.2;overflow-wrap:anywhere}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;padding:18px 14px 6px;text-align:center}
+.wk .w{font-size:14px;color:var(--muted)}
+.wk .c{width:40px;max-width:100%;aspect-ratio:1;margin:8px auto 0;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-weight:700}
+.wk .c.done{background:var(--accent);color:var(--on-accent)}
+.wk .c.today{box-shadow:0 0 0 2px var(--ink)}
+.kpis.two{grid-template-columns:1fr 1fr;padding-top:14px}
+.bodies{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:22px 16px 10px}
+.bodies svg{width:100%;max-height:260px}
+.legend{display:flex;justify-content:center;gap:16px;font-size:13px;color:var(--muted);padding-bottom:16px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.bars{display:flex;flex-direction:column;gap:10px;padding:16px 18px}
+.bar{display:grid;grid-template-columns:40px 1fr 40px;gap:10px;align-items:center;font-size:14px}
+.bar .track{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:5px}
+.bar .v{text-align:right;color:var(--muted)}
+.range{border:0;background:none;color:var(--muted);font-size:15px}
+
+/* 설정 */
+.sync{width:100%;border:0;text-align:left;display:flex;align-items:center;gap:12px;padding:22px 20px}
+.sync b{display:block;font-size:20px}
+.sync span{color:var(--muted);font-size:14px}
+.sync svg{margin-left:auto;flex:none;color:var(--accent-2)}
+.list{padding:8px 0}
+.list h4{margin:14px 20px 6px;font-size:18px}
+.li{display:flex;align-items:center;gap:16px;padding:12px 20px;width:100%;border:0;background:none;text-align:left}
+.li .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;flex:none}
+.li .ic svg{width:24px;height:24px}
+.li .lb{flex:1;font-size:17px;padding-block:6px;border-bottom:1px solid var(--line)}
+.li:last-child .lb{border-bottom:0}
+.li .val{color:var(--muted);font-size:15px}
+.li select{border:0;background:var(--surface-2);border-radius:10px;padding:8px 10px;font-weight:600}
+.switch{width:52px;height:30px;border-radius:15px;background:var(--surface-2);border:0;position:relative;flex:none}
+.switch::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch[aria-checked="true"]{background:var(--accent)}
+.switch[aria-checked="true"]::after{left:25px}
+.routine .li .lb{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.backup-box{padding:0 20px 18px;display:flex;flex-direction:column;gap:10px}
+textarea.backup{width:100%;min-height:80px;font-family:var(--mono);font-size:11px;border:0;border-radius:12px;background:var(--surface-2);padding:10px}
+
+/* 운동 세션 화면 */
+#session{position:fixed;inset:0;z-index:30;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.s-in{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:calc(8px + env(safe-area-inset-top,0px)) calc(110px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
+.s-top{display:flex;align-items:center;gap:10px;padding-top:6px}
+.s-top .back{width:42px;height:42px;border-radius:12px;border:0;background:var(--surface);font-size:22px;line-height:1}
+.s-top b{display:block;font-size:20px}
+.s-top span{font-size:13px;color:var(--muted)}
+.timer{background:linear-gradient(135deg,var(--accent) 0%,#2A3CB0 100%);color:#fff;border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.clock{font-family:var(--mono);font-size:48px;line-height:1;letter-spacing:-1px}
+.timer .sub{font-size:13px;opacity:.8}
+.timer .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tbtn{border:0;border-radius:14px;padding:13px;font-weight:700;background:#fff;color:#2A3CB0}
+.tbtn.ghost{background:rgba(255,255,255,.14);color:#fff}
+.rest-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
+.pill{border:0;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600;background:rgba(255,255,255,.16);color:#fff}
+.manual{display:flex;gap:6px;align-items:center;font-size:13px;opacity:.95}
+.manual input{width:72px;border:0;border-radius:10px;background:rgba(255,255,255,.16);color:#fff;padding:6px 8px;text-align:right}
+.manual input::placeholder{color:rgba(255,255,255,.6)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--surface);border-radius:16px;padding:12px 14px}
+.stat b{display:block;font-size:22px;color:var(--accent-2)}
+.stat span{font-size:12px;color:var(--muted)}
+.ex{background:var(--surface);border-radius:20px;overflow:hidden}
+.ex-head{display:flex;gap:12px;align-items:center;padding:14px 16px}
+.ex-head .t{flex:1;min-width:0}
+.ex-head .t b{display:block;font-size:17px}
+.ex-head .t span{font-size:13px;color:var(--muted)}
+.ex-head .cnt{font-weight:700;color:var(--muted)}
+.ex-head .cnt.full{color:var(--good)}
+.set{display:grid;grid-template-columns:46px 1fr 1fr 46px;gap:8px;align-items:center;padding:8px 16px;border-top:1px solid var(--line)}
+.set .no{font-size:13px;color:var(--muted)}
+.set label{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.set input{width:100%;min-width:0;border:0;background:var(--surface-2);border-radius:10px;padding:8px;font-size:16px;font-weight:600;text-align:right;color:var(--ink)}
+.set.done{background:var(--accent-soft)}
+.done-btn{width:40px;height:38px;border-radius:11px;border:0;background:var(--surface-2);font-size:18px;font-weight:700;color:var(--muted);justify-self:end}
+.set.done .done-btn{background:var(--accent);color:#fff}
+.ex-foot{display:flex;gap:6px;padding:10px 16px 14px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.how{padding:0 16px 16px}
+.how ol{margin:0 0 8px;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+textarea.memo{width:100%;min-height:72px;border:0;border-radius:16px;background:var(--surface);padding:12px 14px;resize:vertical}
+.rest-day{background:var(--surface);border-radius:20px;padding:22px;text-align:center;color:var(--muted)}
+.finish{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 35%);z-index:31}
+.finish .btn{width:100%;max-width:528px;display:block;margin:0 auto;padding:16px;font-size:17px}
 
 /* 하단 탭 */
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));z-index:10}
-nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
-nav.tabs button{border:0;background:transparent;padding:8px 4px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:600;color:var(--muted)}
-nav.tabs button svg{width:22px;height:22px}
-nav.tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface-2)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));z-index:10}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:var(--muted);padding:4px}
+nav.tabs svg{width:26px;height:26px}
+nav.tabs button[aria-selected="true"]{color:var(--accent-2)}
 
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--on-ink);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;z-index:50;white-space:nowrap;max-width:calc(100% - 32px);overflow:hidden;text-overflow:ellipsis}
 @media (prefers-reduced-motion: no-preference){
-  .set,.day,.chip,.done-btn{transition:background-color .15s,border-color .15s}
+  .switch::after{transition:left .15s}
+  .set,.done-btn,.chip{transition:background-color .15s}
 }
 </style>
 
 <div class="app">
-  <header class="top">
-    <div class="brand">플레이트 운동일지<small>가슴 · 등 · 어깨 · 팔 · 하체 5분할</small></div>
-    <div class="date-label" id="dateLabel"></div>
-  </header>
-
-  <main id="view-today" class="section" style="gap:18px"></main>
-  <main id="view-cal" class="section" style="gap:18px" hidden></main>
-  <main id="view-guide" class="section" style="gap:18px" hidden></main>
+  <main id="v-train">
+    <div class="seg" role="tablist">
+      <button id="seg-plan" role="tab" aria-selected="true" data-seg="plan">계획</button>
+      <button id="seg-train" role="tab" aria-selected="false" data-seg="train">훈련</button>
+    </div>
+    <div id="plan" style="display:flex;flex-direction:column;gap:16px"></div>
+    <div id="train" style="display:flex;flex-direction:column;gap:14px" hidden></div>
+  </main>
+  <main id="v-lib" hidden></main>
+  <main id="v-report" hidden></main>
+  <main id="v-set" hidden></main>
 </div>
 
+<section id="session" hidden aria-label="운동 기록"></section>
 <div class="toast" id="toast" hidden></div>
 
-<nav class="tabs" role="tablist">
-  <div class="in">
-    <button id="tab-today" role="tab" aria-selected="true" data-tab="today">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9v6M6 6v12M18 6v12M21 9v6M6 12h12"/></svg>오늘 운동
+<nav class="tabs">
+  <div class="in" role="tablist">
+    <button id="tab-train" role="tab" aria-selected="true" data-tab="train">
+      <svg viewBox="0 0 24 24" fill="currentColor"><g transform="rotate(-45 12 12)"><rect x="0.5" y="8.5" width="3" height="7" rx="1.2"/><rect x="4" y="5.5" width="4" height="13" rx="1.5"/><rect x="8" y="10.6" width="8" height="2.8"/><rect x="16" y="5.5" width="4" height="13" rx="1.5"/><rect x="20.5" y="8.5" width="3" height="7" rx="1.2"/></g></svg>훈련
     </button>
-    <button id="tab-cal" role="tab" aria-selected="false" data-tab="cal">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>달력
+    <button id="tab-lib" role="tab" aria-selected="false" data-tab="lib">
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5" transform="rotate(45 17 7)"/><rect x="3" y="13" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg>운동
     </button>
-    <button id="tab-guide" role="tab" aria-selected="false" data-tab="guide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h11a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 9h6M8 13h6"/></svg>운동법 · 설정
+    <button id="tab-report" role="tab" aria-selected="false" data-tab="report">
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="11" width="4.5" height="10" rx="2.2"/><rect x="9.8" y="3" width="4.5" height="18" rx="2.2"/><rect x="16.5" y="8" width="4.5" height="13" rx="2.2"/></svg>리포트
+    </button>
+    <button id="tab-set" role="tab" aria-selected="false" data-tab="set">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7.5" r="4.5"/><path d="M3 20.5c0-4 4-6.5 9-6.5s9 2.5 9 6.5V21H3z"/></svg>내 설정
     </button>
   </div>
 </nav>
@@ -224,11 +256,11 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface-
 <script>
 /* ───────── 운동 데이터 ───────── */
 const PARTS = {
-  chest:     { name:'가슴', kg:15 },
-  back:      { name:'등',   kg:20 },
-  shoulders: { name:'어깨', kg:10 },
-  arms:      { name:'팔',   kg:5  },
-  legs:      { name:'하체', kg:25 },
+  chest:     { name:'가슴' },
+  back:      { name:'등' },
+  shoulders: { name:'어깨' },
+  arms:      { name:'팔' },
+  legs:      { name:'하체' },
 };
 const PART_KEYS = ['chest','back','shoulders','arms','legs'];
 const DOW = ['월','화','수','목','금','토','일'];
@@ -323,6 +355,7 @@ const EX = {
 const EX_BY_ID = {};
 for (const p of PART_KEYS) for (const e of EX[p]) EX_BY_ID[e.id] = e;
 
+
 /* ───────── 저장소 ───────── */
 const KEY = 'plate-log-v1';
 const DEFAULT_ROUTINE = ['chest','back','shoulders','arms','legs','rest','rest'];
@@ -333,257 +366,346 @@ try {
 } catch (e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
 
-/* ───────── 날짜 도우미 ───────── */
+/* ───────── 날짜 ───────── */
 const pad = n => String(n).padStart(2,'0');
 const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
 const dowIdx = d => (d.getDay() + 6) % 7; // 월=0 … 일=6
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
 const todayStr = () => ymd(new Date());
+const weekDates = base => { const mon = addDays(base, -dowIdx(base)); return Array.from({length:7}, (_, i) => ymd(addDays(mon, i))); };
 
-let sel = todayStr();
-let calMonth = new Date(); calMonth.setDate(1);
-let guidePart = 'chest';
-let open = {}; // 펼친 운동 방법
-
-/* ───────── 기록 도우미 ───────── */
-function planFor(dateStr){ return db.routine[dowIdx(parse(dateStr))] || 'rest'; }
-function partFor(dateStr){ const l = db.logs[dateStr]; return (l && l.part) || planFor(dateStr); }
-function ensureLog(dateStr){
-  if (!db.logs[dateStr]) db.logs[dateStr] = { part: planFor(dateStr), sec: 0, run: null, ex: {}, memo: '' };
-  return db.logs[dateStr];
+/* ───────── 기록 ───────── */
+const partName = k => k === 'rest' ? '휴식' : PARTS[k].name;
+function planFor(s){ return db.routine[dowIdx(parse(s))] || 'rest'; }
+function partFor(s){ const l = db.logs[s]; return (l && l.part) || planFor(s); }
+function ensureLog(s){
+  if (!db.logs[s]) db.logs[s] = { part: planFor(s), sec: 0, run: null, ex: {}, memo: '' };
+  return db.logs[s];
 }
 function elapsed(l){ if (!l) return 0; return (l.sec||0) + (l.run ? Math.floor((Date.now() - l.run)/1000) : 0); }
-function setsOf(dateStr, ex){
-  const l = db.logs[dateStr];
+function setsOf(s, ex){
+  const l = db.logs[s];
   if (l && l.ex && l.ex[ex.id]) return l.ex[ex.id];
   return Array.from({length: ex.sets}, () => ({ kg:'', reps:'', done:false }));
 }
-function materialize(dateStr, ex){
-  const l = ensureLog(dateStr);
-  if (!l.ex[ex.id]) l.ex[ex.id] = setsOf(null, ex).map(s => ({...s}));
+function materialize(s, ex){
+  const l = ensureLog(s);
+  if (!l.ex[ex.id]) l.ex[ex.id] = setsOf(null, ex).map(x => ({...x}));
   return l.ex[ex.id];
 }
-function summary(dateStr){
-  const l = db.logs[dateStr];
+function summary(s){
+  const l = db.logs[s];
   let sets = 0, reps = 0, vol = 0;
-  if (l && l.ex) for (const id in l.ex) for (const s of l.ex[id]) if (s.done) {
-    sets++; const r = +s.reps || 0; reps += r; vol += r * (+s.kg || 0);
+  if (l && l.ex) for (const id in l.ex) for (const x of l.ex[id]) if (x.done) {
+    sets++; const r = +x.reps || 0; reps += r; vol += r * (+x.kg || 0);
   }
-  return { sets, reps, vol, sec: elapsed(l) };
+  return { sets, reps, vol: Math.round(vol), sec: elapsed(l) };
 }
-function didWorkout(dateStr){ const s = summary(dateStr); return s.sets > 0 || s.sec >= 60; }
-const fmtClock = sec => { const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), s = sec%60; return h ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`; };
-const fmtMin = sec => { const m = Math.round(sec/60); return m >= 60 ? `${Math.floor(m/60)}시간 ${m%60}분` : `${m}분`; };
+const didWorkout = s => { const m = summary(s); return m.sets > 0 || m.sec >= 60; };
+const fmtClock = sec => { const h = Math.floor(sec/3600), m = Math.floor(sec%3600/60), x = sec%60; return h ? `${h}:${pad(m)}:${pad(x)}` : `${pad(m)}:${pad(x)}`; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const partName = k => k === 'rest' ? '휴식' : PARTS[k].name;
+const fmtNum = n => n.toLocaleString('ko-KR');
 
-/* ───────── 오늘 운동 화면 ───────── */
-function renderToday(){
-  const d = parse(sel);
-  const part = partFor(sel);
-  const l = db.logs[sel];
-  document.getElementById('dateLabel').innerHTML =
-    `${d.getFullYear()}년<b>${d.getMonth()+1}월 ${d.getDate()}일 (${DOW[dowIdx(d)]})</b>`;
-
-  // 이번 주 띠
-  const mon = addDays(d, -dowIdx(d));
-  let week = '';
-  for (let i = 0; i < 7; i++){
-    const x = addDays(mon, i), s = ymd(x), p = partFor(s);
-    week += `<button class="day${s===sel?' sel':''}${s===todayStr()?' today':''}" data-go="${s}" aria-label="${x.getMonth()+1}월 ${x.getDate()}일 ${partName(p)}">
-      <span class="dw">${DOW[i]}</span><span class="dn">${x.getDate()}</span>
-      <span class="plate sm" data-part="${p}"></span><span class="pn">${partName(p)}</span>
-      <span class="chk">${didWorkout(s)?'✓':''}</span></button>`;
-  }
-
-  const chips = [...PART_KEYS, 'rest'].map(k =>
-    `<button class="chip" data-setpart="${k}" aria-pressed="${k===part}"><span class="plate sm" data-part="${k}"></span>${partName(k)}</button>`).join('');
-
-  const running = !!(l && l.run);
-  const sm = summary(sel);
-
-  let exHtml = '';
-  if (part === 'rest'){
-    exHtml = `<div class="rest-day">오늘은 <b>휴식일</b>이에요.<br>근육은 쉬는 동안 자랍니다. 가볍게 걷기나 스트레칭을 추천해요.<br><br>운동하고 싶다면 위에서 부위를 골라주세요.</div>`;
-  } else {
-    exHtml = EX[part].map(ex => exCard(ex)).join('');
-  }
-
-  document.getElementById('view-today').innerHTML = `
-    <section class="section">
-      <div class="spread"><span class="eyebrow">이번 주 루틴</span>
-        ${sel!==todayStr()?'<button class="btn line small" data-go="'+todayStr()+'">오늘로</button>':''}</div>
-      <div class="week">${week}</div>
-    </section>
-
-    <section class="section">
-      <span class="eyebrow">운동 부위</span>
-      <div class="chips">${chips}</div>
-    </section>
-
-    <section class="timer" aria-label="운동 시간">
-      <div class="spread">
-        <div><div class="sub">운동 시간</div><div class="clock num" id="clock">${fmtClock(sm.sec)}</div></div>
-        <span class="plate lg" data-part="${part}" title="원판 색">${part==='rest'?'':PARTS[part].kg}</span>
-      </div>
-      <div class="btns">
-        <button class="btn light" data-act="toggleTimer">${running ? '일시정지' : (sm.sec ? '이어서 시작' : '운동 시작')}</button>
-        <button class="btn ghost" data-act="resetTimer">시간 초기화</button>
-      </div>
-      <div class="rest-row"><span>세트 사이 휴식</span>
-        <button class="pill" data-rest="60">1분</button><button class="pill" data-rest="90">1분 30초</button><button class="pill" data-rest="120">2분</button>
-        <span id="restOut" class="num" style="font-size:14px;opacity:1;font-weight:600"></span>
-      </div>
-      <label class="manual">시간 직접 입력
-        <input id="manualMin" type="number" inputmode="numeric" min="0" placeholder="분" ${running?'disabled':''} value="${!running && sm.sec ? Math.round(sm.sec/60) : ''}">분
-      </label>
-    </section>
-
-    <section class="stats" id="stats">${statsHtml(sm)}</section>
-
-    <section class="section">
-      <div class="spread"><h2>${part==='rest'?'휴식':PARTS[part].name+' 운동'}</h2>
-        ${part!=='rest'?'<span class="muted">✓를 누르면 세트 완료</span>':''}</div>
-      ${exHtml}
-    </section>
-
-    <section class="section">
-      <label class="eyebrow" for="memo">메모</label>
-      <textarea id="memo" class="memo" placeholder="컨디션, 다음에 올릴 무게 등을 적어두세요">${esc((l && l.memo) || '')}</textarea>
-    </section>`;
-  updateRest();
+/* ───────── 근육 그림 ───────── */
+function bodySvg(hl, side){
+  const c = p => hl.has(p) ? 'var(--accent)' : 'var(--body)';
+  const base = `
+    <circle cx="60" cy="19" r="13" fill="var(--body)"/>
+    <rect x="53" y="31" width="14" height="12" rx="4" fill="var(--body)"/>
+    <ellipse cx="33" cy="54" rx="13" ry="10" fill="${c('shoulders')}"/><ellipse cx="87" cy="54" rx="13" ry="10" fill="${c('shoulders')}"/>
+    <rect x="17" y="64" width="14" height="40" rx="7" fill="${c('arms')}"/><rect x="89" y="64" width="14" height="40" rx="7" fill="${c('arms')}"/>
+    <rect x="13" y="106" width="13" height="38" rx="6" fill="${c('arms')}"/><rect x="94" y="106" width="13" height="38" rx="6" fill="${c('arms')}"/>
+    <rect x="39" y="122" width="20" height="100" rx="9" fill="${c('legs')}"/><rect x="61" y="122" width="20" height="100" rx="9" fill="${c('legs')}"/>`;
+  const front = `
+    <rect x="36" y="45" width="23" height="27" rx="7" fill="${c('chest')}"/><rect x="61" y="45" width="23" height="27" rx="7" fill="${c('chest')}"/>
+    <rect x="43" y="74" width="34" height="46" rx="7" fill="var(--body)"/>`;
+  const back = `
+    <path d="M36 46 H84 L78 114 H42 Z" fill="${c('back')}"/>
+    <rect x="40" y="112" width="40" height="18" rx="8" fill="${c('legs')}"/>`;
+  return `<svg viewBox="0 0 120 230" aria-hidden="true"><g stroke="var(--surface)" stroke-width="2">${base}${side === 'back' ? back : front}</g></svg>`;
 }
-function statsHtml(sm){
-  return `<div class="stat"><b>${sm.sets}</b><span>완료 세트</span></div>
-    <div class="stat"><b>${sm.reps}</b><span>총 횟수</span></div>
-    <div class="stat"><b>${sm.vol.toLocaleString()}</b><span>총 볼륨(kg)</span></div>`;
-}
-function exCard(ex){
-  const sets = setsOf(sel, ex);
-  const done = sets.filter(s => s.done).length;
-  const rows = sets.map((s, i) => `
-    <div class="set${s.done?' done':''}">
-      <span class="no">${i+1}세트</span>
-      <label><input type="number" inputmode="decimal" min="0" step="0.5" placeholder="0" value="${esc(s.kg)}" data-ex="${ex.id}" data-i="${i}" data-f="kg" aria-label="${ex.name} ${i+1}세트 무게">kg</label>
-      <label><input type="number" inputmode="numeric" min="0" placeholder="${ex.reps}" value="${esc(s.reps)}" data-ex="${ex.id}" data-i="${i}" data-f="reps" aria-label="${ex.name} ${i+1}세트 횟수">회</label>
-      <button class="done-btn" data-done="${ex.id}" data-i="${i}" aria-pressed="${s.done}" aria-label="${i+1}세트 완료">✓</button>
-    </div>`).join('');
-  const isOpen = open[ex.id];
-  return `<article class="ex">
-    <div class="ex-head">
-      <div class="t"><b>${ex.name}</b><span>${ex.target} · 권장 ${ex.sets}세트 × ${ex.reps}회</span></div>
-      <span class="prog${done===sets.length?' full':''}">${done}/${sets.length}</span>
-    </div>
-    <div class="sets">${rows}</div>
-    <div class="ex-foot">
-      <button class="btn line small" data-addset="${ex.id}">+ 세트 추가</button>
-      ${sets.length>1?`<button class="btn line small" data-delset="${ex.id}">− 세트 빼기</button>`:''}
-      <button class="btn line small" data-how="${ex.id}" aria-expanded="${!!isOpen}">${isOpen?'방법 닫기':'운동 방법 보기'}</button>
-    </div>
-    ${isOpen?`<div class="how"><ol>${ex.steps.map(s=>`<li>${s}</li>`).join('')}</ol><div class="tip"><b>TIP</b>${ex.tip}</div></div>`:''}
-  </article>`;
-}
+const partSide = p => p === 'back' ? 'back' : 'front';
+const miniBody = p => bodySvg(new Set([p]), partSide(p));
 
-/* ───────── 달력 화면 ───────── */
-function renderCal(){
+/* ───────── 화면 상태 ───────── */
+let tab = 'train', seg = 'plan';
+let calMonth = new Date(); calMonth.setDate(1);
+let libPart = 'all', libQuery = '', libOpen = null;
+let trainOpen = {};
+let reportRange = 'week';
+let sess = null;          // 세션 화면에 열린 날짜
+let howOpen = {};
+let restEnd = 0;
+
+/* ───────── 계획 ───────── */
+function renderPlan(){
+  const today = todayStr();
+  const week = weekDates(new Date());
+  const planned = week.filter(s => partFor(s) !== 'rest');
+  const done = planned.filter(didWorkout).length;
+  const hero = `
+    <div class="hero">
+      <svg viewBox="0 0 200 120" aria-hidden="true">
+        <g fill="none" stroke="rgba(255,255,255,.22)" stroke-width="2"><circle cx="150" cy="60" r="52"/><circle cx="150" cy="60" r="38"/><circle cx="150" cy="60" r="9"/></g>
+        <rect x="10" y="56" width="190" height="8" rx="4" fill="rgba(255,255,255,.35)"/>
+        <rect x="118" y="8" width="14" height="104" rx="5" fill="rgba(92,116,240,.85)"/><rect x="100" y="20" width="14" height="80" rx="5" fill="rgba(255,255,255,.55)"/>
+      </svg>
+      <b>5분할 근육 만들기</b>
+      <span>가슴 · 등 · 어깨 · 팔 · 하체 — 이번 주 ${done}/${planned.length}일 완료</span>
+      <div class="prog"><i style="width:${planned.length ? done/planned.length*100 : 0}%"></i></div>
+    </div>`;
+
+  const rows = week.map((s, i) => {
+    const p = partFor(s), d = parse(s), isToday = s === today, ok = didWorkout(s);
+    const n = p === 'rest' ? 0 : EX[p].length;
+    let right;
+    if (isToday) right = `<span class="go">${ok || (db.logs[s] && db.logs[s].run) ? '이어하기' : '시작'}</span>`;
+    else if (ok) right = `<span class="badge">✓ 완료</span>`;
+    else right = `<span class="date">${d.getMonth()+1}/${d.getDate()}</span>`;
+    if (p === 'rest') return `<button class="dayc rest${isToday?' today':''}" data-open="${s}">
+        <div class="t"><b>${DOW[i]}요일 · 휴식</b><span>근육이 자라는 날</span></div>${isToday?right:(ok?right:`<span class="date">${d.getMonth()+1}/${d.getDate()}</span>`)}</button>`;
+    return `<button class="dayc${isToday?' today':''}" data-open="${s}" data-start="${isToday?1:''}">
+      <div class="t"><b>${DOW[i]}요일</b><span>${PARTS[p].name} · 운동 ${n}개</span></div>${right}</button>`;
+  }).join('');
+
   const y = calMonth.getFullYear(), m = calMonth.getMonth();
   const first = new Date(y, m, 1), days = new Date(y, m+1, 0).getDate();
-  let cells = DOW.map((w,i) => `<div class="h${i===6?' sun':''}">${w}</div>`).join('');
-  for (let i = 0; i < dowIdx(first); i++) cells += `<div class="cell blank"></div>`;
-  let workDays = 0, totalSec = 0, totalSets = 0;
-  const counts = {}; PART_KEYS.forEach(k => counts[k] = 0);
-  for (let dnum = 1; dnum <= days; dnum++){
-    const s = ymd(new Date(y, m, dnum));
-    const done = didWorkout(s), p = partFor(s), sm = summary(s);
-    if (done){ workDays++; totalSec += sm.sec; totalSets += sm.sets; if (counts[p] !== undefined) counts[p]++; }
-    cells += `<button class="cell${s===todayStr()?' today':''}${s===sel?' sel':''}" data-open="${s}" aria-label="${m+1}월 ${dnum}일">
-      <span class="n">${dnum}</span>
-      ${done ? `<span class="tag" data-part="${p}">${partName(p)}</span>${sm.sec>=60?`<span class="min">${Math.round(sm.sec/60)}분</span>`:''}`
-             : `<span class="plan">${p==='rest'?'':partName(p)}</span>`}
-    </button>`;
+  let cells = DOW.map(w => `<div class="h">${w}</div>`).join('');
+  for (let i = 0; i < dowIdx(first); i++) cells += '<div></div>';
+  for (let dn = 1; dn <= days; dn++){
+    const s = ymd(new Date(y, m, dn)), p = partFor(s), ok = didWorkout(s);
+    cells += `<button class="cell${ok?' done':''}${s===today?' today':''}" data-open="${s}" aria-label="${m+1}월 ${dn}일 ${partName(p)}${ok?' 완료':''}">
+      <span class="n">${dn}</span><span class="p">${p==='rest' ? '' : PARTS[p].name}</span></button>`;
   }
+
+  document.getElementById('plan').innerHTML = `
+    ${hero}
+    <h3>이번 주</h3>
+    <div class="days">${rows}</div>
+    <div class="cal-nav"><button data-mon="-1" aria-label="이전 달">‹</button><h3 style="margin:0">${y}년 ${m+1}월</h3><button data-mon="1" aria-label="다음 달">›</button></div>
+    <div class="card cal">${cells}</div>
+    <p class="muted" style="margin:-6px 4px 0">파란 동그라미는 운동한 날이에요. 날짜를 누르면 그날 기록을 보거나 고칠 수 있어요.</p>`;
+}
+
+/* ───────── 훈련 (부위별 카드) ───────── */
+function renderTrain(){
+  document.getElementById('train').innerHTML = PART_KEYS.map(p => {
+    const list = trainOpen[p] ? EX[p] : EX[p].slice(0, 3);
+    return `<article class="card pcard">
+      <div class="head"><div><b>${PARTS[p].name} 운동</b><span>운동 ${EX[p].length}개</span></div><div class="fig">${miniBody(p)}</div></div>
+      <ul class="exl">${list.map(e => `<li><span>${e.name}</span><b class="num">${e.sets}×${e.reps}</b></li>`).join('')}</ul>
+      <div class="foot"><button class="btn accent small" data-trainstart="${p}">오늘 이 운동 시작</button>
+        <button class="link" data-trainmore="${p}">${trainOpen[p] ? '접기' : '전체 보기'}</button></div>
+    </article>`;
+  }).join('');
+}
+
+/* ───────── 운동 목록 ───────── */
+function renderLib(){
+  const all = PART_KEYS.flatMap(p => EX[p].map(e => ({...e, part:p})));
+  const q = libQuery.trim();
+  const items = all.filter(e => (libPart === 'all' || e.part === libPart) && (!q || e.name.includes(q) || e.target.includes(q)));
+  const chips = [['all', `모두 (${all.length})`], ...PART_KEYS.map(p => [p, `${PARTS[p].name} (${EX[p].length})`])]
+    .map(([k, t]) => `<button class="chip" data-libpart="${k}" aria-pressed="${k===libPart}">${t}</button>`).join('');
+  let list = '', lastPart = null;
+  for (const e of items){
+    if (e.part !== lastPart && libPart === 'all'){ list += `<div class="group">${PARTS[e.part].name}</div>`; lastPart = e.part; }
+    const open = libOpen === e.id;
+    list += `<div><button class="item" data-lib="${e.id}" aria-expanded="${open}">
+        <span class="thumb">${bodySvg(new Set([e.part]), partSide(e.part)).replaceAll('var(--body)','#C9CFD8').replaceAll('var(--surface)','#F3F4F6')}</span>
+        <span style="flex:1;min-width:0"><b>${e.name}</b><span>${e.target}</span></span></button>
+      ${open ? `<div class="detail"><div class="muted">권장 ${e.sets}세트 × ${e.reps}회</div><ol>${e.steps.map(x=>`<li>${x}</li>`).join('')}</ol><div class="tip"><b>TIP</b>${e.tip}</div></div>` : ''}</div>`;
+  }
+  if (!items.length) list = `<div class="rest-day">“${esc(q)}”에 맞는 운동이 없어요.</div>`;
+  const v = document.getElementById('v-lib');
+  const keepFocus = document.activeElement && document.activeElement.id === 'libq';
+  v.innerHTML = `
+    <div class="spread"><h1 class="page-title">운동</h1></div>
+    <label class="search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="libq" type="search" placeholder="운동 이름이나 부위로 찾기" value="${esc(libQuery)}" aria-label="운동 검색"></label>
+    <div class="chips">${chips}</div>
+    ${list}`;
+  if (keepFocus){ const i = document.getElementById('libq'); i.focus(); i.setSelectionRange(i.value.length, i.value.length); }
+}
+
+/* ───────── 리포트 ───────── */
+function renderReport(){
+  const today = todayStr();
+  let days = 0, secs = 0, vol = 0;
+  for (const s in db.logs){ const m = summary(s); if (didWorkout(s)) days++; secs += m.sec; vol += m.vol; }
+  const week = weekDates(new Date());
+  const todayMin = Math.round(summary(today).sec / 60);
+  const weekMin = Math.round(week.reduce((a, s) => a + summary(s).sec, 0) / 60);
+
+  let range;
+  if (reportRange === 'week') range = week;
+  else { const y = new Date().getFullYear(), m = new Date().getMonth(), n = new Date(y, m+1, 0).getDate();
+    range = Array.from({length:n}, (_, i) => ymd(new Date(y, m, i+1))); }
+  const counts = {}; PART_KEYS.forEach(p => counts[p] = 0);
+  for (const s of range) if (didWorkout(s)){ const p = partFor(s); if (p in counts) counts[p]++; }
+  const hl = new Set(PART_KEYS.filter(p => counts[p] > 0));
   const max = Math.max(1, ...Object.values(counts));
-  const bars = PART_KEYS.map(k => `<div class="bar" data-part="${k}"><span>${PARTS[k].name}</span>
-    <div class="track"><div class="fill" style="width:${counts[k]/max*100}%"></div></div><span class="v">${counts[k]}회</span></div>`).join('');
 
-  document.getElementById('view-cal').innerHTML = `
-    <div class="cal-nav">
-      <button data-mon="-1" aria-label="이전 달">‹</button>
-      <h2>${y}년 ${m+1}월</h2>
-      <button data-mon="1" aria-label="다음 달">›</button>
+  document.getElementById('v-report').innerHTML = `
+    <h1 class="page-title">리포트</h1>
+    <h3>총</h3>
+    <div class="card kpis">
+      <div><div class="kpi-l">운동(일)</div><div class="kpi-v num">${fmtNum(days)}</div></div>
+      <div><div class="kpi-l">시간(분)</div><div class="kpi-v num">${fmtNum(Math.round(secs/60))}</div></div>
+      <div><div class="kpi-l">볼륨(kg)</div><div class="kpi-v num">${fmtNum(vol)}</div></div>
     </div>
-    <div class="cal">${cells}</div>
-    <p class="muted" style="margin:0">색 배지 = 운동한 날 · 회색 글씨 = 예정된 부위. 날짜를 누르면 그날 기록으로 이동합니다.</p>
-    <section class="stats">
-      <div class="stat"><b>${workDays}일</b><span>운동한 날</span></div>
-      <div class="stat"><b>${fmtMin(totalSec)}</b><span>총 운동 시간</span></div>
-      <div class="stat"><b>${totalSets}</b><span>완료 세트</span></div>
-    </section>
-    <section class="section"><span class="eyebrow">이번 달 부위별 운동 횟수</span><div class="bars">${bars}</div></section>`;
+    <h3>이번 주</h3>
+    <div class="card">
+      <div class="wk">${week.map((s, i) => `<div><div class="w">${DOW[i]}</div><button class="c${didWorkout(s)?' done':''}${s===today?' today':''}" data-open="${s}" style="border:0;color:inherit">${parse(s).getDate()}</button></div>`).join('')}</div>
+      <div class="kpis two">
+        <div><div class="kpi-l">오늘(분)</div><div class="kpi-v num">${todayMin}</div></div>
+        <div><div class="kpi-l">이번 주 합계(분)</div><div class="kpi-v num">${weekMin}</div></div>
+      </div>
+    </div>
+    <div class="spread"><h3>훈련한 부위</h3>
+      <select class="range" id="range" aria-label="기간"><option value="week"${reportRange==='week'?' selected':''}>이번 주</option><option value="month"${reportRange==='month'?' selected':''}>이번 달</option></select></div>
+    <div class="card">
+      <div class="bodies">${bodySvg(hl, 'front')}${bodySvg(hl, 'back')}</div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>운동한 부위</span><span><i style="background:var(--body)"></i>아직 안 한 부위</span></div>
+      <div class="bars" style="border-top:1px solid var(--line)">${PART_KEYS.map(p => `<div class="bar"><span>${PARTS[p].name}</span><div class="track"><div class="fill" style="width:${counts[p]/max*100}%"></div></div><span class="v">${counts[p]}회</span></div>`).join('')}</div>
+    </div>`;
 }
 
-/* ───────── 운동법 · 설정 화면 ───────── */
-function renderGuide(){
-  const chips = PART_KEYS.map(k =>
-    `<button class="chip" data-gpart="${k}" aria-pressed="${k===guidePart}"><span class="plate sm" data-part="${k}"></span>${PARTS[k].name}</button>`).join('');
-  const cards = EX[guidePart].map(ex => `<article class="guide">
-      <b style="font-size:16px">${ex.name}</b>
-      <div class="meta"><span class="tagx">${ex.target}</span><span class="tagx">${ex.sets}세트 × ${ex.reps}회</span></div>
-      <ol>${ex.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-      <div class="tip"><b>TIP</b>${ex.tip}</div>
-    </article>`).join('');
+/* ───────── 내 설정 ───────── */
+const ICONS = {
+  sync:'<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.5M4 13a8 8 0 0 0 14.3 4.5"/><path d="M5 3v4h4M19 21v-4h-4"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>',
+  timer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2.5h6"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+};
+let backupOpen = false, confirmReset = false;
+function renderSet(){
+  const dark = document.documentElement.classList.contains('app-dark');
   const opts = k => [...PART_KEYS,'rest'].map(p => `<option value="${p}"${p===k?' selected':''}>${partName(p)}</option>`).join('');
-  const routine = DOW.map((w,i) => `<div class="r"><b>${w}</b><span class="plate" data-part="${db.routine[i]}"></span>
-      <select id="rt-${i}" data-rt="${i}" aria-label="${w}요일 운동 부위">${opts(db.routine[i])}</select></div>`).join('');
-
-  document.getElementById('view-guide').innerHTML = `
-    <section class="section">
-      <h2>부위별 운동 방법</h2>
-      <div class="chips">${chips}</div>
-      ${cards}
-    </section>
-    <section class="section">
-      <h2>요일별 루틴 정하기</h2>
-      <p class="muted" style="margin:0">요일마다 어떤 부위를 할지 정하면, 그날 “오늘 운동” 화면에 해당 운동이 자동으로 나옵니다.</p>
-      <div class="routine">${routine}</div>
-    </section>
-    <section class="section">
-      <h2>기록 백업</h2>
-      <p class="muted" style="margin:0">기록은 이 휴대폰의 브라우저에만 저장됩니다. 폰을 바꾸거나 인터넷 기록을 지우기 전에 복사해서 카톡 ‘나와의 채팅’ 등에 붙여 두세요.</p>
-      <div class="row"><button class="btn dark small" data-act="copyBackup">기록 복사하기</button>
-        <button class="btn line small" data-act="restore">붙여넣은 기록 불러오기</button></div>
-      <textarea id="backupBox" class="backup" placeholder="복원할 때는 여기에 백업 내용을 붙여넣고 ‘불러오기’를 누르세요"></textarea>
-    </section>`;
+  document.getElementById('v-set').innerHTML = `
+    <h1 class="page-title">내 설정</h1>
+    <div class="card">
+      <button class="sync" data-act="backup" aria-expanded="${backupOpen}"><div><b>데이터 백업과 복원</b><span>기록을 복사해 두거나 다시 불러옵니다</span></div>${ICONS.sync}</button>
+      ${backupOpen ? `<div class="backup-box">
+        <p class="muted" style="margin:0">기록은 이 휴대폰의 브라우저에만 저장돼요. ‘기록 복사하기’를 누른 뒤 카톡 ‘나와의 채팅’ 등에 붙여 두면, 폰을 바꿔도 아래 칸에 붙여넣어 되살릴 수 있어요.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn accent small" data-act="copy">기록 복사하기</button><button class="btn soft small" data-act="restore">붙여넣은 기록 불러오기</button></div>
+        <textarea id="backupBox" class="backup" placeholder="복원할 때는 여기에 백업 내용을 붙여넣으세요"></textarea></div>` : ''}
+    </div>
+    <div class="card list">
+      <h4>설정</h4>
+      <div class="li"><span class="ic" style="background:var(--i-lav)">${ICONS.moon}</span><span class="lb" style="display:flex;justify-content:space-between;align-items:center">다크 모드
+        <button class="switch" role="switch" aria-checked="${dark}" aria-label="다크 모드" data-act="theme"></button></span></div>
+      <div class="li"><span class="ic" style="background:var(--i-orange)">${ICONS.timer}</span><span class="lb" style="display:flex;justify-content:space-between;align-items:center">기본 휴식 시간
+        <select id="restDef" aria-label="기본 휴식 시간">${[60,90,120,180].map(v=>`<option value="${v}"${v===restDefault()?' selected':''}>${v<120?(v===60?'1분':'1분 30초'):(v/60)+'분'}</option>`).join('')}</select></span></div>
+    </div>
+    <div class="card list routine">
+      <h4>요일별 루틴</h4>
+      <p class="muted" style="margin:0 20px 6px">요일마다 할 부위를 정하면 ‘계획’ 화면에 자동으로 나와요.</p>
+      ${DOW.map((w, i) => `<div class="li"><span class="ic" style="background:${db.routine[i]==='rest'?'var(--i-slate)':'var(--i-blue)'}">${ICONS.cal}</span>
+        <span class="lb">${w}요일<select id="rt-${i}" data-rt="${i}" aria-label="${w}요일 운동 부위">${opts(db.routine[i])}</select></span></div>`).join('')}
+    </div>
+    <div class="card list">
+      <button class="li" data-act="reset"><span class="ic" style="background:var(--i-pink)">${ICONS.trash}</span><span class="lb">${confirmReset ? '한 번 더 누르면 모든 기록이 지워져요' : '모든 기록 지우기'}</span></button>
+    </div>`;
 }
+function restDefault(){ try { return +localStorage.getItem('plate-log-rest') || 90; } catch (e) { return 90; } }
 
-/* ───────── 탭 · 공용 ───────── */
-let tab = 'today';
-function show(t){
-  tab = t;
-  for (const k of ['today','cal','guide']){
-    document.getElementById('view-'+k).hidden = k !== t;
-    document.getElementById('tab-'+k).setAttribute('aria-selected', k === t);
+/* ───────── 운동 세션 화면 ───────── */
+function openSession(s, autoStart){
+  sess = s;
+  if (autoStart){
+    const l = ensureLog(s);
+    if (!l.run){ stopOthers(s); l.run = Date.now(); save(); }
   }
-  render();
-  window.scrollTo(0, 0);
+  document.getElementById('session').hidden = false;
+  document.body.style.overflow = 'hidden';
+  renderSession();
+  document.getElementById('session').scrollTop = 0;
 }
+function closeSession(){
+  sess = null;
+  document.getElementById('session').hidden = true;
+  document.body.style.overflow = '';
+  render();
+}
+function stopOthers(keep){
+  for (const k in db.logs){ const l = db.logs[k]; if (k !== keep && l.run){ l.sec = elapsed(l); l.run = null; } }
+}
+function statsHtml(m){
+  return `<div class="stat"><b class="num">${m.sets}</b><span>완료 세트</span></div>
+    <div class="stat"><b class="num">${m.reps}</b><span>총 횟수</span></div>
+    <div class="stat"><b class="num">${fmtNum(m.vol)}</b><span>볼륨(kg)</span></div>`;
+}
+function exCard(ex){
+  const sets = setsOf(sess, ex), done = sets.filter(x => x.done).length;
+  return `<article class="ex">
+    <div class="ex-head"><div class="fig" style="width:52px;height:52px">${miniBody(ex.part)}</div>
+      <div class="t"><b>${ex.name}</b><span>${ex.target} · 권장 ${ex.sets}×${ex.reps}</span></div>
+      <span class="cnt num${done===sets.length?' full':''}">${done}/${sets.length}</span></div>
+    ${sets.map((x, i) => `<div class="set${x.done?' done':''}">
+      <span class="no">${i+1}세트</span>
+      <label><input type="number" inputmode="decimal" min="0" step="0.5" placeholder="0" value="${esc(x.kg)}" data-ex="${ex.id}" data-i="${i}" data-f="kg" aria-label="${ex.name} ${i+1}세트 무게">kg</label>
+      <label><input type="number" inputmode="numeric" min="0" placeholder="${ex.reps}" value="${esc(x.reps)}" data-ex="${ex.id}" data-i="${i}" data-f="reps" aria-label="${ex.name} ${i+1}세트 횟수">회</label>
+      <button class="done-btn" data-done="${ex.id}" data-i="${i}" aria-pressed="${x.done}" aria-label="${i+1}세트 완료">✓</button></div>`).join('')}
+    <div class="ex-foot">
+      <button class="btn soft small" data-addset="${ex.id}">+ 세트</button>
+      ${sets.length > 1 ? `<button class="btn soft small" data-delset="${ex.id}">− 세트</button>` : ''}
+      <button class="link" style="margin-left:auto" data-how="${ex.id}" aria-expanded="${!!howOpen[ex.id]}">${howOpen[ex.id] ? '방법 닫기' : '운동 방법'}</button>
+    </div>
+    ${howOpen[ex.id] ? `<div class="how"><ol>${ex.steps.map(x=>`<li>${x}</li>`).join('')}</ol><div class="tip"><b>TIP</b>${ex.tip}</div></div>` : ''}
+  </article>`;
+}
+function renderSession(){
+  if (!sess) return;
+  const d = parse(sess), part = partFor(sess), l = db.logs[sess], m = summary(sess), running = !!(l && l.run);
+  const chips = [...PART_KEYS, 'rest'].map(k => `<button class="chip" data-setpart="${k}" aria-pressed="${k===part}">${partName(k)}</button>`).join('');
+  const body = part === 'rest'
+    ? `<div class="rest-day">휴식일이에요. 근육은 쉬는 동안 자랍니다.<br>그래도 운동하고 싶다면 위에서 부위를 골라주세요.</div>`
+    : EX[part].map(e => exCard({...e, part})).join('');
+  document.getElementById('session').innerHTML = `<div class="s-in">
+    <div class="s-top"><button class="back" data-act="close" aria-label="뒤로">‹</button>
+      <div><b>${part==='rest' ? '휴식' : PARTS[part].name + ' 운동'}</b><span>${d.getMonth()+1}월 ${d.getDate()}일 ${DOW[dowIdx(d)]}요일</span></div></div>
+    <div class="chips">${chips}</div>
+    <section class="timer">
+      <div><div class="sub">운동 시간</div><div class="clock num" id="clock">${fmtClock(m.sec)}</div></div>
+      <div class="btns"><button class="tbtn" data-act="toggle">${running ? '일시정지' : (m.sec ? '이어서 시작' : '시작')}</button><button class="tbtn ghost" data-act="resetTime">시간 초기화</button></div>
+      <div class="rest-row"><span style="opacity:.8">휴식</span>
+        ${[60,90,120].map(v => `<button class="pill" data-rest="${v}">${v===60?'1분':v===90?'1분 30초':'2분'}</button>`).join('')}
+        <b id="restOut" class="num" style="margin-left:4px"></b></div>
+      <label class="manual">시간 직접 입력 <input id="manualMin" type="number" inputmode="numeric" min="0" placeholder="분" ${running?'disabled':''} value="${!running && m.sec ? Math.round(m.sec/60) : ''}"> 분</label>
+    </section>
+    <section class="stats" id="stats">${statsHtml(m)}</section>
+    ${body}
+    <textarea id="memo" class="memo" placeholder="메모: 컨디션, 다음에 올릴 무게 등" aria-label="메모">${esc((l && l.memo) || '')}</textarea>
+  </div>
+  <div class="finish"><button class="btn accent" data-act="finish">운동 끝내기</button></div>`;
+  updateRest();
+}
+
+/* ───────── 공용 ───────── */
 function render(){
-  if (tab === 'today') renderToday();
-  else if (tab === 'cal') renderCal();
-  else renderGuide();
-  const d = parse(sel);
-  document.getElementById('dateLabel').innerHTML = `${d.getFullYear()}년<b>${d.getMonth()+1}월 ${d.getDate()}일 (${DOW[dowIdx(d)]})</b>`;
+  document.getElementById('v-train').hidden = tab !== 'train';
+  document.getElementById('v-lib').hidden = tab !== 'lib';
+  document.getElementById('v-report').hidden = tab !== 'report';
+  document.getElementById('v-set').hidden = tab !== 'set';
+  for (const k of ['train','lib','report','set']) document.getElementById('tab-'+k).setAttribute('aria-selected', k === tab);
+  document.getElementById('plan').hidden = seg !== 'plan';
+  document.getElementById('train').hidden = seg !== 'train';
+  document.getElementById('seg-plan').setAttribute('aria-selected', seg === 'plan');
+  document.getElementById('seg-train').setAttribute('aria-selected', seg === 'train');
+  if (tab === 'train') { seg === 'plan' ? renderPlan() : renderTrain(); }
+  else if (tab === 'lib') renderLib();
+  else if (tab === 'report') renderReport();
+  else renderSet();
 }
 let toastT;
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.hidden = false;
-  clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 1800);
+  clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2000);
 }
-
-/* 휴식 타이머 */
-let restEnd = 0;
 function updateRest(){
   const out = document.getElementById('restOut') || {};
   if (!restEnd){ out.textContent = ''; return; }
@@ -594,85 +716,90 @@ function updateRest(){
     toast('휴식 끝! 다음 세트 시작하세요');
     return;
   }
-  out.textContent = `남은 휴식 ${fmtClock(left)}`;
+  out.textContent = fmtClock(left);
 }
 setInterval(() => {
-  const l = db.logs[sel];
-  const c = document.getElementById('clock');
-  if (c && l && l.run) c.textContent = fmtClock(elapsed(l));
+  if (sess){ const l = db.logs[sess], c = document.getElementById('clock'); if (c && l && l.run) c.textContent = fmtClock(elapsed(l)); }
   if (restEnd) updateRest();
 }, 1000);
-
-function stopAllTimersExcept(dateStr){
-  for (const k in db.logs){ const l = db.logs[k]; if (k !== dateStr && l.run){ l.sec = elapsed(l); l.run = null; } }
-}
 
 /* ───────── 이벤트 ───────── */
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   const ds = b.dataset;
-  if (ds.tab) return show(ds.tab);
-  if (ds.go){ sel = ds.go; return render(); }
-  if (ds.open){ sel = ds.open; return show('today'); }
-  if (ds.mon){ calMonth.setMonth(calMonth.getMonth() + +ds.mon); return renderCal(); }
-  if (ds.gpart){ guidePart = ds.gpart; return renderGuide(); }
-  if (ds.setpart){ ensureLog(sel).part = ds.setpart; save(); return renderToday(); }
-  if (ds.how){ open[ds.how] = !open[ds.how]; return renderToday(); }
+  if (ds.tab){ tab = ds.tab; confirmReset = false; render(); window.scrollTo(0, 0); return; }
+  if (ds.seg){ seg = ds.seg; return render(); }
+  if (ds.open){ return openSession(ds.open, ds.start === '1'); }
+  if (ds.mon){ calMonth.setMonth(calMonth.getMonth() + +ds.mon); return renderPlan(); }
+  if (ds.trainmore){ trainOpen[ds.trainmore] = !trainOpen[ds.trainmore]; return renderTrain(); }
+  if (ds.trainstart){ ensureLog(todayStr()).part = ds.trainstart; save(); return openSession(todayStr(), true); }
+  if (ds.libpart){ libPart = ds.libpart; return renderLib(); }
+  if (ds.lib){ libOpen = libOpen === ds.lib ? null : ds.lib; return renderLib(); }
+  if (ds.setpart){ ensureLog(sess).part = ds.setpart; save(); return renderSession(); }
+  if (ds.how){ howOpen[ds.how] = !howOpen[ds.how]; return renderSession(); }
   if (ds.rest){ restEnd = Date.now() + (+ds.rest)*1000; return updateRest(); }
-  if (ds.addset){
-    const sets = materialize(sel, EX_BY_ID[ds.addset]); const last = sets[sets.length-1] || {};
-    sets.push({ kg:last.kg||'', reps:'', done:false }); save(); return renderToday();
-  }
-  if (ds.delset){ const sets = materialize(sel, EX_BY_ID[ds.delset]); if (sets.length>1) sets.pop(); save(); return renderToday(); }
+  if (ds.addset){ const s = materialize(sess, EX_BY_ID[ds.addset]); const last = s[s.length-1] || {}; s.push({ kg:last.kg||'', reps:'', done:false }); save(); return renderSession(); }
+  if (ds.delset){ const s = materialize(sess, EX_BY_ID[ds.delset]); if (s.length > 1) s.pop(); save(); return renderSession(); }
   if (ds.done){
-    const ex = EX_BY_ID[ds.done], s = materialize(sel, ex)[+ds.i];
-    s.done = !s.done;
-    if (s.done && !s.reps) s.reps = String(ex.reps);
-    save(); renderToday();
-    if (s.done) toast(`${ex.name} ${+ds.i+1}세트 완료!`);
+    const ex = EX_BY_ID[ds.done], x = materialize(sess, ex)[+ds.i];
+    x.done = !x.done;
+    if (x.done && !x.reps) x.reps = String(ex.reps);
+    const l = ensureLog(sess);
+    if (x.done && !l.run && !l.sec && sess === todayStr()){ stopOthers(sess); l.run = Date.now(); }
+    save(); renderSession();
+    if (x.done){ restEnd = Date.now() + restDefault()*1000; updateRest(); toast(`${ex.name} ${+ds.i+1}세트 완료 · 휴식 시작`); }
     return;
   }
-  if (ds.act === 'toggleTimer'){
-    const l = ensureLog(sel);
-    if (l.run){ l.sec = elapsed(l); l.run = null; }
-    else { stopAllTimersExcept(sel); l.run = Date.now(); }
-    save(); return renderToday();
+  const act = ds.act;
+  if (act === 'close') return closeSession();
+  if (act === 'toggle'){ const l = ensureLog(sess); if (l.run){ l.sec = elapsed(l); l.run = null; } else { stopOthers(sess); l.run = Date.now(); } save(); return renderSession(); }
+  if (act === 'resetTime'){ const l = db.logs[sess]; if (l){ l.sec = 0; l.run = null; save(); } return renderSession(); }
+  if (act === 'finish'){
+    const l = db.logs[sess]; if (l && l.run){ l.sec = elapsed(l); l.run = null; save(); }
+    const m = summary(sess); restEnd = 0; closeSession();
+    return toast(m.sets || m.sec ? `수고하셨어요! ${Math.round(m.sec/60)}분 · ${m.sets}세트` : '기록 없이 닫았어요');
   }
-  if (ds.act === 'resetTimer'){
-    const l = db.logs[sel]; if (l){ l.sec = 0; l.run = null; save(); } return renderToday();
-  }
-  if (ds.act === 'copyBackup'){
-    const text = JSON.stringify(db);
-    const box = document.getElementById('backupBox'); box.value = text;
+  if (act === 'backup'){ backupOpen = !backupOpen; return renderSet(); }
+  if (act === 'copy'){
+    const text = JSON.stringify(db), box = document.getElementById('backupBox'); box.value = text;
     const fallback = () => { box.focus(); box.select(); toast('아래 칸을 길게 눌러 복사하세요'); };
     try { navigator.clipboard.writeText(text).then(() => toast('기록을 복사했어요'), fallback); } catch (err) { fallback(); }
     return;
   }
-  if (ds.act === 'restore'){
-    try {
-      const d = JSON.parse(document.getElementById('backupBox').value);
-      if (!d || !d.logs) throw 0;
-      db = { routine: d.routine || DEFAULT_ROUTINE.slice(), logs: d.logs }; save(); toast('기록을 불러왔어요'); renderGuide();
-    } catch (err) { toast('백업 내용이 올바르지 않아요. 복사한 글 전체를 붙여넣어 주세요'); }
+  if (act === 'restore'){
+    try { const d = JSON.parse(document.getElementById('backupBox').value); if (!d || !d.logs) throw 0;
+      db = { routine: d.routine || DEFAULT_ROUTINE.slice(), logs: d.logs }; save(); toast('기록을 불러왔어요'); renderSet();
+    } catch (err) { toast('백업 내용이 올바르지 않아요'); }
+    return;
+  }
+  if (act === 'theme'){
+    const r = document.documentElement, dark = !r.classList.contains('app-dark');
+    r.classList.toggle('app-dark', dark); r.classList.toggle('app-light', !dark);
+    try { localStorage.setItem('plate-log-theme', dark ? 'dark' : 'light'); } catch (err) {}
+    return renderSet();
+  }
+  if (act === 'reset'){
+    if (!confirmReset){ confirmReset = true; return renderSet(); }
+    db.logs = {}; save(); confirmReset = false; toast('모든 기록을 지웠어요'); return renderSet();
   }
 });
-
 document.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.ex){
-    const s = materialize(sel, EX_BY_ID[t.dataset.ex])[+t.dataset.i];
-    s[t.dataset.f] = t.value; save();
-    document.getElementById('stats').innerHTML = statsHtml(summary(sel));
-  } else if (t.id === 'memo'){ ensureLog(sel).memo = t.value; save(); }
-  else if (t.id === 'manualMin'){
-    const l = ensureLog(sel); if (!l.run){ l.sec = Math.max(0, Math.round((+t.value||0)*60)); save();
-      document.getElementById('clock').textContent = fmtClock(l.sec); }
-  }
+    const x = materialize(sess, EX_BY_ID[t.dataset.ex])[+t.dataset.i];
+    x[t.dataset.f] = t.value; save();
+    document.getElementById('stats').innerHTML = statsHtml(summary(sess));
+  } else if (t.id === 'memo'){ ensureLog(sess).memo = t.value; save(); }
+  else if (t.id === 'manualMin'){ const l = ensureLog(sess); if (!l.run){ l.sec = Math.max(0, Math.round((+t.value||0)*60)); save(); document.getElementById('clock').textContent = fmtClock(l.sec); } }
+  else if (t.id === 'libq'){ libQuery = t.value; renderLib(); }
 });
 document.addEventListener('change', e => {
   const t = e.target;
-  if (t.dataset.rt !== undefined){ db.routine[+t.dataset.rt] = t.value; save(); renderGuide(); toast(`${DOW[+t.dataset.rt]}요일 → ${partName(t.value)}`); }
+  if (t.dataset.rt !== undefined){ db.routine[+t.dataset.rt] = t.value; save(); renderSet(); toast(`${DOW[+t.dataset.rt]}요일 → ${partName(t.value)}`); }
+  else if (t.id === 'range'){ reportRange = t.value; renderReport(); }
+  else if (t.id === 'restDef'){ try { localStorage.setItem('plate-log-rest', t.value); } catch (err) {} toast('기본 휴식 시간을 바꿨어요'); }
 });
 
 render();
+
 </script>
