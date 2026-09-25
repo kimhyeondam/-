@@ -65,6 +65,17 @@ h3{font-family:var(--display);font-weight:400;font-size:21px;margin:8px 0 -4px;l
 .btn.small{padding:8px 12px;font-size:13px;border-radius:10px}
 .btn.block{width:100%}
 .link{border:0;background:none;color:var(--accent);font-weight:700;padding:4px 0;font-size:14px}
+a.link,a.chip,a.btn{text-decoration:none;color:inherit}
+a.link{color:var(--accent)}
+.yt-ic{width:20px;height:20px;flex:none;vertical-align:-4px}
+a.btn.yt{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--ink);color:var(--bg)}
+.coach{display:flex;align-items:center;gap:12px}
+.avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-size:22px;color:#fff;background:var(--accent);flex:none}
+.coach .t{flex:1;min-width:0}
+.coach .t b{display:block;font-size:17px}
+.coach .t span{font-size:13px;color:var(--muted)}
+.coach-sel{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.coach-sel select{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 10px;font-weight:600;color:var(--ink)}
 .dot{width:10px;height:10px;border-radius:3px;background:var(--pc);flex:none;display:inline-block}
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:7px;background:var(--surface-2)}
 .status{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
@@ -374,12 +385,20 @@ for (const p of PART_KEYS) for (const e of EX[p]) e.part = p;
 /* ───────── 저장소 ───────── */
 const KEY = 'plate-log-v1';
 const DEFAULT_ROUTINE = ['chest','back','shoulders','arms','legs','rest','rest'];
-function blankDb(){ return { routine: DEFAULT_ROUTINE.slice(), logs: {}, weights: {}, custom: [], settings: { goal: 4, rest: 90 } }; }
+// 처음 설치할 때 넣어 두는 예시 코치. 유튜브 검색으로 연결되며 설정에서 고치거나 지울 수 있다.
+const DEFAULT_COACHES = [
+  { id:'k1', name:'피지컬갤러리', channel:'', note:'예시 · 운동 기초와 자세', videos:{} },
+  { id:'k2', name:'핏블리', channel:'', note:'예시 · 헬스 초보 가이드', videos:{} },
+  { id:'k3', name:'말왕', channel:'', note:'예시 · 근력 운동', videos:{} },
+  { id:'k4', name:'빅씨스', channel:'', note:'예시 · 여성 홈트레이닝', videos:{} },
+];
+const coachDefaults = () => DEFAULT_COACHES.map(c => ({...c, videos:{}}));
+function blankDb(){ return { routine: DEFAULT_ROUTINE.slice(), logs: {}, weights: {}, custom: [], influencers: coachDefaults(), settings: { goal: 4, rest: 90, coach: '' } }; }
 function normalize(d){
   const b = blankDb();
   if (!d || typeof d !== 'object') return b;
   return { routine: Array.isArray(d.routine) && d.routine.length === 7 ? d.routine : b.routine,
-    logs: d.logs || {}, weights: d.weights || {}, custom: d.custom || [],
+    logs: d.logs || {}, weights: d.weights || {}, custom: d.custom || [], influencers: Array.isArray(d.influencers) ? d.influencers : coachDefaults(),
     settings: Object.assign(b.settings, d.settings || {}) };
 }
 let db = blankDb();
@@ -473,6 +492,27 @@ const fmtClock = sec => { const h = Math.floor(sec/3600), m = Math.floor(sec%360
 const fmtNum = n => Number(n).toLocaleString('ko-KR');
 const fmtMin = sec => { const m = Math.round(sec/60); return m >= 60 ? `${Math.floor(m/60)}시간 ${m%60}분` : `${m}분`; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ───────── 코치(인플루언서) · 유튜브 연결 ───────── */
+const YT_ICON = '<svg class="yt-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0033"/><path d="M10 8.5v7l6-3.5z" fill="#fff"/></svg>';
+const ytSearch = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+const cleanName = n => n.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+function safeYt(u){
+  try { const x = new URL(String(u).trim()); if (x.protocol !== 'https:') return '';
+    const h = x.hostname.replace(/^(www|m)\./, ''); return (h === 'youtube.com' || h === 'youtu.be') ? x.href : ''; } catch (e) { return ''; }
+}
+function channelUrl(c){
+  const ch = (c.channel || '').trim();
+  if (/^@[^\s/]+$/.test(ch)) return 'https://www.youtube.com/' + encodeURI(ch);
+  return safeYt(ch) || ytSearch(c.name);
+}
+const coachById = id => db.influencers.find(c => c.id === id) || null;
+const myCoach = () => coachById(db.settings.coach);
+function videoUrl(c, ex){
+  if (!c) return ytSearch(cleanName(ex.name) + ' 자세');
+  return (c.videos && c.videos[ex.id]) || ytSearch(c.name + ' ' + cleanName(ex.name));
+}
+const coachInitial = c => esc([...c.name.trim()][0] || '?');
 
 /* 부위별 회복 */
 function recovery(p){
@@ -674,6 +714,15 @@ function renderLib(){
   const keep = document.activeElement && document.activeElement.id === 'libq';
   document.getElementById('v-lib').innerHTML = `
     <div class="spread"><h1 class="title">운동</h1><button class="btn primary small" data-act="addEx" style="margin-top:14px">+ 내 운동 추가</button></div>
+    <h3>내 코치</h3>
+    <div class="chips">
+      <button class="chip" data-coach="" aria-pressed="${!myCoach()}">앱 기본</button>
+      ${db.influencers.map(c => `<button class="chip" data-coach="${c.id}" aria-pressed="${db.settings.coach === c.id}">${esc(c.name)}</button>`).join('')}
+      <button class="chip" data-act="coachNew">+ 코치 등록</button></div>
+    ${myCoach() ? (c => `<div class="box pad coach"><span class="avatar">${coachInitial(c)}</span><div class="t"><b>${esc(c.name)}</b><span>${esc(c.note || '유튜브 운동 코치')}</span></div>
+      <a class="btn small" href="${esc(channelUrl(c))}" target="_blank" rel="noopener">${YT_ICON} 채널</a><button class="btn small" data-coachedit="${c.id}">편집</button></div>`)(myCoach())
+      : '<p class="muted" style="margin:0 4px">코치를 고르면 모든 운동의 ‘▶ 영상’ 버튼이 그 코치의 유튜브 영상으로 연결돼요.</p>'}
+    <h3>운동 목록</h3>
     <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
       <input id="libq" type="search" placeholder="운동 이름이나 부위로 찾기" value="${esc(libQuery)}" aria-label="운동 검색"></label>
     <div class="chips">${chips}</div>
@@ -758,6 +807,9 @@ function renderSet(){
       <div class="sr"><span>화면 밝기</span><div class="seg3" role="group" aria-label="화면 밝기">${[['auto','자동'],['light','밝게'],['dark','어둡게']].map(([k, t]) => `<button data-theme-set="${k}" aria-pressed="${tm === k}">${t}</button>`).join('')}</div></div>
       <div class="sr"><span>원판 계산기</span><button class="btn small" data-act="plate">열기</button></div>
     </div>
+    <h3>코치(인플루언서) 관리</h3>
+    <div class="box set-list">${db.influencers.map(c => `<div class="sr"><span class="coach" style="min-width:0"><span class="avatar" style="width:34px;height:34px;font-size:16px">${coachInitial(c)}</span><span class="t"><b style="font-size:15px">${esc(c.name)}${db.settings.coach === c.id ? ' <span class="tag">내 코치</span>' : ''}</b><span>${esc(c.note || '')}</span></span></span><button class="btn small" data-coachedit="${c.id}">편집</button></div>`).join('')}
+      <div class="sr"><span class="muted">좋아하는 운동 유튜버를 추가하세요</span><button class="btn primary small" data-act="coachNew">+ 코치 등록</button></div></div>
     <h3>요일별 루틴</h3>
     <div class="box set-list">${DOW.map((w, i) => `<div class="sr" data-part="${db.routine[i]}"><span class="row"><span class="dot"></span>${w}요일</span><select id="rt-${i}" data-rt="${i}" aria-label="${w}요일 운동 부위">${opts(db.routine[i])}</select></div>`).join('')}</div>
     <h3>데이터</h3>
@@ -787,6 +839,13 @@ function renderSheet(){
       <h2>${esc(e.name)}</h2>
       ${e.target ? `<div class="muted">주로 쓰는 근육: ${esc(e.target)}</div>` : ''}
       ${e.steps ? `<ol>${e.steps.map(s => `<li>${s}</li>`).join('')}</ol><div class="tip"><b>TIP</b>${e.tip}</div>` : ''}
+      <h3>영상으로 배우기</h3>
+      ${(() => { const c = myCoach(), saved = c && c.videos && c.videos[e.id];
+        return `<a class="btn yt block" href="${esc(videoUrl(c, e))}" target="_blank" rel="noopener">${YT_ICON}${c ? esc(c.name) + ' · ' : ''}${esc(cleanName(e.name))} 영상 보기</a>
+        <p class="muted" style="margin:0">${c ? (saved ? '저장해 둔 영상으로 바로 연결돼요.' : `유튜브에서 ‘${esc(c.name)} ${esc(cleanName(e.name))}’를 검색해 보여줘요. 딱 맞는 영상을 찾았다면 주소를 아래에 넣어 두세요.`) : '유튜브에서 이 운동의 자세 영상을 찾아줘요. ‘운동’ 탭에서 코치를 고르면 그 코치 영상으로 연결돼요.'}</p>
+        ${db.influencers.filter(o => o !== c).length ? `<div class="chips">${db.influencers.filter(o => o !== c).map(o => `<a class="chip" href="${esc(videoUrl(o, e))}" target="_blank" rel="noopener">${YT_ICON}${esc(o.name)}</a>`).join('')}</div>` : ''}
+        ${c ? `<form id="vidForm" class="row"><input class="field" id="vidIn" type="url" inputmode="url" placeholder="${esc(c.name)}의 이 운동 영상 주소 (선택)" value="${esc(saved || '')}" aria-label="영상 주소"><button class="btn primary" type="submit" style="white-space:nowrap;flex:none">저장</button></form>
+          ${saved ? '<button class="link" data-act="vidDel" style="align-self:flex-start">저장한 영상 지우기</button>' : ''}` : ''}`; })()}
       <h3>내 기록</h3>
       <div class="kpis"><div class="kpi"><b>${b.kg ? b.kg + 'kg' : '—'}</b><span>최고 무게</span></div><div class="kpi"><b>${b.e1rm ? b.e1rm + 'kg' : '—'}</b><span>예상 1회 최대</span></div><div class="kpi"><b>${b.reps ? b.reps + '회' : '—'}</b><span>한 세트 최다</span></div></div>
       <p class="muted" style="margin:0">‘예상 1회 최대’는 무게와 횟수로 계산한 “딱 한 번 들 수 있는 무게” 추정치예요. 이 숫자가 오르면 힘이 세진 거예요.</p>
@@ -794,6 +853,16 @@ function renderSheet(){
       ${hist.length ? `<div class="box prl">${hist.slice(-5).reverse().map(x => `<div class="r"><b>${md(x.date)}</b><span class="muted num" style="text-align:right">${x.sets.map(s => setText(s) + (s.pr ? '★' : '')).join(' · ')}</span></div>`).join('')}</div>` : ''}
       ${e.custom ? `<button class="btn" data-act="delEx" style="${confirmDel ? 'background:var(--c-chest);color:#fff' : ''}">${confirmDel ? '한 번 더 누르면 삭제돼요' : '이 운동 삭제'}</button>` : ''}
     </div>`;
+  } else if (sheet.kind === 'coach'){
+    const c = sheet.arg ? coachById(sheet.arg) : null;
+    h = `<h2>${c ? '코치 편집' : '코치 등록'}</h2>
+      <p class="muted" style="margin:0">좋아하는 운동 유튜버를 등록하세요. 채널 주소가 없어도 이름으로 유튜브 검색이 연결돼요.</p>
+      <form id="coachForm" style="display:flex;flex-direction:column;gap:10px">
+        <label class="lab">이름 (유튜브 채널 이름)<input class="field" id="cName" required maxlength="30" placeholder="예: 운동하는 김코치" value="${esc(c ? c.name : '')}"></label>
+        <label class="lab">채널 주소 또는 @아이디 (선택)<input class="field" id="cChannel" maxlength="200" placeholder="예: @channelname 또는 https://www.youtube.com/@..." value="${esc(c ? c.channel || '' : '')}"></label>
+        <label class="lab">한 줄 소개 (선택)<input class="field" id="cNote" maxlength="40" placeholder="예: 초보 자세 설명이 쉬움" value="${esc(c ? c.note || '' : '')}"></label>
+        <button class="btn primary block" type="submit">${c ? '저장하기' : '등록하고 내 코치로 정하기'}</button></form>
+      ${c ? `<button class="btn" data-act="coachDel" style="${confirmDel ? 'background:var(--c-chest);color:#fff' : ''}">${confirmDel ? '한 번 더 누르면 삭제돼요' : '이 코치 삭제'}</button>` : ''}`;
   } else if (sheet.kind === 'add'){
     h = `<h2>내 운동 추가</h2><p class="muted" style="margin:0">목록에 없는 운동을 직접 넣을 수 있어요. 해당 부위 날에 자동으로 나와요.</p>
       <form id="addForm" style="display:flex;flex-direction:column;gap:10px">
@@ -854,7 +923,8 @@ function exCard(ex){
       <button class="done-btn" data-done="${ex.id}" data-i="${i}" aria-pressed="${x.done}" aria-label="${i+1}세트 완료">✓</button></div>`).join('')}
     <div class="ex-foot"><button class="btn small" data-addset="${ex.id}">+ 세트</button>
       ${sets.length > 1 ? `<button class="btn small" data-delset="${ex.id}">− 세트</button>` : ''}
-      ${ex.steps ? `<button class="link" style="margin-left:auto" data-how="${ex.id}" aria-expanded="${!!howOpen[ex.id]}">${howOpen[ex.id] ? '방법 닫기' : '하는 방법'}</button>` : ''}</div>
+      <a class="link" style="margin-left:auto;display:inline-flex;align-items:center;gap:4px" href="${esc(videoUrl(myCoach(), ex))}" target="_blank" rel="noopener">${YT_ICON}영상</a>
+      ${ex.steps ? `<button class="link" data-how="${ex.id}" aria-expanded="${!!howOpen[ex.id]}">${howOpen[ex.id] ? '방법 닫기' : '하는 방법'}</button>` : ''}</div>
     ${howOpen[ex.id] && ex.steps ? `<div class="how"><ol>${ex.steps.map(s => `<li>${s}</li>`).join('')}</ol><div class="tip"><b>TIP</b>${ex.tip}</div></div>` : ''}
   </article>`;
 }
@@ -868,6 +938,8 @@ function renderSession(){
       <div class="t"><b>${part === 'rest' ? '휴식' : PARTS[part].name + ' 운동'}</b><span>${d.getMonth()+1}월 ${d.getDate()}일 ${DOW[dowIdx(d)]}요일</span></div>
       <button class="btn small" data-act="plate">원판 계산</button></div>
     <div class="chips">${chips}</div>
+    <label class="coach-sel">${YT_ICON} 영상 코치<select id="coachSel" aria-label="영상 코치">
+      <option value="">앱 기본 (자세 영상 검색)</option>${db.influencers.map(c => `<option value="${c.id}"${db.settings.coach === c.id ? ' selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
     <section class="timer">
       <div class="spread"><div><div class="lb">운동 시간</div><div class="clock" id="clock">${fmtClock(m.sec)}</div></div></div>
       <div class="btns"><button class="tbtn" data-act="toggle">${running ? '일시정지' : (m.sec ? '이어서 시작' : '시작')}</button><button class="tbtn ghost" data-act="resetTime">시간 초기화</button></div>
@@ -923,6 +995,8 @@ document.addEventListener('click', e => {
   if (ds.mon){ calMonth.setMonth(calMonth.getMonth() + +ds.mon); return renderCal(); }
   if (ds.libpart){ libPart = ds.libpart; return renderLib(); }
   if (ds.exd){ return openSheet('ex', ds.exd); }
+  if ('coach' in ds){ db.settings.coach = ds.coach; save(); const c = myCoach(); renderLib(); return toast(c ? `내 코치: ${c.name}` : '앱 기본 영상으로 연결해요'); }
+  if (ds.coachedit){ return openSheet('coach', ds.coachedit); }
   if (ds.themeSet){
     const r = document.documentElement.classList; r.remove('app-dark', 'app-light');
     if (ds.themeSet !== 'auto') r.add('app-' + ds.themeSet);
@@ -973,6 +1047,14 @@ document.addEventListener('click', e => {
   if (act === 'closeSheet') return closeSheet();
   if (act === 'plate') return openSheet('plate');
   if (act === 'addEx') return openSheet('add');
+  if (act === 'coachNew') return openSheet('coach', null);
+  if (act === 'coachDel'){
+    if (!confirmDel){ confirmDel = true; return renderSheet(); }
+    const c = coachById(sheet.arg); db.influencers = db.influencers.filter(x => x.id !== sheet.arg);
+    if (db.settings.coach === sheet.arg) db.settings.coach = '';
+    save(); closeSheet(); render(); return toast(`${c ? c.name : '코치'}를 삭제했어요`);
+  }
+  if (act === 'vidDel'){ const c = myCoach(); if (c && c.videos) delete c.videos[sheet.arg]; save(); renderSheet(); return toast('저장한 영상을 지웠어요'); }
   if (act === 'delEx'){
     if (!confirmDel){ confirmDel = true; return renderSheet(); }
     db.custom = db.custom.filter(c => c.id !== sheet.arg); save(); closeSheet(); render(); return toast('운동을 삭제했어요');
@@ -1003,6 +1085,19 @@ document.addEventListener('submit', e => {
     const d = document.getElementById('wDate').value || todayStr();
     if (d > todayStr()) return toast('미래 날짜에는 기록할 수 없어요');
     db.weights[d] = r1(v); save(); renderGrow(); toast(`${md(d)} 체중 ${r1(v)}kg 저장`);
+  } else if (e.target.id === 'coachForm'){
+    const name = document.getElementById('cName').value.trim(); if (!name) return;
+    const channel = document.getElementById('cChannel').value.trim(), note = document.getElementById('cNote').value.trim();
+    if (channel && !/^@[^\s/]+$/.test(channel) && !safeYt(channel)) return toast('채널 주소는 유튜브 주소(https://www.youtube.com/...)나 @아이디로 넣어 주세요');
+    const c = sheet.arg ? coachById(sheet.arg) : null;
+    if (c){ Object.assign(c, { name, channel, note }); save(); closeSheet(); render(); return toast(`${name} 정보를 저장했어요`); }
+    const nc = { id: 'c' + Date.now(), name, channel, note, videos: {} };
+    db.influencers.push(nc); db.settings.coach = nc.id; save(); closeSheet(); render(); return toast(`${name}을(를) 내 코치로 정했어요`);
+  } else if (e.target.id === 'vidForm'){
+    const c = myCoach(), v = document.getElementById('vidIn').value.trim(); if (!c) return;
+    if (!v){ delete c.videos[sheet.arg]; save(); renderSheet(); return toast('저장한 영상을 지웠어요'); }
+    const u = safeYt(v); if (!u) return toast('유튜브 영상 주소를 넣어 주세요 (youtube.com 또는 youtu.be)');
+    c.videos = c.videos || {}; c.videos[sheet.arg] = u; save(); renderSheet(); return toast('이제 이 운동은 저장한 영상으로 연결돼요');
   } else if (e.target.id === 'addForm'){
     const name = document.getElementById('aName').value.trim(); if (!name) return;
     const ex = { id: 'u' + Date.now(), custom: true, part: document.getElementById('aPart').value, name,
@@ -1034,6 +1129,7 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (t.dataset.rt !== undefined){ db.routine[+t.dataset.rt] = t.value; save(); renderSet(); toast(`${DOW[+t.dataset.rt]}요일 → ${partName(t.value)}`); }
+  else if (t.id === 'coachSel'){ db.settings.coach = t.value; save(); renderSession(); const c = myCoach(); toast(c ? `영상 코치: ${c.name}` : '앱 기본 영상으로 연결해요'); }
   else if (t.id === 'goal'){ db.settings.goal = +t.value; save(); toast(`주 ${t.value}일 목표로 바꿨어요`); }
   else if (t.id === 'restDef'){ db.settings.rest = +t.value; save(); toast('기본 휴식 시간을 바꿨어요'); }
   else if (t.id === 'pBar'){ plateState.bar = +t.value; renderSheet(); }
