@@ -1,5 +1,5 @@
 // 오프라인에서도 앱이 열리도록 파일을 휴대폰에 저장해 둔다.
-const VERSION = 'v74354252';
+const VERSION = 'v15381997';
 const CACHE = 'plate-log-' + VERSION;
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 

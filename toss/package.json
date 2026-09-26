@@ -1,0 +1,16 @@
+{
+  "name": "plate-log-toss",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "build": "node scripts/build-web.mjs && ait build"
+  },
+  "dependencies": {
+    "@apps-in-toss/web-framework": "^3.5.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10"
+  }
+}

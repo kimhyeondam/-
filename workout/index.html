@@ -477,13 +477,8 @@ for (const p of PART_KEYS) for (const e of EX[p]) e.part = p;
 /* ───────── 저장소 ───────── */
 const KEY = 'plate-log-v1';
 const DEFAULT_ROUTINE = ['chest','back','shoulders','arms','legs','rest','rest'];
-// 처음 설치할 때 넣어 두는 예시 코치. 유튜브 검색으로 연결되며 설정에서 고치거나 지울 수 있다.
-const DEFAULT_COACHES = [
-  { id:'k1', name:'피지컬갤러리', channel:'', note:'예시 · 운동 기초와 자세', videos:{} },
-  { id:'k2', name:'핏블리', channel:'', note:'예시 · 헬스 초보 가이드', videos:{} },
-  { id:'k3', name:'말왕', channel:'', note:'예시 · 근력 운동', videos:{} },
-  { id:'k4', name:'빅씨스', channel:'', note:'예시 · 여성 홈트레이닝', videos:{} },
-];
+// 코치(유튜버)는 사용자가 직접 등록한다. 배포판에는 실제 인물 이름을 미리 넣지 않는다.
+const DEFAULT_COACHES = [];
 const coachDefaults = () => DEFAULT_COACHES.map(c => ({...c, videos:{}}));
 function blankDb(){ return { routine: DEFAULT_ROUTINE.slice(), logs: {}, weights: {}, custom: [], influencers: coachDefaults(), settings: { goal: 4, rest: 90, coach: '', mode: 'gym' } }; }
 function normalize(d){
@@ -495,7 +490,11 @@ function normalize(d){
 }
 let db = blankDb();
 try { const raw = localStorage.getItem(KEY); if (raw) db = normalize(JSON.parse(raw)); } catch (e) {}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} }
+function save(){
+  const json = JSON.stringify(db);
+  try { localStorage.setItem(KEY, json); } catch (e) {}
+  try { window.__persist && window.__persist(KEY, json); } catch (e) {} // 토스 미니앱: 토스 저장소에도 보관
+}
 
 /* ───────── 날짜 ───────── */
 const pad = n => String(n).padStart(2,'0');
@@ -975,6 +974,12 @@ function renderSet(){
       <div class="sr"><span class="muted">좋아하는 운동 유튜버를 추가하세요</span><button class="btn primary small" data-act="coachNew">+ 코치 등록</button></div></div>
     <h3>요일별 루틴</h3>
     <div class="box set-list">${DOW.map((w, i) => `<div class="sr" data-part="${db.routine[i]}"><span class="row"><span class="dot"></span>${w}요일</span><select id="rt-${i}" data-rt="${i}" aria-label="${w}요일 운동 부위">${opts(db.routine[i])}</select></div>`).join('')}</div>
+    <h3>이용 안내</h3>
+    <div class="box pad" style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)">
+      <p style="margin:0">이 앱의 운동 방법과 스트레칭은 일반적인 정보예요. 건강에 문제가 있거나 오랜만에 운동한다면 먼저 전문가와 상담하고, 운동 중 통증이나 어지러움이 느껴지면 바로 멈추세요.</p>
+      <p style="margin:0">모든 기록은 이 휴대폰 안에만 저장되고, 어떤 서버로도 보내지 않아요.</p>
+      <a class="link" href="https://kimhyeondam.github.io/-/workout/privacy.html" target="_blank" rel="noopener">개인정보처리방침 보기</a>
+    </div>
     <h3>데이터</h3>
     <div class="box set-list">
       <div class="sr"><span>백업과 복원</span><button class="btn small" data-act="backup" aria-expanded="${backupOpen}">${backupOpen ? '닫기' : '열기'}</button></div>
