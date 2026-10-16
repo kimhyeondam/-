@@ -153,6 +153,23 @@ pre.preview{background:var(--sunk);border-radius:6px;padding:12px;margin:0;font-
 .ad{border:1px dashed var(--line);border-radius:8px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:14px;color:var(--muted)}
 .ad small{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line);padding:0 6px;border-radius:4px}
 .empty{color:var(--muted);font-size:14px}
+.posts{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:8px;min-width:0}
+.post{display:grid;gap:4px;padding:14px 18px;border:0;border-top:1px solid var(--line);background:transparent;text-align:left;cursor:pointer;width:100%}
+.post:first-child{border-top:0}
+.post:hover .ttl{color:var(--accent)}
+.post .ttl{font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.post .meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
+.post.pin{background:var(--hi)}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 6px;font-weight:400;white-space:nowrap}
+.tag.news{color:var(--accent);border-color:var(--accent)}
+.tag.product{color:var(--warn);border-color:var(--warn)}
+.article{display:grid;gap:14px}
+.article .body{white-space:pre-wrap;max-width:68ch}
+.prodbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;background:var(--sunk);border-radius:6px;padding:12px 14px;margin:0}
+.prodbox div{display:grid;gap:2px}.prodbox dt{font-size:12px;color:var(--muted)}.prodbox dd{margin:0;font-weight:500}
+.comments{display:grid;gap:10px;list-style:none;margin:0;padding:0}
+.comments li{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:2px;font-size:14px}
+.comments .meta{font-size:12px;color:var(--muted)}
 
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;font-size:14px;max-width:calc(100% - 32px);z-index:20}
 footer.site{border-top:1px solid var(--line);color:var(--muted);font-size:13px}
@@ -265,6 +282,13 @@ function seed() {
         timeline:[{d:'2026-09-01',s:'내용증명 발송',m:''}], reply:'', files:['세금계산서_2606.pdf','내용증명_사본.pdf'] },
     ],
     objections: [],
+    posts: [
+      { id:'p0', board:'free', title:'팔아유 게시판 이용 안내', body:'자유게시판, 토목자재 뉴스, 신제품 소식 세 곳으로 나뉘어 있습니다.\n\n· 거래처 대금 이야기는 게시판이 아니라 결제조회의 정해진 양식으로만 올려 주세요.\n· 판매사끼리 단가를 맞추자는 글은 담합 위험이 있어 올릴 수 없습니다.\n· 광고성 글은 신제품 소식에 올려 주세요.', by:'admin', date:addDays(t,-20), pinned:true, comments:[] },
+      { id:'p1', board:'news', title:'국토부, 상습체불 건설사업자 명단 조회 방법', body:'건설산업지식정보시스템(kiscon.net)에서 상습체불 건설사업자 공표 대상자를 검색할 수 있습니다. 행정처분까지 받은 경우만 올라가므로, 처음 거래하는 회사는 팔아유 결제조회와 함께 확인하면 좋습니다.', link:'https://molit.go.kr/USR/WPGE0201/m_36452/DTL.jsp', by:'admin', date:addDays(t,-6), comments:[] },
+      { id:'p2', board:'news', title:'(예시) 내년 상반기 하수관로 정비사업 발주 늘어날 전망', body:'지자체 하수관로 정비 예산이 늘면서 흄관·맨홀 수요가 늘 것으로 보입니다. 설계 단계에서 자재 승인을 받아 두는 곳이 유리합니다.\n\n(시연용 예시 기사입니다)', by:'m2', date:addDays(t,-3), comments:[{ by:'m1', body:'설계사무소 쪽 자재 승인 서류는 어떤 걸 준비하셨나요?', date:addDays(t,-2) }] },
+      { id:'p3', board:'product', title:'투수형 집수정 커넥터 일체형 출시', body:'바닥과 옆면에 투수공을 생산 단계에서 넣은 집수정입니다. 연결 관경 150~300mm 커넥터 일체형이라 현장에서 따로 구멍을 뚫을 필요가 없고, 상부 앵글 일체로 주철뚜껑·그레이팅 모두 쓸 수 있습니다.', product:{ name:'집수정(투수형)', spec:'300×400×H600~900 / 600×600×H600~1000', maker:'현담토목(주)', release:addDays(t,-10) }, by:'m1', date:addDays(t,-4), comments:[{ by:'b1', body:'시험성적서도 받을 수 있나요?', date:addDays(t,-3) }] },
+      { id:'p4', board:'free', title:'5톤 카고로 보강토블럭 몇 장까지 실으시나요', body:'현장 진입로가 좁아서 5톤으로 나눠 받아야 하는데, 판매사마다 적재 수량이 달라서 여쭤봅니다.', by:'b1', date:addDays(t,-1), comments:[{ by:'m1', body:'H200 기준으로 저희는 약 450장 싣습니다. 파렛트 포장 기준입니다.', date:t }] },
+    ],
     log: [
       { d:addDays(t,-2), t:'(예시) 가나토건(주) 결제정보 증빙 확인 후 공개 · 법원 확인 표시' },
       { d:addDays(t,-10), t:'(예시) 다라건설 결제정보 증빙 확인 후 공개' },
@@ -274,6 +298,7 @@ function seed() {
 
 let S;
 try { S = JSON.parse(localStorage.getItem(KEY)) || seed(); } catch { S = seed(); }
+if (!S.posts) S.posts = seed().posts;
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
 const log = t => { S.log.unshift({ d: today(), t }); };
 
@@ -323,6 +348,7 @@ const issuesHtml = arr => arr.map(i => `<li class="pill bad block">${esc(i)}</li
 const VIEWS = {
   home:     { label:'단가비교', render: viewHome },
   quote:    { label:'견적', render: viewQuote },
+  board:    { label:'게시판', render: viewBoard },
   sell:     { label:'판매 등록', render: viewSell },
   join:     { label:'가입', render: viewJoin },
   credit:   { label:'결제조회', render: viewCredit, sub:true },
@@ -344,6 +370,7 @@ function route() {
   document.querySelectorAll('#roleSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.role === S.role));
   app.innerHTML = '';
   VIEWS[v].render(app);
+  document.querySelector('#nav a[href="#board"]')?.addEventListener('click', () => { if (viewBoard.open || viewBoard.writing) { viewBoard.open = null; viewBoard.writing = false; route(); } });
   document.querySelector('#nav a[href="#home"]')?.addEventListener('click', () => { if (viewHome.sel) { viewHome.sel = null; route(); } });
   app.querySelectorAll('a[data-q]').forEach(a => a.addEventListener('click', () => { viewCredit.q = a.dataset.q; }));
 }
@@ -543,6 +570,135 @@ function viewQuote(el) {
       save(); toast('견적을 보냈습니다.'); viewQuote(el);
     });
   }
+}
+
+/* ===== 게시판 ===== */
+const BOARDS = { free:'자유게시판', news:'토목자재 뉴스', product:'신제품 소식' };
+const BOARD_NOTE = {
+  free:'현장 이야기, 질문, 구인·구직 등 무엇이든 올려 주세요.',
+  news:'업계 소식, 발주·정책 뉴스, 자재 시세 기사를 나누는 곳입니다. 기사를 옮길 때는 출처를 함께 적어 주세요.',
+  product:'새로 나온 제품이나 규격을 알리는 곳입니다. 판매사의 제품 홍보는 이 게시판에만 올립니다.',
+};
+const author = id => id === 'admin' ? '운영자' : (M(id)?.company || '탈퇴 회원');
+const canPost = () => S.role === 'admin' || canTrade();
+const BOARD_RULES = [
+  { re:/미지급|떼먹|떼였|(대금|돈|결제|외상값?|잔금)\S{0,2}\s?(안|못)\s?(주|줘|준|줄|받|해|하)/, why:'거래처 대금 이야기는 게시판이 아니라 결제조회의 정해진 양식으로만 올립니다' },
+];
+const checkPost = txt => [...checkText(txt), ...BOARD_RULES.filter(r => r.re.test(txt)).map(r => r.why)];
+
+function viewBoard(el) {
+  if (viewBoard.open) return viewPost(el, viewBoard.open);
+  if (viewBoard.writing) return viewPostForm(el);
+  const b = viewBoard.b || 'all';
+  const q = (viewBoard.q || '').trim();
+  const list = S.posts.filter(p => !p.hidden || S.role === 'admin')
+    .filter(p => b === 'all' || p.board === b)
+    .filter(p => !q || norm(p.title + p.body + (p.product ? p.product.name + p.product.maker : '')).includes(norm(q)))
+    .sort((x, y) => (!!y.pinned - !!x.pinned) || y.date.localeCompare(x.date));
+  el.innerHTML = `<section class="view">
+    <div class="spread"><h2>게시판</h2>${canPost() ? '<button type="button" class="btn" id="newPost">글쓰기</button>' : S.role === 'guest' ? '<a class="btn ghost" href="#join">가입하고 글쓰기</a>' : ''}</div>
+    <div class="chips" role="group" aria-label="게시판 선택">${[['all','전체'], ...Object.entries(BOARDS)].map(([k, v]) => `<button type="button" data-b="${k}" aria-pressed="${k===b}">${v} <span class="num">${S.posts.filter(p => !p.hidden && (k === 'all' || p.board === k)).length}</span></button>`).join('')}</div>
+    ${b !== 'all' ? `<p class="lead">${BOARD_NOTE[b]}</p>` : ''}
+    <div class="search"><input type="search" id="bq" placeholder="제목, 내용, 제품명 검색" value="${esc(q)}" aria-label="게시글 검색"></div>
+    ${ad(b === 'product' ? '(예시) 몰드·형틀 제작 — ○○금형' : '(예시) 화물 운송 공동구매 — 광주·전남 5톤 카고')}
+    <div class="posts">${list.length ? list.map(p => `<button type="button" class="post ${p.pinned ? 'pin' : ''}" data-open="${p.id}">
+      <span class="ttl">${p.pinned ? '<span class="tag">공지</span>' : ''}<span class="tag ${p.board}">${BOARDS[p.board]}</span>${esc(p.title)}${p.comments.length ? ` <span class="num" style="color:var(--accent);font-size:13px">[${p.comments.length}]</span>` : ''}${p.hidden ? ' <span class="pill bad">숨김</span>' : ''}</span>
+      <span class="meta"><span>${esc(author(p.by))}</span><span class="num">${dot(p.date)}</span>${p.product ? `<span>${esc(p.product.name)}</span>` : ''}</span>
+    </button>`).join('') : '<p class="empty" style="padding:14px 18px">아직 글이 없습니다.</p>'}</div>
+  </section>`;
+  el.querySelectorAll('[data-b]').forEach(x => x.onclick = () => { viewBoard.b = x.dataset.b; viewBoard(el); });
+  el.querySelectorAll('[data-open]').forEach(x => x.onclick = () => { viewBoard.open = x.dataset.open; viewBoard(el); scrollTo(0, 0); });
+  el.querySelector('#newPost')?.addEventListener('click', () => { viewBoard.writing = true; viewBoard(el); scrollTo(0, 0); });
+  const bq = el.querySelector('#bq');
+  bq.addEventListener('input', () => { viewBoard.q = bq.value; const pos = bq.selectionStart; viewBoard(el); const n = el.querySelector('#bq'); n.focus(); n.setSelectionRange(pos, pos); });
+}
+
+function viewPost(el, id) {
+  const p = S.posts.find(x => x.id === id);
+  if (!p || (p.hidden && S.role !== 'admin')) { viewBoard.open = null; return viewBoard(el); }
+  const mineP = (S.role === 'admin' && p.by === 'admin') || (me() && p.by === me().id);
+  el.innerHTML = `<section class="view article">
+    <div class="row"><button type="button" class="btn small ghost" id="back">← 목록</button><span class="tag ${p.board}">${BOARDS[p.board]}</span>${p.pinned ? '<span class="tag">공지</span>' : ''}${p.hidden ? '<span class="pill bad">신고로 숨김</span>' : ''}</div>
+    <div style="display:grid;gap:6px"><h2>${esc(p.title)}</h2><p class="empty">${esc(author(p.by))} · <span class="num">${dot(p.date)}</span></p></div>
+    ${p.product ? `<dl class="prodbox">
+      <div><dt>제품명</dt><dd>${esc(p.product.name)}</dd></div>
+      <div><dt>규격</dt><dd class="num">${esc(p.product.spec)}</dd></div>
+      <div><dt>제조·판매사</dt><dd>${esc(p.product.maker)}</dd></div>
+      ${p.product.release ? `<div><dt>출시일</dt><dd class="num">${dot(p.product.release)}</dd></div>` : ''}
+    </dl>` : ''}
+    <p class="body">${esc(p.body)}</p>
+    ${p.link ? `<p class="empty">출처: <a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.link)}</a></p>` : ''}
+    ${p.product && S.products.some(x => norm(x.name) === norm(p.product.name)) ? `<div class="row"><button type="button" class="btn small ghost" id="toPrice">이 제품 단가 비교하기</button></div>` : ''}
+    <div class="row">
+      ${mineP ? '<button type="button" class="btn small danger" id="del">글 삭제</button>' : ''}
+      ${S.role === 'admin' ? `<button type="button" class="btn small ghost" id="pin">${p.pinned ? '공지 해제' : '공지로 고정'}</button><button type="button" class="btn small ghost" id="hide">${p.hidden ? '다시 보이기' : '숨기기'}</button>` : ''}
+      ${!mineP && canTrade() && !p.hidden ? '<button type="button" class="btn small danger" id="report">신고</button>' : ''}
+    </div>
+    <div class="panel">
+      <h3>댓글 <span class="num">${p.comments.length}</span></h3>
+      <ul class="comments">${p.comments.map(c => `<li><span class="meta">${esc(author(c.by))} · <span class="num">${dot(c.date)}</span></span><span>${esc(c.body)}</span></li>`).join('') || '<li class="empty" style="border:0;padding:0">첫 댓글을 남겨 보세요.</li>'}</ul>
+      ${canPost() ? `<form id="cf" style="gap:8px"><label class="f">댓글 쓰기 <textarea id="c-body" style="min-height:64px" required></textarea></label><ul class="issues" id="cissues"></ul><div class="row"><button class="btn small">댓글 달기</button></div></form>` : '<p class="empty">댓글은 가입한 회사만 쓸 수 있습니다.</p>'}
+    </div>
+  </section>`;
+  const reload = () => { save(); viewPost(el, id); };
+  el.querySelector('#back').onclick = () => { viewBoard.open = null; viewBoard(el); };
+  el.querySelector('#toPrice')?.addEventListener('click', () => { const g = S.products.find(x => norm(x.name) === norm(p.product.name)); viewHome.sel = groupKey(g); viewHome.keep = true; location.hash = 'home'; });
+  el.querySelector('#del')?.addEventListener('click', () => { S.posts = S.posts.filter(x => x.id !== id); save(); viewBoard.open = null; toast('글을 삭제했습니다.'); viewBoard(el); });
+  el.querySelector('#pin')?.addEventListener('click', () => { p.pinned = !p.pinned; reload(); });
+  el.querySelector('#hide')?.addEventListener('click', () => { p.hidden = !p.hidden; log(`게시글 "${p.title}" ${p.hidden ? '숨김' : '다시 보이기'}`); reload(); });
+  el.querySelector('#report')?.addEventListener('click', () => { p.hidden = true; log(`게시글 "${p.title}" 신고 접수 → 운영자 확인 전까지 숨김`); save(); viewBoard.open = null; toast('신고를 접수했습니다. 운영자 확인 전까지 숨깁니다.'); viewBoard(el); });
+  const cf = el.querySelector('#cf');
+  if (cf) cf.onsubmit = ev => {
+    ev.preventDefault();
+    const body = cf.querySelector('#c-body').value.trim(); if (!body) return;
+    const iss = checkPost(body);
+    if (iss.length) { cf.querySelector('#cissues').innerHTML = issuesHtml(iss); return; }
+    p.comments.push({ by: S.role === 'admin' ? 'admin' : me().id, body, date: today() }); reload();
+  };
+}
+
+function viewPostForm(el) {
+  if (!canPost()) { viewBoard.writing = false; return viewBoard(el); }
+  const b = viewBoard.b && viewBoard.b !== 'all' ? viewBoard.b : 'free';
+  el.innerHTML = `<section class="view">
+    <div class="row"><button type="button" class="btn small ghost" id="back">← 목록</button></div>
+    <h2>글쓰기</h2>
+    <form id="pf" class="panel">
+      <fieldset><legend>어디에 올릴까요</legend><div class="checks">${Object.entries(BOARDS).map(([k, v]) => `<label class="check"><input type="radio" name="pb" value="${k}" ${k===b?'checked':''}> ${v}</label>`).join('')}</div></fieldset>
+      <p class="empty" id="pnote"></p>
+      <label class="f">제목 <input type="text" id="p-title" required maxlength="80"></label>
+      <div class="grid2" id="prodFields">
+        <label class="f">제품명 <input type="text" id="p-pname" placeholder="집수정(투수형)"></label>
+        <label class="f">규격 <input type="text" id="p-pspec" placeholder="600×600×H900"></label>
+        <label class="f">제조·판매사 <input type="text" id="p-pmaker" value="${esc(S.role === 'admin' ? '' : me().company)}"></label>
+        <label class="f">출시일 <input type="date" id="p-prel"></label>
+      </div>
+      <label class="f" id="linkField">출처 링크 <em>기사를 옮길 때는 원문 주소를 적어 주세요</em><input type="text" id="p-link" placeholder="https://"></label>
+      <label class="f">내용 <textarea id="p-body" required style="min-height:160px"></textarea></label>
+      <ul class="issues" id="pissues"></ul>
+      <div class="row"><button class="btn">올리기</button></div>
+    </form>
+  </section>`;
+  const f = el.querySelector('#pf');
+  const board = () => f.querySelector('input[name=pb]:checked').value;
+  const sync = () => { const k = board(); f.querySelector('#prodFields').hidden = k !== 'product'; f.querySelector('#linkField').hidden = k !== 'news'; f.querySelector('#pnote').textContent = BOARD_NOTE[k]; };
+  f.querySelectorAll('input[name=pb]').forEach(r => r.onchange = sync); sync();
+  el.querySelector('#back').onclick = () => { viewBoard.writing = false; viewBoard(el); };
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const v = id => f.querySelector('#' + id).value.trim();
+    const k = board(), errs = [];
+    if (!v('p-title') || !v('p-body')) errs.push('제목과 내용을 적어 주세요.');
+    if (k === 'product' && (!v('p-pname') || !v('p-pmaker'))) errs.push('신제품 소식에는 제품명과 제조·판매사를 적어 주세요.');
+    if (k === 'news' && v('p-link') && !/^https?:\/\//.test(v('p-link'))) errs.push('출처 링크는 http:// 또는 https://로 시작해야 합니다.');
+    errs.push(...checkPost(v('p-title') + ' ' + v('p-body')));
+    if (errs.length) { f.querySelector('#pissues').innerHTML = issuesHtml(errs); return; }
+    const post = { id: uid(), board: k, title: v('p-title'), body: v('p-body'), by: S.role === 'admin' ? 'admin' : me().id, date: today(), comments: [] };
+    if (k === 'news' && v('p-link')) post.link = v('p-link');
+    if (k === 'product') post.product = { name: v('p-pname'), spec: v('p-pspec'), maker: v('p-pmaker'), release: v('p-prel') };
+    S.posts.unshift(post); save();
+    viewBoard.writing = false; viewBoard.b = k; viewBoard.open = post.id; toast('글을 올렸습니다.'); viewBoard(el); scrollTo(0, 0);
+  };
 }
 
 /* ===== 판매 등록 ===== */
@@ -876,6 +1032,7 @@ function viewAdmin(el) {
   const objs = S.objections.filter(o => o.status !== '완료');
   const joins = S.members.filter(m => m.status === '대기');
   const stale = S.products.filter(p => daysAgo(p.updated) > 30);
+  const hiddenPosts = S.posts.filter(p => p.hidden);
   el.innerHTML = `<section class="view">
     <div style="display:grid;gap:8px"><h2>운영자</h2>
     <p class="lead">단가표 <span class="num">${S.products.length}</span>건 · 판매사 <span class="num">${S.members.filter(m=>m.type==='판매사'&&m.status==='승인').length}</span>곳 · 구매사 <span class="num">${S.members.filter(m=>m.type==='구매사'&&m.status==='승인').length}</span>곳 · 진행 중 견적 <span class="num">${S.requests.filter(r=>r.status==='견적 받는 중').length}</span>건</p></div>
@@ -886,6 +1043,10 @@ function viewAdmin(el) {
 
     <div class="panel"><div class="spread"><h3>30일 넘게 갱신 안 된 단가</h3><span class="pill ${stale.length?'warn':'mute'}">${stale.length}건</span></div>
       ${stale.length ? stale.map(p => `<p>${esc(M(p.by).company)} · ${esc(p.name)} ${esc(p.spec)} · ${dot(p.updated)}</p>`).join('') : '<p class="empty">모든 단가가 최근 30일 안에 갱신됐습니다.</p>'}
+    </div>
+
+    <div class="panel"><div class="spread"><h3>신고로 숨긴 게시글</h3><span class="pill ${hiddenPosts.length?'bad':'mute'}">${hiddenPosts.length}건</span></div>
+      ${hiddenPosts.length ? hiddenPosts.map(p => `<div class="spread"><span>[${BOARDS[p.board]}] ${esc(p.title)} · ${esc(author(p.by))}</span><span class="row"><button type="button" class="btn small ghost" data-pv="${p.id}">다시 보이기</button><button type="button" class="btn small danger" data-pd="${p.id}">삭제</button></span></div>`).join('') : '<p class="empty">숨긴 글이 없습니다.</p>'}
     </div>
 
     <h3 style="margin-top:8px">결제조회 관리</h3>
@@ -930,15 +1091,17 @@ function viewAdmin(el) {
   on('data-or', id => { const o = O(id), e = E(o.entry); e.status = '공개'; if (o.reply) e.reply = o.reply; o.status = '완료'; log(`${e.company} 판매사 증빙 확인 → 재공개${o.reply ? ' · 거래처 해명 게재' : ''}`); toast('다시 공개했습니다.'); });
   on('data-oc', id => { const o = O(id); o.status = '완료'; log(`${o.company} 이의제기 확인 완료 (연결된 글 없음)`); });
   on('data-ja', id => { const m = M(id); m.status = '승인'; log(`${m.company} (${m.type}) 가입 승인 (사업자 상태 확인)`); toast('승인했습니다.'); });
+  on('data-pv', id => { const p = S.posts.find(x => x.id === id); p.hidden = false; log(`게시글 "${p.title}" 신고 검토 후 다시 보이기`); });
+  on('data-pd', id => { const p = S.posts.find(x => x.id === id); S.posts = S.posts.filter(x => x.id !== id); log(`게시글 "${p.title}" 신고 검토 후 삭제`); });
   on('data-jr', id => { const m = M(id); m.status = '반려'; log(`${m.company} 가입 반려`); });
 }
 
 document.querySelectorAll('#roleSeg button').forEach(b => b.onclick = () => {
-  S.role = b.dataset.role; viewQuote.tab = null; viewQuote.prefill = null;
+  S.role = b.dataset.role; viewBoard.writing = false; viewQuote.tab = null; viewQuote.prefill = null;
   save(); route();
 });
 document.getElementById('resetDemo').onclick = () => { S = seed(); save(); viewHome.sel = null; viewQuote.tab = null; location.hash = 'home'; route(); toast('예시 데이터로 되돌렸습니다.'); };
-addEventListener('hashchange', () => { if (location.hash === '#home' || location.hash === '') viewHome.sel = null; route(); scrollTo(0, 0); });
+addEventListener('hashchange', () => { if (location.hash === '#board') { viewBoard.open = null; viewBoard.writing = false; } if ((location.hash === '#home' || location.hash === '') && !viewHome.keep) viewHome.sel = null; viewHome.keep = false; route(); scrollTo(0, 0); });
 route();
 })();
 </script>
