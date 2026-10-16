@@ -6,24 +6,24 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* 레이아웃: 상단 띠(이름+메뉴) 아래 한 줄 본문. 결제정보는 '외상장부' 카드, 법원 서류는 붉은 도장으로 표시 */
+/* 레이아웃: 상단 띠(이름+메뉴) 아래 한 줄 본문. 중심은 자재 단가표, 결제조회는 판매사 전용 부가 메뉴. 법원 서류는 붉은 도장 */
 :root{
   --bg:#eef0ec; --surface:#ffffff; --sunk:#e4e7e2; --ink:#1c2220; --muted:#5b6560; --line:#d3d8d2;
-  --accent:#2c5a4d; --accent-ink:#ffffff; --stamp:#b0392a; --warn:#9a6200; --warn-bg:#fbf1dc; --ok:#2d7547; --ok-bg:#e3f2e7; --bad-bg:#f8e3df;
+  --accent:#2c5a4d; --accent-ink:#ffffff; --stamp:#b0392a; --warn:#9a6200; --warn-bg:#fbf1dc; --ok:#2d7547; --ok-bg:#e3f2e7; --bad-bg:#f8e3df; --hi:#e8f1ec;
   --f-display:"Gowun Batang","Nanum Myeongjo",serif;
   --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121614; --surface:#1b201e; --sunk:#232926; --ink:#e4e8e5; --muted:#9aa49f; --line:#2f3733;
-  --accent:#86bfac; --accent-ink:#0f1513; --stamp:#e47a6b; --warn:#e2ab4f; --warn-bg:#33291a; --ok:#73c48f; --ok-bg:#1a2e21; --bad-bg:#3a201c; color-scheme:dark}}
+  --accent:#86bfac; --accent-ink:#0f1513; --stamp:#e47a6b; --warn:#e2ab4f; --warn-bg:#33291a; --ok:#73c48f; --ok-bg:#1a2e21; --bad-bg:#3a201c; --hi:#1f2e28; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121614; --surface:#1b201e; --sunk:#232926; --ink:#e4e8e5; --muted:#9aa49f; --line:#2f3733;
-  --accent:#86bfac; --accent-ink:#0f1513; --stamp:#e47a6b; --warn:#e2ab4f; --warn-bg:#33291a; --ok:#73c48f; --ok-bg:#1a2e21; --bad-bg:#3a201c; color-scheme:dark}
+  --accent:#86bfac; --accent-ink:#0f1513; --stamp:#e47a6b; --warn:#e2ab4f; --warn-bg:#33291a; --ok:#73c48f; --ok-bg:#1a2e21; --bad-bg:#3a201c; --hi:#1f2e28; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65;margin:0}
-.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.3;margin:0}
 h2{font-size:1.45rem}
 h3{font-size:1.1rem}
@@ -33,16 +33,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 
-/* 시연 띠 */
 .demo{background:var(--sunk);border-bottom:1px dashed var(--line);font-size:13px}
 .demo .wrap{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding-block:8px}
 .demo b{color:var(--muted);font-weight:500}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .seg button{border:0;background:transparent;padding:4px 10px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .linkbtn{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;padding:0;font-size:13px}
 
-/* 머리 */
 header.top{background:var(--surface);border-bottom:1px solid var(--line)}
 header.top .wrap{padding-block:18px 0;display:grid;gap:12px}
 .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -53,27 +51,55 @@ nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;white-space:nowra
 nav a{display:block;padding:9px 14px;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent}
 nav a[aria-current="page"]{color:var(--ink);border-color:var(--accent);font-weight:600}
 nav .lock{font-size:11px;margin-left:4px;color:var(--muted)}
+nav li.sub{margin-left:auto}
 
 main .wrap{padding-block:28px 56px;display:grid;gap:22px}
 .lead{color:var(--muted);max-width:62ch}
-section.view{display:grid;gap:18px}
+section.view{display:grid;gap:18px;min-width:0}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:12px;min-width:0}
+.panel.sunk{background:var(--sunk);border:0}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .spread{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
-.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:6px;padding:8px 14px;cursor:pointer;font-weight:500;text-decoration:none;display:inline-block}
 .btn.ghost{background:transparent;color:var(--accent)}
 .btn.danger{background:transparent;border-color:var(--stamp);color:var(--stamp)}
 .btn.small{padding:4px 10px;font-size:13px}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 
-/* 원칙 4개 */
+/* 자재 분류·검색 */
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 14px;cursor:pointer;font-size:14px}
+.chips button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.group{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:6px;text-align:left;cursor:pointer;min-width:0}
+.group:hover{border-color:var(--accent)}
+.group small{color:var(--muted);font-size:12px;letter-spacing:.04em}
+.group b{font-family:var(--f-display);font-size:1.1rem;font-weight:700}
+.group .spec{color:var(--muted);font-size:14px}
+.group .price{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.group .price .num{font-size:1.2rem}
+.group .foot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+
+/* 단가 비교표 */
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+th{font-weight:500;color:var(--muted);font-size:12px;background:var(--sunk)}
+td.r,th.r{text-align:right}
+tr.best td{background:var(--hi)}
+tr.off td{color:var(--muted)}
+tbody tr:last-child td{border-bottom:0}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .rule{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:4px;align-content:start}
 .rule small{font-family:var(--f-mono);color:var(--muted);font-size:12px}
 .rule b{font-family:var(--f-display);font-size:1.05rem}
 .rule p{color:var(--muted);font-size:14px}
 
-/* 장부 카드 */
+/* 결제조회 카드 */
 .ledger{display:grid;gap:14px}
 .entry{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:12px;position:relative;min-width:0}
 .entry header{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;padding-right:84px}
@@ -98,100 +124,133 @@ section.view{display:grid;gap:18px}
 .pill.warn{color:var(--warn);background:var(--warn-bg)}
 .pill.bad{color:var(--stamp);background:var(--bad-bg)}
 .pill.mute{color:var(--muted)}
+.pill.block{border-radius:6px;white-space:normal}
 
 .notice{border-left:3px solid var(--warn);background:var(--warn-bg);padding:10px 14px;border-radius:0 6px 6px 0;font-size:14px}
 .notice.ok{border-color:var(--ok);background:var(--ok-bg)}
 .notice.bad{border-color:var(--stamp);background:var(--bad-bg)}
+.notice.plain{border-color:var(--line);background:var(--surface)}
 
-/* 폼 */
 form{display:grid;gap:14px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 16px}
-label.f{display:grid;gap:4px;font-size:14px;font-weight:500;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 16px}
+label.f{display:grid;gap:4px;font-size:14px;font-weight:500;min-width:0;align-content:start}
 label.f em{font-style:normal;font-weight:400;color:var(--muted);font-size:12px}
-input[type=text],input[type=email],input[type=number],input[type=date],input[type=month],select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+input[type=text],input[type=email],input[type=number],input[type=date],input[type=month],input[type=search],select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
 textarea{min-height:84px;resize:vertical}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:6px;min-width:0}
+legend{font-size:14px;font-weight:500;padding:0;margin-bottom:6px}
 .check{display:flex;gap:8px;align-items:flex-start;font-size:14px}
 .check input{margin-top:5px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
 .tlrow{display:grid;grid-template-columns:150px 1fr 1fr auto;gap:8px}
 @media (max-width:560px){.tlrow{grid-template-columns:1fr 1fr}.tlrow input[type=text],.tlrow .x{grid-column:span 2}}
 .issues{display:grid;gap:6px;margin:0;padding:0;list-style:none}
 .issues li{font-size:13px}
 pre.preview{background:var(--sunk);border-radius:6px;padding:12px;margin:0;font-family:var(--f-mono);font-size:12.5px;line-height:1.7;white-space:pre-wrap;overflow-x:auto}
 
+.req{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:grid;gap:10px;min-width:0}
+.req .meta{font-size:13px;color:var(--muted)}
 .ad{border:1px dashed var(--line);border-radius:8px;padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:14px;color:var(--muted)}
 .ad small{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;border:1px solid var(--line);padding:0 6px;border-radius:4px}
-
-.posts{display:grid;gap:0;background:var(--surface);border:1px solid var(--line);border-radius:8px}
-.post{padding:14px 18px;border-top:1px solid var(--line);display:grid;gap:4px}
-.post:first-child{border-top:0}
-.post .meta{font-size:12px;color:var(--muted)}
-.tabs{display:flex;gap:6px;flex-wrap:wrap}
-.tabs button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 14px;cursor:pointer}
-.tabs button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);font-weight:600}
-
-.tablebox{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13.5px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-weight:500;color:var(--muted);font-size:12px}
-.empty{color:var(--muted);font-size:14px;padding:6px 0}
+.empty{color:var(--muted);font-size:14px}
 
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;font-size:14px;max-width:calc(100% - 32px);z-index:20}
 footer.site{border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 footer.site .wrap{padding-block:20px 32px;display:grid;gap:6px}
-@media (prefers-reduced-motion:no-preference){.entry,.panel{transition:border-color .2s}}
+@media (prefers-reduced-motion:no-preference){.group,.entry,.panel{transition:border-color .2s}}
 </style>
 
 <div class="demo"><div class="wrap">
   <b>시연용 보기</b>
   <div class="seg" role="group" aria-label="보기 전환" id="roleSeg">
-    <button type="button" data-role="guest">방문자·거래처</button>
-    <button type="button" data-role="member">회원사</button>
+    <button type="button" data-role="guest">방문자</button>
+    <button type="button" data-role="buyer">구매사(시공사)</button>
+    <button type="button" data-role="seller">판매사</button>
     <button type="button" data-role="admin">운영자</button>
   </div>
   <button type="button" class="linkbtn" id="resetDemo">예시 데이터로 되돌리기</button>
 </div></div>
 
 <header class="top"><div class="wrap">
-  <div class="brand"><h1>팔아유</h1><span>콘크리트·토목자재 업계의 거래처 결제 경험 나눔터</span></div>
+  <div class="brand"><h1>팔아유</h1><span>토목·건축자재 단가 비교하고 견적 받는 곳</span></div>
   <nav aria-label="주 메뉴"><ul id="nav"></ul></nav>
 </div></header>
 
 <main><div class="wrap" id="app"></div></main>
 
 <footer class="site"><div class="wrap">
-  <p>팔아유는 정보 열람에 돈을 받지 않습니다. 거래를 할지 말지는 각 회원사가 스스로 판단합니다.</p>
-  <p>등록된 거래처의 정정·삭제 요청: <span class="num">objection@palayu.example</span> 또는 <a href="#objection">이의제기 양식</a></p>
-  <p>이 화면은 운영규칙 초안을 옮긴 시제품입니다. 실제 운영 전에 변호사 검토가 필요합니다.</p>
+  <p>단가는 각 판매사가 구매자에게 공개한 판매가입니다. 팔아유는 판매사끼리 가격을 맞추는 일에 관여하지 않습니다.</p>
+  <p>결제조회에 등록된 거래처의 정정·삭제 요청: <span class="num">objection@palayu.example</span> 또는 <a href="#objection">이의제기 양식</a></p>
+  <p>이 화면은 시제품이며 단가와 회사는 모두 예시입니다. 실제 운영 전에 변호사 검토가 필요합니다.</p>
 </div></footer>
 
 <div class="toast" id="toast" hidden></div>
 
 <script>
 (() => {
-const KEY = 'palayu-demo-v1';
+const KEY = 'palayu-demo-v2';
 const DAY = 864e5;
 const today = () => new Date().toISOString().slice(0,10);
 const addDays = (iso, n) => new Date(new Date(iso).getTime() + n*DAY).toISOString().slice(0,10);
+const daysAgo = iso => Math.round((Date.now() - new Date(iso)) / DAY);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const krw = n => Math.round(n).toLocaleString('ko-KR');
 const won = man => '약 ' + Number(man).toLocaleString('ko-KR') + '만 원';
 const ym = m => m ? m.replace(/^(\d{4})-(\d{2})$/, (_, y, mo) => `${y}년 ${+mo}월`) : '';
 const dot = d => d ? d.replaceAll('-', '.') : '';
 const monthsSince = d => Math.max(0, Math.floor((Date.now() - new Date(d)) / (30.44*DAY)));
 const uid = () => Math.random().toString(36).slice(2, 9);
+const norm = s => String(s).replace(/\s|\(주\)|주식회사|\(예시\)/g, '');
 
+const CATS = ['콘크리트 2차제품','레미콘','철근·철강','골재','건축자재'];
+const REGIONS = ['광주광역시','전라남도','전라북도','경상남도','충청남도'];
+const UNITS = ['개','본','장','㎥','톤','m','㎡','포'];
 const STEPS = ['대금 청구(문자·이메일)','내용증명 발송','지급명령 신청','지급명령 확정','소송 제기','판결 확정','일부 변제','기타'];
 const COURT_STEPS = ['지급명령 확정','판결 확정'];
 
-/* ---------- 예시 데이터 (모두 가상의 회사) ---------- */
+/* ---------- 예시 데이터 (단가·회사 모두 가상) ---------- */
 function seed() {
   const t = today();
+  const P = (by, cat, name, spec, unit, price, opt) => ({ id: uid(), by, cat, name, spec, unit, price, updated: addDays(t, -(opt.ago ?? 3)),
+    delivery: opt.inc ? '포함' : '별도', freight: opt.fr || 0, perTruck: opt.pt || 1, regions: opt.rg, minQty: opt.min || 1, lead: opt.lead || 3, ks: !!opt.ks });
+  const GJ = ['광주광역시','전라남도'];
   return {
-    role: 'member',
-    me: 'm1',
+    role: 'seller', meSeller: 'm1', meBuyer: 'b1',
     members: [
-      { id:'m1', company:'현담토목(주)', bizno:'***-**-11335', status:'승인', date:addDays(t,-60) },
-      { id:'m2', company:'예시콘크리트', bizno:'***-**-20481', status:'승인', date:addDays(t,-45) },
-      { id:'m3', company:'샘플블록산업', bizno:'***-**-77302', status:'대기', date:addDays(t,-1) },
+      { id:'m1', type:'판매사', company:'현담토목(주)', bizno:'***-**-11335', region:'광주광역시', status:'승인', date:addDays(t,-60) },
+      { id:'m2', type:'판매사', company:'예시콘크리트', bizno:'***-**-20481', region:'전라남도', status:'승인', date:addDays(t,-45) },
+      { id:'m3', type:'판매사', company:'샘플블록산업', bizno:'***-**-77302', region:'전라북도', status:'승인', date:addDays(t,-40) },
+      { id:'m4', type:'판매사', company:'가상레미콘', bizno:'***-**-30219', region:'광주광역시', status:'승인', date:addDays(t,-30) },
+      { id:'m5', type:'판매사', company:'테스트철강', bizno:'***-**-55810', region:'광주광역시', status:'승인', date:addDays(t,-28) },
+      { id:'m6', type:'판매사', company:'모의골재', bizno:'***-**-61177', region:'전라남도', status:'승인', date:addDays(t,-20) },
+      { id:'m7', type:'판매사', company:'예시건자재', bizno:'***-**-40026', region:'광주광역시', status:'승인', date:addDays(t,-18) },
+      { id:'b1', type:'구매사', company:'(예시) 한빛종합건설', bizno:'***-**-80412', region:'광주광역시', status:'승인', date:addDays(t,-15) },
+      { id:'b2', type:'구매사', company:'(예시) 가나토건(주)', bizno:'***-**-12345', region:'광주광역시', status:'승인', date:addDays(t,-9) },
+      { id:'m9', type:'판매사', company:'(예시) 새싹블록', bizno:'***-**-90931', region:'경상남도', status:'대기', date:addDays(t,-1) },
+    ],
+    products: [
+      P('m1','콘크리트 2차제품','보강토블럭','500×450×H200','개',3300,{fr:250000,pt:900,rg:GJ,lead:3,min:300,ago:2}),
+      P('m2','콘크리트 2차제품','보강토블럭','500×450×H200','개',3150,{fr:280000,pt:900,rg:[...GJ,'전라북도'],lead:5,min:500,ago:6}),
+      P('m3','콘크리트 2차제품','보강토블럭','500×450×H200','개',3450,{inc:true,rg:['전라북도','광주광역시'],lead:7,min:900,ago:12}),
+      P('m1','콘크리트 2차제품','보강토블럭','500×450×H250','개',3650,{fr:250000,pt:750,rg:GJ,lead:3,min:300,ago:2}),
+      P('m2','콘크리트 2차제품','흄관','D600 × 2.5m','본',168000,{fr:300000,pt:12,rg:[...GJ,'전라북도'],lead:4,ks:true,ago:5}),
+      P('m3','콘크리트 2차제품','흄관','D600 × 2.5m','본',172000,{fr:320000,pt:12,rg:['전라북도','충청남도','광주광역시'],lead:6,ks:true,ago:20}),
+      P('m1','콘크리트 2차제품','원형맨홀 하부구체','Φ900 × H1000','개',285000,{fr:250000,pt:6,rg:GJ,lead:5,ks:true,ago:2}),
+      P('m2','콘크리트 2차제품','원형맨홀 하부구체','Φ900 × H1000','개',279000,{fr:280000,pt:6,rg:GJ,lead:7,ks:true,ago:9}),
+      P('m1','콘크리트 2차제품','집수정(투수형)','600×600×H900','개',98000,{fr:250000,pt:20,rg:GJ,lead:5,ago:2}),
+      P('m4','레미콘','레미콘','25-24-150','㎥',89000,{inc:true,rg:GJ,lead:1,min:6,ago:1}),
+      P('m5','철근·철강','이형철근','SD400 D13','톤',945000,{inc:true,rg:GJ,lead:2,min:5,ks:true,ago:1}),
+      P('m7','철근·철강','이형철근','SD400 D13','톤',960000,{inc:true,rg:['광주광역시'],lead:1,min:1,ks:true,ago:4}),
+      P('m6','골재','쇄석','25mm','㎥',18000,{fr:180000,pt:15,rg:GJ,lead:1,min:15,ago:3}),
+      P('m7','골재','쇄석','25mm','㎥',21500,{inc:true,rg:['광주광역시'],lead:1,min:15,ago:8}),
+      P('m7','건축자재','시멘트벽돌','190×90×57','장',95,{fr:200000,pt:5000,rg:['광주광역시'],lead:2,min:2000,ago:7}),
+      P('m2','건축자재','시멘트벽돌','190×90×57','장',92,{fr:220000,pt:5000,rg:GJ,lead:4,min:5000,ago:15}),
+      P('m7','건축자재','ALC블록','600×300×100','개',4200,{inc:true,rg:['광주광역시'],lead:3,min:100,ago:7}),
+    ],
+    requests: [
+      { id:'r1', by:'b1', cat:'콘크리트 2차제품', name:'보강토블럭', spec:'500×450×H200', unit:'개', qty:2400, site:'광주광역시', need:addDays(t,10), memo:'현장 진입로 협소, 5톤 이하 차량 희망', status:'견적 받는 중', date:addDays(t,-1),
+        quotes:[ { by:'m2', price:3100, freight:280000, lead:5, note:'5톤 카고 가능', date:addDays(t,-1) }, { by:'m3', price:3400, freight:0, lead:7, note:'운반비 포함가', date:t } ] },
+      { id:'r2', by:'b2', cat:'콘크리트 2차제품', name:'보강토블럭', spec:'500×450×H250', unit:'개', qty:1800, site:'광주광역시', need:addDays(t,14), memo:'', status:'견적 받는 중', date:t, quotes:[] },
     ],
     entries: [
       { id:'e1', by:'m2', company:'(예시) 가나토건(주)', bizTail:'12345', region:'광주광역시', period:'2026-03', item:'콘크리트 맨홀블록',
@@ -206,14 +265,9 @@ function seed() {
         timeline:[{d:'2026-09-01',s:'내용증명 발송',m:''}], reply:'', files:['세금계산서_2606.pdf','내용증명_사본.pdf'] },
     ],
     objections: [],
-    posts: [
-      { id:'p1', board:'news', title:'11월부터 레미콘 단가 조정 공문 받으신 곳 있나요', body:'광주·전남 쪽 공장 두 곳에서 공문이 왔습니다. 인상 폭 비교해 보실 분 댓글 주세요.', by:'예시콘크리트', date:addDays(t,-2) },
-      { id:'p2', board:'news', title:'국토부 상습체불 건설사업자 명단 조회하는 법', body:'건설산업지식정보시스템(kiscon.net)에서 공표 대상자를 검색할 수 있습니다. 신규 거래처는 납품 전에 한 번씩 확인해 두세요.', by:'운영자', date:addDays(t,-6) },
-      { id:'p3', board:'gear', title:'맨홀 형틀 중고 2조 팝니다 (Φ900)', body:'사용 1년, 상태 양호. 광산구 공장에서 직접 보실 수 있습니다.', by:'현담토목(주)', date:addDays(t,-4) },
-    ],
     log: [
-      { d:addDays(t,-2), t:'(예시) 가나토건(주) 글 증빙 확인 후 공개 · 법원 확인 표시' },
-      { d:addDays(t,-10), t:'(예시) 다라건설 글 증빙 확인 후 공개' },
+      { d:addDays(t,-2), t:'(예시) 가나토건(주) 결제정보 증빙 확인 후 공개 · 법원 확인 표시' },
+      { d:addDays(t,-10), t:'(예시) 다라건설 결제정보 증빙 확인 후 공개' },
     ],
   };
 }
@@ -223,17 +277,33 @@ try { S = JSON.parse(localStorage.getItem(KEY)) || seed(); } catch { S = seed();
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} };
 const log = t => { S.log.unshift({ d: today(), t }); };
 
-/* 제21조: 등록 후 3년 지나면 자동 삭제 */
 S.entries = S.entries.filter(e => {
   if (e.status === '삭제') return true;
-  if (new Date(addDays(e.created, 365*3)) < new Date()) { log(`${e.company} 글 게시기간(3년) 만료로 자동 삭제`); return false; }
+  if (new Date(addDays(e.created, 365*3)) < new Date()) { log(`${e.company} 결제정보 게시기간(3년) 만료로 자동 삭제`); return false; }
   return true;
 });
 
-const me = () => S.members.find(m => m.id === S.me);
-const canSeeLedger = () => S.role === 'admin' || (S.role === 'member' && me()?.status === '승인');
+const M = id => S.members.find(m => m.id === id);
+const me = () => S.role === 'seller' ? M(S.meSeller) : S.role === 'buyer' ? M(S.meBuyer) : null;
+const approved = () => me()?.status === '승인';
+const isSeller = () => S.role === 'seller' && approved();
+const canTrade = () => (S.role === 'seller' || S.role === 'buyer') && approved();
+const canCredit = () => S.role === 'admin' || isSeller();
+const groupKey = p => `${p.cat}|${p.name}|${p.spec}`;
 
-/* ---------- 표현 검사 (제10조·제22조·제23조) ---------- */
+/* 거래처 결제조회: 회원사 이름·사업자번호로 공개된 미지급 정보 찾기 */
+function creditHits(member) {
+  const tail = member.bizno.replace(/\D/g, '').slice(-5);
+  return S.entries.filter(e => e.status === '공개' && e.bizTail === tail && (norm(e.company).includes(norm(member.company)) || norm(member.company).includes(norm(e.company))));
+}
+function creditChip(member) {
+  if (!canCredit()) return '';
+  const h = creditHits(member);
+  if (!h.length) return '<span class="pill mute">결제조회 등록 없음</span>';
+  return `<a class="pill bad" href="#credit" data-q="${esc(member.company)}">결제조회 미지급 ${h.length}건${h.some(e => e.court) ? ' · 법원 확인' : ''}</a>`;
+}
+
+/* ---------- 표현 검사 ---------- */
 const RULES = [
   { re:/01[016789][-\s.]?\d{3,4}[-\s.]?\d{4}/, why:'휴대폰 번호는 등록할 수 없습니다 (제10조 1호)' },
   { re:/\d{6}[-\s]?[1-4]\d{6}/, why:'주민등록번호로 보이는 숫자가 있습니다 (제10조 1호)' },
@@ -244,17 +314,20 @@ const RULES = [
   { re:/부도|망할|망한다|도산|파산\s?직전|야반도주|잠적/, why:'추측성 신용 표현은 신용훼손 위험이 있습니다 (제15조)' },
   { re:/들었|카더라|다른\s?업체도|소문/, why:'직접 겪은 일만 써 주세요. 들은 이야기는 등록할 수 없습니다 (제10조 3호)' },
   { re:/올리겠|올린다고|커뮤니티에\s?올/, why:'"올리겠다"는 압박은 공갈 문제가 될 수 있습니다 (제23조 2호)' },
+  { re:/가격\s?(을\s?)?맞추|단가\s?(를\s?)?맞추|같이\s?올리|다같이\s?인상|덤핑\s?하지\s?마/, why:'판매사끼리 가격을 맞추자는 표현은 담합 위험이 있어 쓸 수 없습니다' },
 ];
 const checkText = txt => RULES.filter(r => r.re.test(txt)).map(r => r.why);
+const issuesHtml = arr => arr.map(i => `<li class="pill bad block">${esc(i)}</li>`).join('');
 
 /* ---------- 화면 ---------- */
 const VIEWS = {
-  home:     { label:'처음', render: viewHome },
-  ledger:   { label:'결제정보', render: viewLedger, lock:true },
-  write:    { label:'등록하기', render: viewWrite, lock:true },
-  board:    { label:'업계소식·장터', render: viewBoard },
-  objection:{ label:'이의제기', render: viewObjection },
-  join:     { label:'가입신청', render: viewJoin },
+  home:     { label:'단가비교', render: viewHome },
+  quote:    { label:'견적', render: viewQuote },
+  sell:     { label:'판매 등록', render: viewSell },
+  join:     { label:'가입', render: viewJoin },
+  credit:   { label:'결제조회', render: viewCredit, sub:true },
+  objection:{ label:'이의제기', render: viewObjection, hidden:true },
+  write:    { label:'미지급 등록', render: viewWrite, hidden:true },
   admin:    { label:'운영자', render: viewAdmin, admin:true },
 };
 const app = document.getElementById('app');
@@ -264,12 +337,15 @@ function route() {
   if (!VIEWS[v]) v = 'home';
   if (VIEWS[v].admin && S.role !== 'admin') v = 'home';
   document.getElementById('nav').innerHTML = Object.entries(VIEWS)
-    .filter(([, o]) => !o.admin || S.role === 'admin')
+    .filter(([, o]) => !o.hidden && (!o.admin || S.role === 'admin'))
     .filter(([k]) => !(k === 'join' && S.role !== 'guest'))
-    .map(([k, o]) => `<li><a href="#${k}" ${k===v?'aria-current="page"':''}>${o.label}${o.lock && !canSeeLedger() ? '<span class="lock">회원</span>' : ''}</a></li>`).join('');
+    .filter(([k]) => !(k === 'sell' && S.role === 'buyer'))
+    .map(([k, o]) => `<li class="${o.sub ? 'sub' : ''}"><a href="#${k}" ${k===v || (k==='credit' && v==='write') ?'aria-current="page"':''}>${o.label}${o.sub && !canCredit() ? '<span class="lock">판매사 전용</span>' : ''}</a></li>`).join('');
   document.querySelectorAll('#roleSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.role === S.role));
   app.innerHTML = '';
   VIEWS[v].render(app);
+  document.querySelector('#nav a[href="#home"]')?.addEventListener('click', () => { if (viewHome.sel) { viewHome.sel = null; route(); } });
+  app.querySelectorAll('a[data-q]').forEach(a => a.addEventListener('click', () => { viewCredit.q = a.dataset.q; }));
 }
 
 function toast(msg) {
@@ -278,47 +354,316 @@ function toast(msg) {
   clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2600);
 }
 const ad = text => `<aside class="ad" aria-label="광고"><small>광고</small><span>${text}</span></aside>`;
+const fresh = iso => { const d = daysAgo(iso); return d <= 7 ? `<span class="pill ok">${d ? d + '일 전' : '오늘'} 갱신</span>` : d <= 30 ? `<span class="pill warn">${d}일 전 갱신</span>` : `<span class="pill mute">${d}일 전 갱신</span>`; };
 
-function memberGate(el) {
-  if (canSeeLedger()) return true;
-  const pending = S.role === 'member' && me()?.status !== '승인';
+/* ===== 단가비교 ===== */
+function totalFor(p, qty) {
+  const goods = p.price * qty;
+  const trucks = Math.ceil(qty / p.perTruck);
+  const freight = p.delivery === '포함' ? 0 : trucks * p.freight;
+  return { goods, freight, trucks, total: goods + freight };
+}
+
+function viewHome(el) {
+  if (viewHome.sel) return viewGroup(el, viewHome.sel);
+  const cat = viewHome.cat || '전체';
+  const q = (viewHome.q || '').trim();
+  const groups = {};
+  S.products.forEach(p => { (groups[groupKey(p)] ||= []).push(p); });
+  const list = Object.entries(groups)
+    .filter(([, ps]) => cat === '전체' || ps[0].cat === cat)
+    .filter(([k]) => !q || norm(k).includes(norm(q)));
+  el.innerHTML = `<section class="view">
+    <div style="display:grid;gap:10px">
+      <h2>같은 규격, 판매사별 단가를 한눈에</h2>
+      <p class="lead">흄관·맨홀·보강토블럭부터 레미콘·철근·골재·벽돌까지. 판매사가 직접 올린 단가와 운반비, 납기를 비교하고 필요한 곳에 바로 견적을 요청하세요.</p>
+    </div>
+    <div class="search"><input type="search" id="hq" placeholder="품목이나 규격 검색 (예: 흄관, D600, 보강토)" value="${esc(q)}" aria-label="자재 검색"></div>
+    <div class="chips" role="group" aria-label="자재 분류">${['전체', ...CATS].map(c => `<button type="button" data-cat="${c}" aria-pressed="${c===cat}">${c}</button>`).join('')}</div>
+    <div class="groups">${list.length ? list.map(([k, ps]) => {
+      const prices = ps.map(p => p.price), lo = Math.min(...prices), hi = Math.max(...prices);
+      const last = ps.map(p => p.updated).sort().pop();
+      return `<button type="button" class="group" data-g="${esc(k)}">
+        <small>${esc(ps[0].cat)}</small><b>${esc(ps[0].name)}</b><span class="spec num">${esc(ps[0].spec)}</span>
+        <span class="price"><span class="num">${krw(lo)}</span>원${hi > lo ? ` ~ <span class="num">${krw(hi)}</span>원` : ''} / ${esc(ps[0].unit)}</span>
+        <span class="foot"><span>판매사 ${ps.length}곳</span><span>최근 갱신 ${dot(last)}</span></span>
+      </button>`; }).join('') : '<p class="empty">찾는 품목이 아직 없습니다. 판매사라면 직접 등록해 주세요.</p>'}</div>
+    ${ad('(예시) 굴착기·크레인 임대 — ○○중기 광주지점')}
+    <div class="rules">
+      <div class="rule"><small>구매사</small><b>무료로 비교·견적</b><p>단가표는 누구나 볼 수 있고, 가입하면 여러 판매사에 한 번에 견적을 요청할 수 있습니다.</p></div>
+      <div class="rule"><small>판매사</small><b>내 지역 현장을 먼저</b><p>배송 가능 지역의 견적 요청이 바로 들어옵니다. 단가를 자주 갱신할수록 위에 보입니다.</p></div>
+      <div class="rule"><small>판매사 전용</small><b>거래처 결제조회</b><p>견적 주기 전에 상대 회사의 미지급 이력을 확인할 수 있습니다. 증빙 확인된 정보만 올라옵니다.</p></div>
+    </div>
+  </section>`;
+  const hq = el.querySelector('#hq');
+  hq.addEventListener('input', () => { viewHome.q = hq.value; const pos = hq.selectionStart; viewHome(el); const n = el.querySelector('#hq'); n.focus(); n.setSelectionRange(pos, pos); });
+  el.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { viewHome.cat = b.dataset.cat; viewHome(el); });
+  el.querySelectorAll('[data-g]').forEach(b => b.onclick = () => { viewHome.sel = b.dataset.g; viewHome(el); scrollTo(0, 0); });
+}
+
+function viewGroup(el, key) {
+  const ps = S.products.filter(p => groupKey(p) === key);
+  if (!ps.length) { viewHome.sel = null; return viewHome(el); }
+  const g = ps[0];
+  const st = viewGroup.st ||= {};
+  const qty = st[key]?.qty ?? Math.max(...ps.map(p => p.minQty), g.unit === '개' ? 1000 : 10);
+  const site = st[key]?.site ?? '광주광역시';
+  const rows = ps.map(p => ({ p, ...totalFor(p, qty), ok: p.regions.includes(site), small: qty < p.minQty }))
+    .sort((a, b) => (b.ok - a.ok) || (a.total - b.total));
+  const best = rows.find(r => r.ok && !r.small);
+  el.innerHTML = `<section class="view">
+    <div class="row"><button type="button" class="btn small ghost" id="back">← 품목 목록</button><span class="empty">${esc(g.cat)}</span></div>
+    <div style="display:grid;gap:6px"><h2>${esc(g.name)} <span class="num" style="font-size:1.05rem">${esc(g.spec)}</span></h2>
+    <p class="lead">수량과 현장 지역을 넣으면 운반비까지 더한 현장 도착 금액으로 비교합니다. 운반비는 판매사가 적은 1대 기준 금액이며 실제 거리에 따라 달라질 수 있습니다.</p></div>
+    <div class="panel calc">
+      <label class="f">필요 수량 (${esc(g.unit)}) <input type="number" id="cq" min="1" step="1" value="${qty}"></label>
+      <label class="f">현장 지역 <select id="cs">${REGIONS.map(r => `<option ${r===site?'selected':''}>${r}</option>`).join('')}</select></label>
+      <div style="display:grid;gap:2px;align-content:end"><span class="empty">가장 낮은 현장 도착 금액</span><b class="num" style="font-size:1.3rem">${best ? krw(best.total) + '원' : '배송 가능한 판매사 없음'}</b>${best ? `<span class="empty">${esc(M(best.p.by).company)} · ${esc(g.unit)}당 <span class="num">${krw(best.total / qty)}</span>원꼴</span>` : ''}</div>
+    </div>
+    <div class="tablebox"><table>
+      <thead><tr><th>판매사</th><th class="r">단가</th><th class="r">자재비</th><th class="r">운반비</th><th class="r">현장 도착 합계</th><th>납기</th><th>최소 주문</th><th>출고지</th><th>갱신</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `<tr class="${r === best ? 'best' : ''} ${!r.ok ? 'off' : ''}">
+        <td><b>${esc(M(r.p.by).company)}</b>${r.p.ks ? ' <span class="pill ok">KS</span>' : ''}${r === best ? ' <span class="pill ok">최저</span>' : ''}</td>
+        <td class="r num">${krw(r.p.price)}</td>
+        <td class="r num">${krw(r.goods)}</td>
+        <td class="r num">${r.p.delivery === '포함' ? '<span class="empty">단가 포함</span>' : `${krw(r.freight)}<br><span class="empty">${r.trucks}대 × ${krw(r.p.freight)}</span>`}</td>
+        <td class="r num"><b>${r.ok ? krw(r.total) : '—'}</b>${!r.ok ? '<br><span class="empty">배송 지역 아님</span>' : r.small ? '<br><span class="pill warn">최소 주문 미달</span>' : ''}</td>
+        <td>${r.p.lead}일</td>
+        <td class="num">${krw(r.p.minQty)} ${esc(r.p.unit)}</td>
+        <td>${esc(M(r.p.by).region)}</td>
+        <td>${fresh(r.p.updated)}</td>
+        <td>${r.ok ? `<button type="button" class="btn small" data-rq="${r.p.id}">견적 요청</button>` : ''}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    <div class="row"><button type="button" class="btn ghost" id="rqAll">이 품목, 배송 가능한 판매사 모두에게 견적 요청</button></div>
+    <p class="empty">표의 단가는 판매사가 공개한 판매가이며 실제 계약 금액은 견적으로 확정됩니다.</p>
+  </section>`;
+  const keep = () => { st[key] = { qty: Math.max(1, +el.querySelector('#cq').value || 1), site: el.querySelector('#cs').value }; };
+  el.querySelector('#back').onclick = () => { viewHome.sel = null; viewHome(el); };
+  el.querySelector('#cq').addEventListener('change', () => { keep(); viewGroup(el, key); });
+  el.querySelector('#cs').addEventListener('change', () => { keep(); viewGroup(el, key); });
+  const go = target => { keep(); viewQuote.tab = 'new'; viewQuote.prefill = { cat: g.cat, name: g.name, spec: g.spec, unit: g.unit, qty: st[key].qty, site: st[key].site, target }; location.hash = 'quote'; };
+  el.querySelectorAll('[data-rq]').forEach(b => b.onclick = () => go(S.products.find(p => p.id === b.dataset.rq).by));
+  el.querySelector('#rqAll').onclick = () => go(null);
+}
+
+/* ===== 견적 ===== */
+function viewQuote(el) {
+  if (!canTrade()) {
+    el.innerHTML = `<section class="view"><div class="panel"><h2>견적은 가입한 회사만 주고받을 수 있습니다</h2>
+      <p class="lead">${S.role === 'admin' ? '운영자 보기에서는 견적을 주고받지 않습니다. 위의 시연용 보기를 바꿔 보세요.' : me() && !approved() ? '가입 신청이 검토 중입니다. 사업자 상태를 확인한 뒤 승인됩니다.' : '가입비는 없습니다. 사업자등록번호만 확인합니다.'}</p>
+      ${S.role === 'guest' ? '<div class="row"><a class="btn" href="#join">무료 가입</a></div>' : ''}</div></section>`;
+    return;
+  }
+  const mine = S.requests.filter(r => r.by === me().id);
+  const myCats = new Set(S.products.filter(p => p.by === me().id).map(p => p.cat));
+  const myRegions = new Set(S.products.filter(p => p.by === me().id).flatMap(p => p.regions));
+  const incoming = isSeller() ? S.requests.filter(r => r.by !== me().id && r.status === '견적 받는 중' && myCats.has(r.cat) && myRegions.has(r.site) && (!r.target || r.target === me().id)) : [];
+  const pf = viewQuote.prefill || {};
+  const tab = viewQuote.tab || (isSeller() && incoming.length && !viewQuote.prefill ? 'in' : 'new');
+  el.innerHTML = `<section class="view">
+    <h2>견적</h2>
+    <div class="chips" role="group" aria-label="견적 메뉴">
+      <button type="button" data-t="new" aria-pressed="${tab==='new'}">견적 요청하기</button>
+      <button type="button" data-t="mine" aria-pressed="${tab==='mine'}">내 요청 ${mine.length}</button>
+      ${isSeller() ? `<button type="button" data-t="in" aria-pressed="${tab==='in'}">받은 요청 ${incoming.length}</button>` : ''}
+    </div>
+    <div id="qbody"></div>
+  </section>`;
+  el.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { viewQuote.tab = b.dataset.t; viewQuote.prefill = null; viewQuote(el); });
+  const body = el.querySelector('#qbody');
+
+  if (tab === 'new') {
+    body.innerHTML = `<form id="qf" class="panel">
+      ${pf.target ? `<div class="notice ok">${esc(M(pf.target).company)}에 보내는 견적 요청입니다.</div>` : pf.name ? '<div class="notice ok">배송 가능한 판매사 모두에게 보냅니다.</div>' : ''}
+      <div class="grid2">
+        <label class="f">분류 <select id="q-cat">${CATS.map(c => `<option ${c===pf.cat?'selected':''}>${c}</option>`).join('')}</select></label>
+        <label class="f">품목 <input type="text" id="q-name" required value="${esc(pf.name || '')}" placeholder="흄관"></label>
+        <label class="f">규격 <input type="text" id="q-spec" required value="${esc(pf.spec || '')}" placeholder="D600 × 2.5m"></label>
+        <label class="f">수량 <input type="number" id="q-qty" min="1" required value="${pf.qty || ''}"></label>
+        <label class="f">단위 <select id="q-unit">${UNITS.map(u => `<option ${u===pf.unit?'selected':''}>${u}</option>`).join('')}</select></label>
+        <label class="f">현장 지역 <select id="q-site">${REGIONS.map(r => `<option ${r===(pf.site || me().region)?'selected':''}>${r}</option>`).join('')}</select></label>
+        <label class="f">필요한 날 <input type="date" id="q-need" required value="${addDays(today(), 10)}"></label>
+      </div>
+      <label class="f">요청 사항 <em>하차 조건, 차량 크기, 시험성적서 필요 여부 등</em><textarea id="q-memo"></textarea></label>
+      <ul class="issues" id="qissues"></ul>
+      <div class="row"><button class="btn">견적 요청 보내기</button></div>
+    </form>`;
+    const f = body.querySelector('#qf');
+    f.onsubmit = ev => {
+      ev.preventDefault();
+      const v = id => f.querySelector('#' + id).value.trim();
+      if (!v('q-name') || !v('q-spec') || !(+v('q-qty') > 0)) { f.querySelector('#qissues').innerHTML = issuesHtml(['품목, 규격, 수량을 채워 주세요.']); return; }
+      const iss = checkText(v('q-memo'));
+      if (iss.length) { f.querySelector('#qissues').innerHTML = issuesHtml(iss); return; }
+      S.requests.unshift({ id: uid(), by: me().id, target: pf.target || null, cat: v('q-cat'), name: v('q-name'), spec: v('q-spec'), unit: v('q-unit'), qty: +v('q-qty'), site: v('q-site'), need: v('q-need'), memo: v('q-memo'), status: '견적 받는 중', date: today(), quotes: [] });
+      save(); viewQuote.prefill = null; viewQuote.tab = 'mine'; toast('견적 요청을 보냈습니다. 판매사 답변이 오면 내 요청에 쌓입니다.'); viewQuote(el);
+    };
+  }
+
+  if (tab === 'mine') {
+    body.innerHTML = mine.length ? mine.map(r => {
+      const qs = [...r.quotes].map(q => ({ ...q, total: q.price * r.qty + q.freight })).sort((a, b) => a.total - b.total);
+      return `<article class="req">
+        <div class="spread"><h3>${esc(r.name)} <span class="num">${esc(r.spec)}</span> · <span class="num">${krw(r.qty)}</span>${esc(r.unit)}</h3><span class="pill ${r.status==='견적 받는 중'?'warn':'ok'}">${esc(r.status)}</span></div>
+        <p class="meta">${esc(r.site)} 현장 · ${dot(r.need)}까지 · ${r.target ? esc(M(r.target).company) + '에 요청' : '지역 판매사 전체에 요청'}${r.memo ? ' · ' + esc(r.memo) : ''}</p>
+        ${qs.length ? `<div class="tablebox"><table><thead><tr><th>판매사</th><th class="r">단가</th><th class="r">운반비</th><th class="r">합계</th><th>납기</th><th>메모</th><th></th></tr></thead><tbody>
+          ${qs.map((q, i) => `<tr class="${i===0?'best':''}"><td><b>${esc(M(q.by).company)}</b>${i===0?' <span class="pill ok">최저</span>':''}${r.chosen===q.by?' <span class="pill ok">선택함</span>':''}</td><td class="r num">${krw(q.price)}</td><td class="r num">${q.freight ? krw(q.freight) : '<span class="empty">포함</span>'}</td><td class="r num"><b>${krw(q.total)}</b></td><td>${q.lead}일</td><td>${esc(q.note)}</td>
+          <td>${r.status==='견적 받는 중' ? `<button type="button" class="btn small" data-pick="${r.id}|${q.by}">이 견적으로 진행</button>` : ''}</td></tr>`).join('')}
+        </tbody></table></div>` : '<p class="empty">아직 받은 견적이 없습니다. 보통 하루 안에 답이 옵니다.</p>'}
+      </article>`; }).join('') : '<p class="empty">보낸 견적 요청이 없습니다.</p>';
+    body.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => {
+      const [rid, sid] = b.dataset.pick.split('|'); const r = S.requests.find(x => x.id === rid);
+      r.status = '판매사 선택 완료'; r.chosen = sid; save(); toast(`${M(sid).company}에 진행 의사를 전달했습니다.`); viewQuote(el);
+    });
+  }
+
+  if (tab === 'in') {
+    body.innerHTML = `<div class="notice plain">견적을 보내기 전에 요청한 회사의 결제조회 결과를 확인할 수 있습니다. 결과는 참고용이며 거래 여부는 각자 판단합니다.</div>` +
+      (incoming.length ? incoming.map(r => {
+        const sent = r.quotes.find(q => q.by === me().id);
+        const myP = S.products.find(p => p.by === me().id && p.name === r.name && p.spec === r.spec);
+        return `<article class="req">
+          <div class="spread"><h3>${esc(r.name)} <span class="num">${esc(r.spec)}</span> · <span class="num">${krw(r.qty)}</span>${esc(r.unit)}</h3><span class="meta">${r.target ? '우리 회사 지정 요청' : '지역 공개 요청'}</span></div>
+          <p class="meta">${esc(r.site)} 현장 · ${dot(r.need)}까지${r.memo ? ' · ' + esc(r.memo) : ''}</p>
+          <div class="row"><b>${esc(M(r.by).company)}</b>${creditChip(M(r.by))}</div>
+          ${sent ? `<div class="notice ok">보낸 견적: 단가 <span class="num">${krw(sent.price)}</span>원, 운반비 <span class="num">${krw(sent.freight)}</span>원, 납기 ${sent.lead}일</div>` :
+          `<form class="grid2" data-qr="${r.id}">
+            <label class="f">단가 (원/${esc(r.unit)}) <input type="number" min="1" required value="${myP ? myP.price : ''}" name="price"></label>
+            <label class="f">운반비 합계 (원) <em>단가에 포함이면 0</em><input type="number" min="0" required value="${myP ? (myP.delivery === '포함' ? 0 : Math.ceil(r.qty / myP.perTruck) * myP.freight) : ''}" name="freight"></label>
+            <label class="f">납기 (일) <input type="number" min="0" required value="${myP ? myP.lead : 3}" name="lead"></label>
+            <label class="f">메모 <input type="text" name="note" placeholder="예: 시험성적서 동봉"></label>
+            <div class="row"><button class="btn small">견적 보내기</button></div>
+          </form>`}
+        </article>`; }).join('') : '<p class="empty">우리 회사 품목·배송 지역에 맞는 새 요청이 없습니다.</p>');
+    body.querySelectorAll('[data-qr]').forEach(f => f.onsubmit = ev => {
+      ev.preventDefault();
+      const r = S.requests.find(x => x.id === f.dataset.qr), d = new FormData(f);
+      r.quotes.push({ by: me().id, price: +d.get('price'), freight: +d.get('freight'), lead: +d.get('lead'), note: String(d.get('note') || '').trim(), date: today() });
+      save(); toast('견적을 보냈습니다.'); viewQuote(el);
+    });
+  }
+}
+
+/* ===== 판매 등록 ===== */
+function viewSell(el) {
+  if (!isSeller()) {
+    el.innerHTML = `<section class="view"><div class="panel"><h2>판매사로 가입하면 단가를 올릴 수 있습니다</h2>
+      <p class="lead">${S.role === 'seller' ? '가입 신청이 검토 중입니다.' : '자재를 생산하거나 유통하는 회사라면 무료로 가입해 단가를 올리고, 내 배송 지역의 견적 요청을 받을 수 있습니다.'}</p>
+      ${S.role === 'guest' ? '<div class="row"><a class="btn" href="#join">판매사 가입</a></div>' : ''}</div></section>`;
+    return;
+  }
+  const mine = S.products.filter(p => p.by === me().id);
+  el.innerHTML = `<section class="view">
+    <div style="display:grid;gap:8px"><h2>판매 등록</h2>
+    <p class="lead">${esc(me().company)}의 판매 품목입니다. 오래된 단가는 구매사가 믿지 않습니다. 단가가 그대로여도 "그대로 확인"을 눌러 갱신일을 새로 해 두세요.</p></div>
+    <div class="tablebox"><table><thead><tr><th>품목</th><th>규격</th><th class="r">단가 (원)</th><th>운반</th><th>배송 지역</th><th>갱신</th><th></th></tr></thead><tbody>
+      ${mine.length ? mine.map(p => `<tr><td>${esc(p.name)}${p.ks ? ' <span class="pill ok">KS</span>' : ''}</td><td class="num">${esc(p.spec)}</td>
+        <td class="r"><input type="number" aria-label="${esc(p.name)} 단가" id="pr-${p.id}" value="${p.price}" min="1" style="width:110px;text-align:right"> / ${esc(p.unit)}</td>
+        <td>${p.delivery === '포함' ? '단가 포함' : `1대 <span class="num">${krw(p.freight)}</span>원 · ${krw(p.perTruck)}${esc(p.unit)}`}</td>
+        <td>${p.regions.map(esc).join(', ')}</td><td>${fresh(p.updated)}</td>
+        <td><div class="row"><button type="button" class="btn small" data-up="${p.id}">저장·갱신</button><button type="button" class="btn small danger" data-del="${p.id}">내리기</button></div></td></tr>`).join('') : '<tr><td colspan="7" class="empty">아직 올린 품목이 없습니다.</td></tr>'}
+    </tbody></table></div>
+    <form id="sf" class="panel">
+      <h3>새 품목 올리기</h3>
+      <div class="grid2">
+        <label class="f">분류 <select id="s-cat">${CATS.map(c => `<option>${c}</option>`).join('')}</select></label>
+        <label class="f">품목 <input type="text" id="s-name" required placeholder="보강토블럭" list="names"></label>
+        <label class="f">규격 <em>같은 규격끼리 비교되도록 표기를 맞춰 주세요</em><input type="text" id="s-spec" required placeholder="500×450×H200"></label>
+        <label class="f">단위 <select id="s-unit">${UNITS.map(u => `<option>${u}</option>`).join('')}</select></label>
+        <label class="f">단가 (원, 부가세 별도) <input type="number" id="s-price" min="1" required></label>
+        <label class="f">최소 주문 수량 <input type="number" id="s-min" min="1" value="1"></label>
+        <label class="f">납기 (주문 후 며칠) <input type="number" id="s-lead" min="0" value="3"></label>
+        <label class="f">운반비 <select id="s-del"><option value="별도">별도</option><option value="포함">단가에 포함</option></select></label>
+        <label class="f">1대 운반비 (원) <input type="number" id="s-fr" min="0" value="250000"></label>
+        <label class="f">1대 적재 수량 <input type="number" id="s-pt" min="1" value="100"></label>
+      </div>
+      <datalist id="names">${[...new Set(S.products.map(p => p.name))].map(n => `<option value="${esc(n)}">`).join('')}</datalist>
+      <fieldset><legend>배송 가능 지역</legend><div class="checks">${REGIONS.map((r, i) => `<label class="check"><input type="checkbox" id="s-r${i}" value="${r}" ${r===me().region?'checked':''}> ${r}</label>`).join('')}</div></fieldset>
+      <label class="check"><input type="checkbox" id="s-ks"> KS 인증 제품입니다</label>
+      <ul class="issues" id="sissues"></ul>
+      <div class="row"><button class="btn">단가표에 올리기</button></div>
+    </form>
+    <div class="notice plain">판매사끼리 단가를 미리 맞추거나 "가격을 같이 올리자"는 연락은 공정거래법상 담합이 될 수 있습니다. 단가는 각 회사가 따로 정해 올립니다.</div>
+  </section>`;
+  el.querySelectorAll('[data-up]').forEach(b => b.onclick = () => {
+    const p = S.products.find(x => x.id === b.dataset.up); const n = +el.querySelector('#pr-' + p.id).value;
+    if (!(n > 0)) return toast('단가를 확인해 주세요.');
+    p.price = n; p.updated = today(); save(); toast('단가를 저장하고 갱신일을 오늘로 바꿨습니다.'); viewSell(el);
+  });
+  el.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { S.products = S.products.filter(x => x.id !== b.dataset.del); save(); toast('단가표에서 내렸습니다.'); viewSell(el); });
+  const f = el.querySelector('#sf');
+  const v = id => f.querySelector('#' + id).value.trim();
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const regions = REGIONS.filter((_, i) => f.querySelector('#s-r' + i).checked);
+    const errs = [];
+    if (!v('s-name') || !v('s-spec')) errs.push('품목과 규격을 적어 주세요.');
+    if (!(+v('s-price') > 0)) errs.push('단가를 적어 주세요.');
+    if (!regions.length) errs.push('배송 가능 지역을 하나 이상 고르세요.');
+    if (errs.length) { f.querySelector('#sissues').innerHTML = issuesHtml(errs); return; }
+    S.products.push({ id: uid(), by: me().id, cat: v('s-cat'), name: v('s-name'), spec: v('s-spec'), unit: v('s-unit'), price: +v('s-price'), updated: today(),
+      delivery: v('s-del'), freight: v('s-del') === '포함' ? 0 : +v('s-fr'), perTruck: Math.max(1, +v('s-pt')), regions, minQty: Math.max(1, +v('s-min')), lead: +v('s-lead'), ks: f.querySelector('#s-ks').checked });
+    save(); toast('단가표에 올렸습니다.'); viewSell(el);
+  };
+}
+
+/* ===== 가입 ===== */
+function viewJoin(el) {
+  const PLEDGE = ['증빙자료로 확인되는 사실만 결제조회에 등록하겠습니다.','거래처 담당자 등 개인정보를 등록하지 않겠습니다.','대금을 받으면 7일 안에 운영자에게 알리겠습니다.','특정 거래처와의 거래 중단을 다른 회원사와 결의하거나 권유하지 않겠습니다.','다른 판매사와 단가를 맞추지 않겠습니다.','결제조회 정보를 외부에 유출하지 않겠습니다.'];
+  el.innerHTML = `<section class="view">
+    <div style="display:grid;gap:8px"><h2>무료 가입</h2>
+    <p class="lead">가입비와 이용료는 없습니다. 사업자등록번호로 휴·폐업 여부만 확인한 뒤 승인합니다. 한 회사에 계정은 하나입니다.</p></div>
+    <form id="jf" class="panel">
+      <fieldset><legend>어떤 회사인가요</legend><div class="checks">
+        <label class="check"><input type="radio" name="jt" value="구매사" checked> 자재를 사는 회사 (시공사·건설사)</label>
+        <label class="check"><input type="radio" name="jt" value="판매사"> 자재를 만들거나 파는 회사</label>
+      </div></fieldset>
+      <div class="grid2">
+        <label class="f">회사명 <input type="text" id="j-company" required></label>
+        <label class="f">사업자등록번호 <input type="text" id="j-biz" inputmode="numeric" required placeholder="000-00-00000"></label>
+        <label class="f">소재지 <select id="j-region">${REGIONS.map(r => `<option>${r}</option>`).join('')}</select></label>
+        <label class="f">사업자등록증 사본 <input type="file" id="j-file" accept=".pdf,.jpg,.jpeg,.png"></label>
+      </div>
+      <fieldset class="panel sunk" id="pledge" hidden><legend>판매사 서약 <span class="empty">결제조회를 쓰려면 필요합니다</span></legend>
+        ${PLEDGE.map((t, i) => `<label class="check"><input type="checkbox" id="j-o${i}"> ${t}</label>`).join('')}
+      </fieldset>
+      <div class="row"><button class="btn">가입 신청</button></div><div id="jmsg"></div>
+    </form>
+  </section>`;
+  const f = el.querySelector('#jf');
+  const type = () => f.querySelector('input[name=jt]:checked').value;
+  f.querySelectorAll('input[name=jt]').forEach(r => r.onchange = () => { f.querySelector('#pledge').hidden = type() !== '판매사'; });
+  f.onsubmit = ev => {
+    ev.preventDefault();
+    const v = id => f.querySelector('#' + id).value.trim();
+    const digits = v('j-biz').replace(/\D/g, '');
+    const out = f.querySelector('#jmsg');
+    if (!v('j-company') || digits.length !== 10) { out.innerHTML = '<div class="notice bad">회사명과 사업자등록번호(숫자 10자리)를 적어 주세요.</div>'; return; }
+    if (type() === '판매사' && !PLEDGE.every((_, i) => f.querySelector('#j-o' + i).checked)) { out.innerHTML = '<div class="notice bad">판매사 서약 6개 항목에 모두 체크해 주세요.</div>'; return; }
+    const m = { id: uid(), type: type(), company: v('j-company'), bizno: '***-**-' + digits.slice(5), region: v('j-region'), status: '대기', date: today() };
+    S.members.push(m);
+    if (m.type === '판매사') { S.meSeller = m.id; S.role = 'seller'; } else { S.meBuyer = m.id; S.role = 'buyer'; }
+    log(`${m.company} (${m.type}) 가입 신청`); save();
+    toast('가입 신청을 받았습니다. 사업자 상태 확인 후 승인됩니다.');
+    location.hash = 'home'; route();
+  };
+}
+
+/* ===== 결제조회 (판매사 전용 부가 기능) ===== */
+function creditGate(el) {
+  if (canCredit()) return true;
   el.innerHTML = `<section class="view"><div class="panel">
-    <h2>승인된 회원사만 볼 수 있습니다</h2>
-    <p class="lead">${pending ? '가입 신청이 검토 중입니다. 운영자가 국세청 휴·폐업 조회로 사업자 상태를 확인한 뒤 승인합니다.' : '결제정보는 사업자등록증을 확인한 같은 업종 회원사끼리만 나눕니다. 아무나 볼 수 있게 열면 명예훼손 위험이 커지기 때문입니다.'}</p>
-    <div class="row">${pending ? '' : '<a class="btn" href="#join">가입 신청하기</a>'}<a class="btn ghost" href="#objection">우리 회사가 등록됐나요? 이의제기</a></div>
+    <h2>결제조회는 승인된 판매사만 쓸 수 있습니다</h2>
+    <p class="lead">자재를 납품하고 대금을 못 받은 경험을 판매사끼리 증빙으로 확인된 사실만 나누는 기능입니다. 아무나 볼 수 있게 열면 명예훼손 위험이 커져서 판매사 회원에게만 엽니다.</p>
+    <div class="row"><a class="btn ghost" href="#objection">우리 회사가 등록됐나요? 이의제기</a></div>
   </div></section>`;
   return false;
 }
 
-/* 처음 */
-function viewHome(el) {
-  const pub = S.entries.filter(e => e.status === '공개').length;
-  const pend = S.entries.filter(e => e.status === '검토대기').length;
-  el.innerHTML = `<section class="view">
-    <div style="display:grid;gap:10px">
-      <h2>못 받은 대금, 혼자 끙끙대지 말고<br>같은 업종끼리 사실만 나눕니다</h2>
-      <p class="lead">팔아유는 콘크리트 제품과 토목자재를 만들고 파는 회사들이 거래처의 대금 결제 경험을 서류로 확인된 사실만 골라 나누는 회원제 모임입니다. 동네 상인회가 회원끼리만 돌려보는 외상장부와 비슷합니다.</p>
-    </div>
-    <div class="rules">
-      <div class="rule"><small>원칙 1</small><b>증빙 있는 사실만</b><p>세금계산서·거래명세표와 청구 기록을 운영자가 확인한 글만 공개됩니다.</p></div>
-      <div class="rule"><small>원칙 2</small><b>개인정보는 뺀다</b><p>회사 상호까지만 씁니다. 담당자 이름·전화번호는 자동으로 걸러집니다.</p></div>
-      <div class="rule"><small>원칙 3</small><b>반론 기회를 준다</b><p>거래처는 누구나 이의제기할 수 있고, 대금을 갚으면 3일 안에 지웁니다.</p></div>
-      <div class="rule"><small>원칙 4</small><b>거래 여부는 각자 판단</b><p>"같이 거래 끊자"는 결의와 권유는 금지입니다.</p></div>
-    </div>
-    <div class="panel">
-      <div class="spread"><h3>지금 장부</h3><span class="pill mute">정보 열람 무료</span></div>
-      <p><span class="num">${pub}</span>건 공개 중 · <span class="num">${pend}</span>건 증빙 확인 대기 · 회원사 <span class="num">${S.members.filter(m=>m.status==='승인').length}</span>곳</p>
-      <div class="row">${canSeeLedger() ? '<a class="btn" href="#ledger">결제정보 보기</a><a class="btn ghost" href="#write">못 받은 대금 등록</a>' : '<a class="btn" href="#join">가입 신청</a>'}</div>
-    </div>
-    <div class="notice">거래처로 등록된 회사라면 로그인 없이 <a href="#objection">이의제기 양식</a>으로 정정·삭제를 요청할 수 있습니다. 접수 즉시 해당 글은 비공개로 바뀝니다.</div>
-    ${ad('(예시) 굴착기·크레인 임대 — ○○중기 광주지점')}
-  </section>`;
-}
-
-/* 결제정보 */
 function entryCard(e, opts = {}) {
   const months = monthsSince(e.due);
-  const mine = S.role === 'member' && e.by === S.me;
+  const mine = S.role === 'seller' && e.by === S.meSeller;
   const pill = e.status === '공개' ? '<span class="pill ok">증빙 확인</span>'
     : e.status === '숨김' ? '<span class="pill bad">이의제기 검토 중 · 비공개</span>'
     : '<span class="pill warn">증빙 확인 대기 · 비공개</span>';
@@ -332,31 +677,31 @@ function entryCard(e, opts = {}) {
       <div><dt>거래 시기·품목</dt><dd>${ym(e.period)} 납품 · ${esc(e.item)}</dd></div>
     </dl>
     <ol class="tl" aria-label="진행 경과">${e.timeline.map(t => `<li><span class="num">${dot(t.d)}</span><span>${esc(t.s)}${t.m ? ' — ' + esc(t.m) : ''}${COURT_STEPS.includes(t.s) ? ' (법원 확인)' : ''}</span></li>`).join('')}</ol>
-    ${e.reply ? `<div class="reply"><b>거래처 해명</b><p>${esc(e.reply)}</p><p style="font-size:12px;color:var(--muted)">운영자는 해명 내용을 고치지 않습니다 (제19조)</p></div>` : ''}
+    ${e.reply ? `<div class="reply"><b>거래처 해명</b><p>${esc(e.reply)}</p><p class="empty" style="font-size:12px">운영자는 해명 내용을 고치지 않습니다 (제19조)</p></div>` : ''}
     <footer>
       <span>${e.verified ? '운영자 증빙 확인 ' + dot(e.verified) : '등록 ' + dot(e.created)} · 게시 만료 <span class="num">${dot(addDays(e.created, 365*3))}</span></span>
       <span class="row">
-        ${mine && e.status !== '숨김' ? `<button class="btn small" data-act="paid" data-id="${e.id}">대금 다 받았어요</button><button class="btn small ghost" data-act="partial" data-id="${e.id}">일부 받았어요</button>` : ''}
-        ${!mine && opts.report !== false && e.status === '공개' ? `<button class="btn small danger" data-act="report" data-id="${e.id}">규칙 위반 신고</button>` : ''}
+        ${mine && e.status !== '숨김' ? `<button type="button" class="btn small" data-act="paid" data-id="${e.id}">대금 다 받았어요</button><button type="button" class="btn small ghost" data-act="partial" data-id="${e.id}">일부 받았어요</button>` : ''}
+        ${!mine && opts.report !== false && e.status === '공개' ? `<button type="button" class="btn small danger" data-act="report" data-id="${e.id}">규칙 위반 신고</button>` : ''}
       </span>
     </footer>
     <div data-slot="${e.id}"></div>
   </article>`;
 }
 
-function viewLedger(el) {
-  if (!memberGate(el)) return;
-  const q = (viewLedger.q || '').trim();
-  const list = S.entries.filter(e => e.status === '공개' || (S.role === 'member' && e.by === S.me && e.status !== '삭제'))
-    .filter(e => !q || (e.company + e.bizTail + e.region + e.item).includes(q));
+function viewCredit(el) {
+  if (!creditGate(el)) return;
+  const q = (viewCredit.q || '').trim();
+  const list = S.entries.filter(e => e.status === '공개' || (S.role === 'seller' && e.by === S.meSeller && e.status !== '삭제'))
+    .filter(e => !q || norm(e.company + e.bizTail + e.region + e.item).includes(norm(q)));
   el.innerHTML = `<section class="view">
-    <div class="spread"><h2>결제정보</h2><a class="btn" href="#write">못 받은 대금 등록</a></div>
-    <div class="notice">이 정보는 회원사의 실제 경험입니다. 거래를 할지 말지는 각 회사가 스스로 판단하며, 팔아유는 특정 거래처와의 거래 중단을 권하지 않습니다. 화면을 캡처해 외부에 퍼뜨리면 회원 자격이 박탈됩니다.</div>
-    <label class="f">거래처 찾기 <input type="text" id="q" placeholder="상호, 사업자번호 끝자리, 지역, 품목" value="${esc(q)}"></label>
-    <div class="ledger">${list.length ? list.map(e => entryCard(e)).join('') : '<p class="empty">찾는 거래처가 없습니다. 등록되지 않았다는 것이 결제를 잘 한다는 뜻은 아닙니다.</p>'}</div>
+    <div class="spread"><div style="display:grid;gap:6px"><h2>거래처 결제조회</h2><p class="lead">처음 거래하는 회사라면 견적 전에 한 번 찾아보세요.</p></div>${S.role === 'seller' ? '<a class="btn" href="#write">못 받은 대금 등록</a>' : ''}</div>
+    <div class="notice">이 정보는 판매사 회원의 실제 경험입니다. 거래를 할지 말지는 각 회사가 스스로 판단하며, 팔아유는 특정 거래처와의 거래 중단을 권하지 않습니다. 화면을 캡처해 외부에 퍼뜨리면 회원 자격이 박탈됩니다.</div>
+    <label class="f">회사 찾기 <input type="search" id="q" placeholder="상호, 사업자번호 끝자리, 지역" value="${esc(q)}"></label>
+    <div class="ledger">${list.length ? list.map(e => entryCard(e)).join('') : '<p class="empty">등록된 정보가 없습니다. 등록되지 않았다는 것이 결제를 잘 한다는 뜻은 아닙니다.</p>'}</div>
   </section>`;
   const qi = el.querySelector('#q');
-  qi.addEventListener('input', () => { viewLedger.q = qi.value; const pos = qi.selectionStart; viewLedger(el); const n = el.querySelector('#q'); n.focus(); n.setSelectionRange(pos, pos); });
+  qi.addEventListener('input', () => { viewCredit.q = qi.value; const pos = qi.selectionStart; viewCredit(el); const n = el.querySelector('#q'); n.focus(); n.setSelectionRange(pos, pos); });
   el.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => entryAction(b.dataset.act, b.dataset.id, el)));
 }
 
@@ -364,8 +709,8 @@ function entryAction(act, id, el) {
   const e = S.entries.find(x => x.id === id);
   const slot = el.querySelector(`[data-slot="${id}"]`);
   if (act === 'paid') {
-    slot.innerHTML = `<div class="notice ok"><p>대금을 모두 받으셨다면 이 글은 3일 안에 삭제됩니다 (제20조). 시연에서는 바로 지웁니다.</p><div class="row" style="margin-top:8px"><button class="btn small" data-yes>삭제 요청</button><button class="btn small ghost" data-no>취소</button></div></div>`;
-    slot.querySelector('[data-yes]').onclick = () => { e.status = '삭제'; log(`${e.company} 대금 전액 변제 알림 → 글 삭제`); save(); toast('변제 알림을 받았습니다. 글을 삭제했습니다.'); route(); };
+    slot.innerHTML = `<div class="notice ok"><p>대금을 모두 받으셨다면 이 글은 3일 안에 삭제됩니다 (제20조). 시연에서는 바로 지웁니다.</p><div class="row" style="margin-top:8px"><button type="button" class="btn small" data-yes>삭제 요청</button><button type="button" class="btn small ghost" data-no>취소</button></div></div>`;
+    slot.querySelector('[data-yes]').onclick = () => { e.status = '삭제'; log(`${e.company} 대금 전액 변제 알림 → 결제정보 삭제`); save(); toast('변제 알림을 받았습니다. 글을 삭제했습니다.'); route(); };
     slot.querySelector('[data-no]').onclick = () => slot.innerHTML = '';
   }
   if (act === 'partial') {
@@ -382,16 +727,16 @@ function entryAction(act, id, el) {
   }
   if (act === 'report') {
     e.status = '숨김';
-    S.objections.unshift({ id: uid(), entry: id, company: e.company, from: '회원사 신고', reason: '규칙 위반 신고 (회원사)', reply: '', contact: '-', status: '접수', date: today() });
-    log(`${e.company} 글 규칙 위반 신고 접수 → 즉시 비공개`); save(); toast('신고를 접수했습니다. 운영자 확인 전까지 비공개로 바뀝니다.'); route();
+    S.objections.unshift({ id: uid(), entry: id, company: e.company, from: '회원사 신고', reason: '규칙 위반 신고 (회원사)', reply: '', status: '접수', date: today() });
+    log(`${e.company} 결제정보 규칙 위반 신고 접수 → 즉시 비공개`); save(); toast('신고를 접수했습니다. 운영자 확인 전까지 비공개로 바뀝니다.'); route();
   }
 }
 
-/* 등록하기 */
 function viewWrite(el) {
-  if (!memberGate(el)) return;
-  if (S.role === 'admin') { el.innerHTML = '<div class="panel"><p>등록은 회원사 보기에서 할 수 있습니다. 위의 시연용 보기를 "회원사"로 바꿔 보세요.</p></div>'; return; }
+  if (!creditGate(el)) return;
+  if (S.role !== 'seller') { el.innerHTML = '<div class="panel"><p>등록은 판매사 보기에서 할 수 있습니다. 위의 시연용 보기를 "판매사"로 바꿔 보세요.</p></div>'; return; }
   el.innerHTML = `<section class="view">
+    <div class="row"><a class="btn small ghost" href="#credit">← 결제조회</a></div>
     <div style="display:grid;gap:8px"><h2>못 받은 대금 등록</h2>
     <p class="lead">정해진 양식으로만 등록합니다 (제14조). 증빙자료는 운영자만 보고, 게시판에는 공개되지 않습니다. 운영자가 확인하기 전까지 글은 비공개입니다.</p></div>
     <form id="wf" class="panel" novalidate>
@@ -415,12 +760,12 @@ function viewWrite(el) {
         <label class="check"><input type="checkbox" id="c2"> 우리 회사가 직접 겪은 일만 적었습니다</label>
         <label class="check"><input type="checkbox" id="c3"> 이 글의 내용이 사실과 다르면 우리 회사가 책임집니다 (제26조)</label>
       </div>
-      <div class="panel" style="background:var(--sunk);border:0">
-        <b>미리보기 (게시판에 이렇게 보입니다)</b>
+      <div class="panel sunk">
+        <b>미리보기 (결제조회에 이렇게 보입니다)</b>
         <pre class="preview" id="pv"></pre>
         <ul class="issues" id="issues"></ul>
       </div>
-      <div class="row"><button class="btn" id="wsubmit">운영자 확인 요청</button><span id="wmsg" class="empty"></span></div>
+      <div class="row"><button class="btn">운영자 확인 요청</button><span id="wmsg" class="empty"></span></div>
     </form>
   </section>`;
 
@@ -452,12 +797,10 @@ ${tl.length ? tl.map(t => ` - ${dot(t.d)} ${t.s}${t.m ? ' — ' + t.m : ''}${COU
 [증빙 확인] 운영자 확인 대기`;
     const text = [val('w-company'), val('w-region'), val('w-item'), ...[...stepsEl.children].map(r => r.children[2].value)].join(' ');
     const issues = checkText(text);
-    const missing = [];
-    if (val('w-biz') && !/^\d{5}$/.test(val('w-biz'))) missing.push('사업자번호 끝자리는 숫자 5개입니다');
-    if (/\d+(번지|길\s?\d|로\s?\d|동\s?\d+호)/.test(val('w-region'))) missing.push('소재지는 시·군까지만 적어 주세요 (상세 주소 금지)');
-    el.querySelector('#issues').innerHTML = [...issues, ...missing].map(i => `<li class="pill bad" style="border-radius:6px;white-space:normal">${esc(i)}</li>`).join('') ||
-      '<li class="pill ok" style="border-radius:6px">금지 표현 없음</li>';
-    return issues.length + missing.length;
+    if (val('w-biz') && !/^\d{5}$/.test(val('w-biz'))) issues.push('사업자번호 끝자리는 숫자 5개입니다');
+    if (/\d+(번지|길\s?\d|로\s?\d|동\s?\d+호)/.test(val('w-region'))) issues.push('소재지는 시·군까지만 적어 주세요 (상세 주소 금지)');
+    el.querySelector('#issues').innerHTML = issuesHtml(issues) || '<li class="pill ok block">금지 표현 없음</li>';
+    return issues.length;
   }
   f.addEventListener('input', update); f.addEventListener('change', update); update();
 
@@ -471,46 +814,22 @@ ${tl.length ? tl.map(t => ` - ${dot(t.d)} ${t.s}${t.m ? ' — ' + t.m : ''}${COU
     if (!steps().length) { msg.textContent = '대금 청구 기록을 최소 1개 넣어 주세요 (제11조).'; return; }
     if (!files.length) { msg.textContent = '증빙자료를 첨부해 주세요. 운영자만 봅니다.'; return; }
     if (!['c1','c2','c3'].every(id => el.querySelector('#' + id).checked)) { msg.textContent = '확인 항목 3개에 모두 체크해 주세요.'; return; }
-    const e = { id: uid(), by: S.me, company: val('w-company'), bizTail: val('w-biz'), region: val('w-region'), period: val('w-period'), item: val('w-item'),
+    const e = { id: uid(), by: S.meSeller, company: val('w-company'), bizTail: val('w-biz'), region: val('w-region'), period: val('w-period'), item: val('w-item'),
       amount: +val('w-amount'), due: val('w-due'), state: val('w-state'), status: '검토대기', court: false, verified: '', created: today(), timeline: steps().sort((a,b) => a.d.localeCompare(b.d)), reply: '', files };
-    S.entries.unshift(e); log(`${e.company} 글 등록 (증빙 ${files.length}건) → 확인 대기`); save();
+    S.entries.unshift(e); log(`${e.company} 결제정보 등록 (증빙 ${files.length}건) → 확인 대기`); save();
     toast('운영자 확인을 요청했습니다. 확인 전까지는 비공개입니다.');
-    location.hash = 'ledger';
+    location.hash = 'credit';
   });
 }
 
-/* 업계소식·장터 */
-function viewBoard(el) {
-  const b = viewBoard.b || 'news';
-  const list = S.posts.filter(p => p.board === b);
-  const canWrite = S.role !== 'guest' && (S.role === 'admin' || me()?.status === '승인');
-  el.innerHTML = `<section class="view">
-    <h2>업계소식·장터</h2>
-    <div class="tabs" role="group" aria-label="게시판"><button type="button" data-b="news" aria-pressed="${b==='news'}">업계 소식</button><button type="button" data-b="gear" aria-pressed="${b==='gear'}">자재·장비 장터</button></div>
-    ${ad(b === 'news' ? '(예시) 화물 운송 공동구매 — 광주·전남 5톤 카고' : '(예시) 몰드·형틀 제작 — ○○금형')}
-    <div class="posts">${list.length ? list.map(p => `<article class="post"><h3>${esc(p.title)}</h3><p>${esc(p.body)}</p><span class="meta">${esc(p.by)} · <span class="num">${dot(p.date)}</span></span></article>`).join('') : '<p class="empty post">아직 글이 없습니다.</p>'}</div>
-    ${canWrite ? `<form class="panel" id="pf"><b>새 글</b><label class="f">제목 <input type="text" id="p-title" required></label><label class="f">내용 <textarea id="p-body" required></textarea></label><p class="empty">거래처 결제 이야기는 이 게시판이 아니라 <a href="#write">결제정보 등록</a> 양식으로만 올립니다.</p><ul class="issues" id="pissues"></ul><div class="row"><button class="btn">올리기</button></div></form>` : '<p class="empty">글쓰기는 승인된 회원사만 할 수 있습니다.</p>'}
-  </section>`;
-  el.querySelectorAll('[data-b]').forEach(x => x.onclick = () => { viewBoard.b = x.dataset.b; viewBoard(el); });
-  const pf = el.querySelector('#pf');
-  if (pf) pf.onsubmit = ev => {
-    ev.preventDefault();
-    const t = pf.querySelector('#p-title').value.trim(), body = pf.querySelector('#p-body').value.trim();
-    if (!t || !body) return;
-    const issues = checkText(t + ' ' + body);
-    if (issues.length) { pf.querySelector('#pissues').innerHTML = issues.map(i => `<li class="pill bad" style="border-radius:6px;white-space:normal">${esc(i)}</li>`).join(''); return; }
-    S.posts.unshift({ id: uid(), board: b, title: t, body, by: S.role === 'admin' ? '운영자' : me().company, date: today() }); save(); toast('글을 올렸습니다.'); viewBoard(el);
-  };
-}
-
-/* 이의제기 (로그인 없이) */
+/* ===== 이의제기 (로그인 없이) ===== */
 function viewObjection(el) {
   el.innerHTML = `<section class="view">
-    <div style="display:grid;gap:8px"><h2>거래처 이의제기</h2>
-    <p class="lead">우리 회사에 대한 정보가 사실과 다르거나 이미 대금을 지급했다면 정정·삭제를 요청해 주세요. 로그인은 필요 없습니다 (제17조).</p></div>
+    <div style="display:grid;gap:8px"><h2>결제조회 이의제기</h2>
+    <p class="lead">결제조회에 등록된 우리 회사 정보가 사실과 다르거나 이미 대금을 지급했다면 정정·삭제를 요청해 주세요. 로그인은 필요 없습니다 (제17조).</p></div>
     <ol class="panel" style="padding-left:36px;margin:0">
       <li>접수하는 즉시 해당 글을 <b>비공개</b>로 바꿉니다.</li>
-      <li>등록한 회원사와 거래처 양쪽에 14일 안에 자료를 요청합니다.</li>
+      <li>등록한 판매사와 거래처 양쪽에 14일 안에 자료를 요청합니다.</li>
       <li>운영위원이 양쪽 자료를 비교해 삭제, 정정, 해명과 함께 재공개 중 하나로 정합니다.</li>
       <li>결과를 이메일로 알려 드립니다.</li>
     </ol>
@@ -536,7 +855,6 @@ function viewObjection(el) {
     if (!v('o-company') || !/^\d{5}$/.test(v('o-biz')) || !/.+@.+\..+/.test(v('o-mail')) || !v('o-reason')) {
       out.innerHTML = '<div class="notice bad">상호, 사업자번호 끝 5자리(숫자), 이메일, 설명을 모두 적어 주세요.</div>'; return;
     }
-    const norm = s => s.replace(/\s|\(주\)|주식회사|\(예시\)/g, '');
     const hits = S.entries.filter(e => ['공개','검토대기'].includes(e.status) && e.bizTail === v('o-biz') && (norm(e.company).includes(norm(v('o-company'))) || norm(v('o-company')).includes(norm(e.company))));
     hits.forEach(e => {
       e.status = '숨김';
@@ -552,107 +870,75 @@ function viewObjection(el) {
   };
 }
 
-/* 가입신청 */
-function viewJoin(el) {
-  el.innerHTML = `<section class="view">
-    <div style="display:grid;gap:8px"><h2>회원사 가입 신청</h2>
-    <p class="lead">가입비와 이용료는 없습니다. 콘크리트 제품·토목자재를 생산하거나 판매하는 사업자만 가입할 수 있고, 한 회사에 계정은 하나입니다.</p></div>
-    <form id="jf" class="panel">
-      <div class="grid2">
-        <label class="f">회사명 <input type="text" id="j-company" required></label>
-        <label class="f">사업자등록번호 <input type="text" id="j-biz" inputmode="numeric" required placeholder="000-00-00000"></label>
-        <label class="f">주요 품목 <input type="text" id="j-item" required placeholder="흄관, 맨홀, 보강토블럭"></label>
-        <label class="f">사업자등록증 사본 <input type="file" id="j-file" accept=".pdf,.jpg,.jpeg,.png"></label>
-      </div>
-      <fieldset class="panel" style="background:var(--sunk);border:0;margin:0"><legend style="font-weight:600;padding:0">회원 서약</legend>
-        ${['증빙자료로 확인되는 사실만 등록하겠습니다.','거래처 담당자 등 개인정보를 등록하지 않겠습니다.','대금을 받으면 7일 안에 운영자에게 알리겠습니다.','특정 거래처와의 거래 중단을 다른 회원사와 결의하거나 권유하지 않겠습니다.','커뮤니티 정보를 외부에 유출하지 않겠습니다.','우리 회사가 등록한 허위 정보로 생긴 손해는 우리 회사가 책임지겠습니다.']
-          .map((t, i) => `<label class="check"><input type="checkbox" id="j-o${i}" required> ${t}</label>`).join('')}
-      </fieldset>
-      <div class="row"><button class="btn">가입 신청</button></div><div id="jmsg"></div>
-    </form>
-  </section>`;
-  const f = el.querySelector('#jf');
-  f.onsubmit = ev => {
-    ev.preventDefault();
-    const v = id => f.querySelector('#' + id).value.trim();
-    const digits = v('j-biz').replace(/\D/g, '');
-    const out = f.querySelector('#jmsg');
-    if (!v('j-company') || digits.length !== 10 || !v('j-item')) { out.innerHTML = '<div class="notice bad">회사명, 사업자등록번호(숫자 10자리), 주요 품목을 적어 주세요.</div>'; return; }
-    if (![...f.querySelectorAll('[id^=j-o]')].every(c => c.checked)) { out.innerHTML = '<div class="notice bad">서약 6개 항목에 모두 체크해 주세요.</div>'; return; }
-    const m = { id: uid(), company: v('j-company'), bizno: '***-**-' + digits.slice(5), status: '대기', date: today() };
-    S.members.push(m); S.me = m.id; S.role = 'member'; log(`${m.company} 가입 신청`); save();
-    toast('가입 신청을 받았습니다. 운영자 승인 후 결제정보를 볼 수 있습니다.');
-    location.hash = 'home'; route();
-  };
-}
-
-/* 운영자 */
+/* ===== 운영자 ===== */
 function viewAdmin(el) {
   const pend = S.entries.filter(e => e.status === '검토대기');
   const objs = S.objections.filter(o => o.status !== '완료');
   const joins = S.members.filter(m => m.status === '대기');
+  const stale = S.products.filter(p => daysAgo(p.updated) > 30);
   el.innerHTML = `<section class="view">
     <div style="display:grid;gap:8px"><h2>운영자</h2>
-    <p class="lead">증빙을 확인하지 않은 글은 공개하지 않습니다. 모든 처리는 아래 기록에 남고 3년간 보관합니다 (제25조).</p></div>
+    <p class="lead">단가표 <span class="num">${S.products.length}</span>건 · 판매사 <span class="num">${S.members.filter(m=>m.type==='판매사'&&m.status==='승인').length}</span>곳 · 구매사 <span class="num">${S.members.filter(m=>m.type==='구매사'&&m.status==='승인').length}</span>곳 · 진행 중 견적 <span class="num">${S.requests.filter(r=>r.status==='견적 받는 중').length}</span>건</p></div>
 
+    <div class="panel"><div class="spread"><h3>가입 신청</h3><span class="pill ${joins.length?'warn':'mute'}">${joins.length}건</span></div>
+      ${joins.length ? `<div class="tablebox"><table><thead><tr><th>회사</th><th>구분</th><th>사업자번호</th><th>신청일</th><th></th></tr></thead><tbody>${joins.map(m => `<tr><td>${esc(m.company)}</td><td>${esc(m.type)}</td><td class="num">${esc(m.bizno)}</td><td class="num">${dot(m.date)}</td><td><div class="row"><button type="button" class="btn small" data-ja="${m.id}">휴·폐업 확인 · 승인</button><button type="button" class="btn small danger" data-jr="${m.id}">반려</button></div></td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">대기 중인 신청이 없습니다.</p>'}
+    </div>
+
+    <div class="panel"><div class="spread"><h3>30일 넘게 갱신 안 된 단가</h3><span class="pill ${stale.length?'warn':'mute'}">${stale.length}건</span></div>
+      ${stale.length ? stale.map(p => `<p>${esc(M(p.by).company)} · ${esc(p.name)} ${esc(p.spec)} · ${dot(p.updated)}</p>`).join('') : '<p class="empty">모든 단가가 최근 30일 안에 갱신됐습니다.</p>'}
+    </div>
+
+    <h3 style="margin-top:8px">결제조회 관리</h3>
     <div class="panel"><div class="spread"><h3>증빙 확인 대기</h3><span class="pill ${pend.length?'warn':'mute'}">${pend.length}건</span></div>
       ${pend.length ? pend.map(e => `${entryCard(e, { report:false })}
-        <div class="row" style="margin-top:-6px">
-          <span class="empty">첨부: ${e.files.map(esc).join(', ') || '없음'} · 등록 ${esc(S.members.find(m=>m.id===e.by)?.company || '-')}</span>
-        </div>
-        <div class="row" style="margin-bottom:8px">
-          <button class="btn small" data-ok="${e.id}">증빙 확인 · 공개</button>
-          <button class="btn small ghost" data-court="${e.id}" ${e.timeline.some(t=>COURT_STEPS.includes(t.s))?'':'disabled title="지급명령 확정·판결 확정 경과가 있어야 합니다"'}>공개 + 법원 확인 표시</button>
-          <button class="btn small danger" data-no="${e.id}">반려</button>
+        <p class="empty">첨부: ${e.files.map(esc).join(', ') || '없음'} · 등록 ${esc(M(e.by)?.company || '-')}</p>
+        <div class="row">
+          <button type="button" class="btn small" data-ok="${e.id}">증빙 확인 · 공개</button>
+          <button type="button" class="btn small ghost" data-court="${e.id}" ${e.timeline.some(t=>COURT_STEPS.includes(t.s))?'':'disabled title="지급명령 확정·판결 확정 경과가 있어야 합니다"'}>공개 + 법원 확인 표시</button>
+          <button type="button" class="btn small danger" data-no="${e.id}">반려</button>
         </div>`).join('') : '<p class="empty">확인할 글이 없습니다.</p>'}
     </div>
 
     <div class="panel"><div class="spread"><h3>이의제기·신고</h3><span class="pill ${objs.length?'bad':'mute'}">${objs.length}건 처리 중</span></div>
-      ${objs.length ? objs.map(o => { const e = S.entries.find(x => x.id === o.entry); return `<div class="panel" style="background:var(--sunk);border:0">
+      ${objs.length ? objs.map(o => { const e = S.entries.find(x => x.id === o.entry); return `<div class="panel sunk">
         <div class="spread"><b>${esc(o.company)}</b><span class="empty">접수 <span class="num">${dot(o.date)}</span>${o.deadline ? ` · 자료 기한 <span class="num">${dot(o.deadline)}</span>` : ''}</span></div>
         <p style="font-size:14px">${esc(o.reason)}</p>
-        ${o.reply ? `<p style="font-size:14px;color:var(--muted)">해명 게재 희망: ${esc(o.reply)}</p>` : ''}
+        ${o.reply ? `<p class="empty">해명 게재 희망: ${esc(o.reply)}</p>` : ''}
         <p class="empty">연락처: ${esc(o.from)} · 현재 글 상태: ${e ? esc(e.status) : '연결된 글 없음'}</p>
         ${e ? `<div class="row">
-          <button class="btn small danger" data-od="${o.id}">거래처 주장 인정 · 삭제</button>
+          <button type="button" class="btn small danger" data-od="${o.id}">거래처 주장 인정 · 삭제</button>
           <input type="number" min="1" aria-label="정정 금액 (만 원)" id="fix-${o.id}" value="${e.amount}" style="width:110px">
-          <button class="btn small ghost" data-of="${o.id}">금액 정정 후 재공개</button>
-          <button class="btn small" data-or="${o.id}">회원사 주장 확인 · 재공개${o.reply ? ' (해명 함께)' : ''}</button>
-        </div>` : `<div class="row"><button class="btn small ghost" data-oc="${o.id}">확인 완료로 닫기</button></div>`}
-      </div>`; }).join('') : '<p class="empty">처리할 이의제기가 없습니다. 거래처 보기에서 이의제기를 접수해 보세요.</p>'}
-    </div>
-
-    <div class="panel"><div class="spread"><h3>가입 신청</h3><span class="pill ${joins.length?'warn':'mute'}">${joins.length}건</span></div>
-      ${joins.length ? `<div class="tablebox"><table><thead><tr><th>회사</th><th>사업자번호</th><th>신청일</th><th></th></tr></thead><tbody>${joins.map(m => `<tr><td>${esc(m.company)}</td><td class="num">${esc(m.bizno)}</td><td class="num">${dot(m.date)}</td><td><div class="row"><button class="btn small" data-ja="${m.id}">휴·폐업 확인 · 승인</button><button class="btn small danger" data-jr="${m.id}">반려</button></div></td></tr>`).join('')}</tbody></table></div>` : '<p class="empty">대기 중인 신청이 없습니다.</p>'}
+          <button type="button" class="btn small ghost" data-of="${o.id}">금액 정정 후 재공개</button>
+          <button type="button" class="btn small" data-or="${o.id}">판매사 주장 확인 · 재공개${o.reply ? ' (해명 함께)' : ''}</button>
+        </div>` : `<div class="row"><button type="button" class="btn small ghost" data-oc="${o.id}">확인 완료로 닫기</button></div>`}
+      </div>`; }).join('') : '<p class="empty">처리할 이의제기가 없습니다. 방문자 보기에서 이의제기를 접수해 보세요.</p>'}
     </div>
 
     <div class="panel"><h3>처리 기록</h3>
-      <div class="tablebox"><table><thead><tr><th style="width:110px">날짜</th><th>내용</th></tr></thead><tbody>${S.log.slice(0, 40).map(l => `<tr><td class="num">${dot(l.d)}</td><td>${esc(l.t)}</td></tr>`).join('')}</tbody></table></div>
+      <div class="tablebox"><table><thead><tr><th>날짜</th><th>내용</th></tr></thead><tbody>${S.log.slice(0, 40).map(l => `<tr><td class="num">${dot(l.d)}</td><td style="white-space:normal">${esc(l.t)}</td></tr>`).join('')}</tbody></table></div>
     </div>
   </section>`;
 
   const on = (attr, fn) => el.querySelectorAll(`[${attr}]`).forEach(b => b.onclick = () => { fn(b.getAttribute(attr)); save(); route(); });
   const E = id => S.entries.find(e => e.id === id);
-  on('data-ok', id => { const e = E(id); e.status = '공개'; e.verified = today(); log(`${e.company} 글 증빙 확인 후 공개`); toast('공개했습니다.'); });
-  on('data-court', id => { const e = E(id); e.status = '공개'; e.court = true; e.verified = today(); log(`${e.company} 글 증빙 확인 후 공개 · 법원 확인 표시`); toast('법원 확인 표시와 함께 공개했습니다.'); });
-  on('data-no', id => { const e = E(id); e.status = '삭제'; log(`${e.company} 글 반려 (증빙 부족 또는 규칙 위반)`); toast('반려했습니다.'); });
   const O = id => S.objections.find(o => o.id === id);
-  on('data-od', id => { const o = O(id), e = E(o.entry); e.status = '삭제'; o.status = '완료'; log(`${e.company} 이의제기 인정 → 글 삭제, 결과 이메일 통지`); toast('글을 삭제하고 이의제기를 마쳤습니다.'); });
+  on('data-ok', id => { const e = E(id); e.status = '공개'; e.verified = today(); log(`${e.company} 결제정보 증빙 확인 후 공개`); toast('공개했습니다.'); });
+  on('data-court', id => { const e = E(id); e.status = '공개'; e.court = true; e.verified = today(); log(`${e.company} 결제정보 증빙 확인 후 공개 · 법원 확인 표시`); toast('법원 확인 표시와 함께 공개했습니다.'); });
+  on('data-no', id => { const e = E(id); e.status = '삭제'; log(`${e.company} 결제정보 반려 (증빙 부족 또는 규칙 위반)`); toast('반려했습니다.'); });
+  on('data-od', id => { const o = O(id), e = E(o.entry); e.status = '삭제'; o.status = '완료'; log(`${e.company} 이의제기 인정 → 결제정보 삭제, 결과 이메일 통지`); toast('글을 삭제하고 이의제기를 마쳤습니다.'); });
   on('data-of', id => { const o = O(id), e = E(o.entry); const n = +el.querySelector('#fix-' + id).value; if (n > 0) e.amount = n; e.status = '공개'; o.status = '완료'; log(`${e.company} 이의제기 일부 인정 → ${e.amount}만 원으로 정정 후 재공개`); toast('정정 후 다시 공개했습니다.'); });
-  on('data-or', id => { const o = O(id), e = E(o.entry); e.status = '공개'; if (o.reply) e.reply = o.reply; o.status = '완료'; log(`${e.company} 회원사 증빙 확인 → 재공개${o.reply ? ' · 거래처 해명 게재' : ''}`); toast('다시 공개했습니다.'); });
+  on('data-or', id => { const o = O(id), e = E(o.entry); e.status = '공개'; if (o.reply) e.reply = o.reply; o.status = '완료'; log(`${e.company} 판매사 증빙 확인 → 재공개${o.reply ? ' · 거래처 해명 게재' : ''}`); toast('다시 공개했습니다.'); });
   on('data-oc', id => { const o = O(id); o.status = '완료'; log(`${o.company} 이의제기 확인 완료 (연결된 글 없음)`); });
-  on('data-ja', id => { const m = S.members.find(x => x.id === id); m.status = '승인'; log(`${m.company} 가입 승인 (사업자 상태 확인)`); toast('승인했습니다.'); });
-  on('data-jr', id => { const m = S.members.find(x => x.id === id); m.status = '반려'; log(`${m.company} 가입 반려`); });
+  on('data-ja', id => { const m = M(id); m.status = '승인'; log(`${m.company} (${m.type}) 가입 승인 (사업자 상태 확인)`); toast('승인했습니다.'); });
+  on('data-jr', id => { const m = M(id); m.status = '반려'; log(`${m.company} 가입 반려`); });
 }
 
-/* 시연 띠 */
 document.querySelectorAll('#roleSeg button').forEach(b => b.onclick = () => {
-  S.role = b.dataset.role;
-  if (S.role === 'member' && !me()) S.me = 'm1';
+  S.role = b.dataset.role; viewQuote.tab = null; viewQuote.prefill = null;
   save(); route();
 });
-document.getElementById('resetDemo').onclick = () => { S = seed(); save(); location.hash = 'home'; route(); toast('예시 데이터로 되돌렸습니다.'); };
-addEventListener('hashchange', () => { route(); scrollTo(0, 0); });
+document.getElementById('resetDemo').onclick = () => { S = seed(); save(); viewHome.sel = null; viewQuote.tab = null; location.hash = 'home'; route(); toast('예시 데이터로 되돌렸습니다.'); };
+addEventListener('hashchange', () => { if (location.hash === '#home' || location.hash === '') viewHome.sel = null; route(); scrollTo(0, 0); });
 route();
 })();
 </script>
